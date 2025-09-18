@@ -1,0 +1,46 @@
+:root {
+
+    /* 搜索框透明 */
+    .DocSearch-Button {
+        background-color: rgba(255, 255, 255, 0);
+    }
+
+    /* 卡片悬浮效果 */
+    .VPFeatures .items .item {
+        transition: transform 0.3s;
+    }
+
+    .VPFeatures .items .item:hover {
+        transform: translateY(-5px);
+    }
+
+    /* 手机端菜单栏顶部横条隐藏 */
+    .VPNavBar.screen-open {
+        border-bottom: none;
+    }
+
+    /* 手机端菜单栏菜单分割线隐藏 */
+    .VPNavScreenMenuLink {
+        border-bottom: none;
+    }
+
+    /* 手机端菜单组隐藏 */
+    .VPNavScreenMenuGroup {
+        border-bottom: none;
+    }
+
+    /* 手机端大纲栏横条隐藏 */
+    .VPLocalNav {
+        border-bottom: none;
+    }
+
+    /* 导航栏分割线隐藏 */
+    .divider {
+        display: none;
+    }
+
+    /* 页面导航回到顶部隐藏 */
+    .VPLocalNavOutlineDropdown .header {
+        display: none;
+    }
+}

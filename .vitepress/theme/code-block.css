@@ -1,0 +1,81 @@
+.vp-doc *:not(.vp-code-block-title):not(.blocks) > div[class*='language-'] {
+    /* 代码块阴影 */
+    box-shadow: 0 10px 30px 0 rgb(0 0 0 / 40%);
+
+    /* macOS 圆点 */
+    &::before {
+        content: '';
+        display: block;
+        position: relative;
+        top: 12px;
+        left: -20px;
+        width: 12px;
+        height: 12px;
+        background-color: rgb(243, 93, 85);
+        border-radius: 50%;
+        box-shadow: 20px 0 0 rgb(242, 180, 46), 40px 0 0 rgb(35, 192, 61);
+        z-index: 1;
+    }
+
+    /* 下移行号 */
+    .line-numbers-wrapper {
+        padding-top: 32px;
+    }
+
+    /* 减小代码块下方 margin */
+    code {
+        margin-bottom: -10px;
+    }
+}
+
+/* 移动端关闭屏幕宽度代码块 */
+.vp-doc div[class*='language-'] {
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 8px;
+}
+
+.vp-code-group {
+    /* 代码组阴影 */
+    border-radius: 8px;
+    box-shadow: 0 10px 30px 0 rgb(0 0 0 / 40%);
+
+    /* 代码组 macOS 圆点 */
+    .tabs {
+        padding-top: 20px;
+
+        /* 移动端关闭屏幕宽度代码块 */
+        margin-left: 0;
+        margin-right: 0;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 12px;
+            height: 12px;
+            background-color: rgb(243, 93, 85);
+            border-radius: 50%;
+            box-shadow: 20px 0 0 rgb(242, 180, 46), 40px 0 0 rgb(35, 192, 61);
+            z-index: 1;
+        }
+    }
+}
+
+/* 删除代码左侧 padding */
+.vp-doc div[class*='language-'] code {
+    padding-left: 0;
+}
+
+/* 关闭行号右侧分隔条 */
+.vp-doc .line-numbers-wrapper {
+    border-right: none;
+}
+
+/* 关闭代码组 tabs 与 blocks 间的分隔条 */
+:root {
+    --vp-code-tab-divider: transparent;
+}

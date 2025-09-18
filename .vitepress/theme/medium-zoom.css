@@ -1,0 +1,7 @@
+/* https://github.com/vuejs/vitepress/issues/854#issuecomment-1732376667 */
+/* https://github.com/francoischalifour/medium-zoom?tab=readme-ov-file#the-zoomed-image-is-not-visible */
+
+.medium-zoom-overlay,
+.medium-zoom-image--opened {
+    z-index: 999;
+}

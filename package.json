@@ -1,0 +1,27 @@
+{
+  "name": "kazumi-website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.0",
+  "devDependencies": {
+    "@types/markdown-it-footnote": "^3.0.4",
+    "vitepress": "2.0.0-alpha.12"
+  },
+  "dependencies": {
+    "markdown-it-footnote": "^4.0.0",
+    "medium-zoom": "^1.1.0",
+    "vitepress-plugin-group-icons": "^1.6.3",
+    "vue": "^3.5.21"
+  }
+}
