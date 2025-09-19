@@ -13,7 +13,7 @@ hero:
       text: 主流平台下载
       link: https://github.com/Predidit/Kazumi/releases/latest
     - theme: alt
-      text: 鸿蒙 NEXT 下载
+      text: HarmonyOS 下载
       link: https://github.com/ErBWs/Kazumi/releases/latest
 
 features:

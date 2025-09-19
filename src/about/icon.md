@@ -1,3 +1,8 @@
+---
+lastUpdated: false
+editLink: false
+---
+
 # 图标
 
 本项目图标来自 [Yuquanaaa](https://www.pixiv.net/users/66219277) 发表在 [Pixiv](https://www.pixiv.net/artworks/116666979) 上的作品。
