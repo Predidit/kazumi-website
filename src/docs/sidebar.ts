@@ -11,6 +11,12 @@ export function docsSidebar(): DefaultTheme.SidebarItem[] {
       ]
     },
     {
+      text: '架构',
+      items: [
+        { text: '实现原理', link: '/docs/architecture/implementation-details' }
+      ]
+    },
+    {
       items: [
         { text: '常见问题', link: '/docs/qa' },
       ]
