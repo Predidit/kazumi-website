@@ -1,5 +1,4 @@
-> [!TIP]
-> **轻量高效的架构**
+> [!TIP] 轻量高效的架构
 >
 > Kazumi 应用程序本身基于 **Flutter** 框架构建，确保了其跨平台的高性能和低资源占用。
 >
@@ -11,12 +10,13 @@ Kazumi 核心的视频嗅探功能基于 WebView 实现。在不同操作系统�
 
 我们的目标是提供一个统一且高效的用户体验，但由于各平台 WebView 实现的差异，底层的技术选型有所不同。下表概述了在主流操作系统上视频嗅探功能的实现方式：
 
-| 操作系统 | WebView 组件 | 实现方式 | 注意事项 |
-| :--- | :--- | :--- | :--- |
-| **Windows** | WebView2 | 使用 `Icorewebview2` C++ API | 性能高效，稳定性好。 |
-| **iOS / macOS** | WKWebView | 通过 `WKUserScript` 注入特权脚本 | 依赖 Apple 提供的脚本接口，功能强大。 |
-| **Linux** | GTKWebkit | 通过 `webkit_user_content_manager` 注入特权脚本 | 与 macOS 类似，利用 WebKit 的脚本扩展能力。 |
-| **Android** | Android WebView | `JavaScript` | 由于原生 WebView 功能限制而实现的妥协方案 |
+| 操作系统            | WebView 组件       | 实现方式                                    | 注意事项                          |
+|:----------------|:-----------------|:----------------------------------------|:------------------------------|
+| **Windows**     | WebView2         | 使用 `Icorewebview2` C++ API              | 性能高效，稳定性好。                    |
+| **iOS / macOS** | WKWebView        | 通过 `WKUserScript` 注入特权脚本                | 依赖 Apple 提供的脚本接口，功能强大。        |
+| **Linux**       | GTKWebkit        | 通过 `webkit_user_content_manager` 注入特权脚本 | 与 macOS 类似，利用 WebKit 的脚本扩展能力。 |
+| **Android**     | Android WebView  | `JavaScript`                            | 由于原生 WebView 功能限制而实现的妥协方案     |
+| **HarmonyOS**   | ohos.web.webview | `JavaScript`                            | 需要 WebView 上屏组件才可以正常工作        |
 
 ## 特别说明：关于 Android 平台
 
