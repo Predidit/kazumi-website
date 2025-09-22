@@ -43,4 +43,9 @@
     .VPLocalNavOutlineDropdown .header {
         display: none;
     }
+
+    /* 透明表格 */
+    tr:nth-child(even) {
+        background-color: transparent;
+    }
 }

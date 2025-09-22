@@ -13,7 +13,8 @@ export function docsSidebar(): DefaultTheme.SidebarItem[] {
     {
       text: '架构',
       items: [
-        { text: '实现原理', link: '/docs/architecture/implementation-details' }
+        { text: '视频嗅探', link: '/docs/architecture/video-parser' },
+        { text: 'BBCode 解析', link: '/docs/architecture/bbcode' },
       ]
     },
     {

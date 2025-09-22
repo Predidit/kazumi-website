@@ -53,7 +53,7 @@ export default defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/Predidit/kazumi-website/edit/main/:path',
+      pattern: 'https://github.com/Predidit/kazumi-website/edit/main/src/:path',
       text: '帮助我们改进本页面内容'
     },
 

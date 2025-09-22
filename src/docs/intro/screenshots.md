@@ -1,9 +1,10 @@
 # 软件界面
 
-## 系统标题栏
+## 系统窗口控制按钮
 
 在电脑端，可以通过 `我的` - `外观设置` - `使用系统标题栏` 来开启，默认关闭。
 
-| 开启前                                     | 开启后                                       |
-|-----------------------------------------|-------------------------------------------|
-| ![](assets/screenshots/no-controls.png) | ![](assets/screenshots/with-controls.png) |
+| 开启前                                       | 开启后                                    |
+|-------------------------------------------|----------------------------------------|
+| ![](assets/screenshots/win-no-button.png) | ![](assets/screenshots/win-button.png) |
+| ![](assets/screenshots/mac-no-button.png) | ![](assets/screenshots/mac-button.png) |
