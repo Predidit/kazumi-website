@@ -12,6 +12,14 @@ export function docsSidebar(): DefaultTheme.SidebarItem[] {
       ]
     },
     {
+      text: '规则指南',
+      items: [
+        { text: '规则介绍', link: '/docs/rules/introduce-rules' },
+        { text: '规则开发', link: '/docs/rules/develop-rules' },
+        { text: '规则示例', link: '/docs/rules/develop-rules-example' },
+      ]
+    },
+    {
       text: '架构',
       items: [
         { text: '视频嗅探', link: '/docs/architecture/video-parser' },
