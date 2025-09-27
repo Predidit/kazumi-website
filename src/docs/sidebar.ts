@@ -8,6 +8,7 @@ export function docsSidebar(): DefaultTheme.SidebarItem[] {
         { text: 'Kazumi 是什么？', link: '/docs/intro/what-is-kazumi' },
         { text: '如何下载', link: '/docs/intro/how-to-download' },
         { text: '软件界面', link: '/docs/intro/screenshots' },
+        { text: '功能模块', link: '/docs/intro/module_details' },
       ]
     },
     {
