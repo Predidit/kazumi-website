@@ -19,18 +19,18 @@ Android 还可以通过 [F-Droid](https://f-droid.org/packages/com.predidit.kazu
 
 可通过 [Flathub](https://flathub.org/apps/io.github.Predidit.Kazumi) 下载。
 
-## Arch Linux
+### Arch Linux
 
 可以从 [AUR](http://aur.archlinux.org) 或 [archlinuxcn](https://github.com/archlinuxcn/repo) 安装。
 
-### AUR
+#### AUR
 
 ```bash
 [yay/paru] -S kazumi # 从源码构建
 [yay/paru] -S kazumi-bin # 二进制包
 ```
 
-### archlinuxcn
+#### archlinuxcn
 
 ```bash
 sudo pacman -S kazumi
