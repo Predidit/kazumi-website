@@ -4,19 +4,18 @@
 
 目前Kazumi仍未上架App Store，所以需要通过ID签的方式安装至iPhone/iPad。虽然已经有[Issue](https://github.com/Predidit/Kazumi/issues/819#issuecomment-2742542449)给出了方案，但不是所有人都会点开Issue，而本篇也会给出不同的方法。
 
-# 方法1 通过Sideloadly
-
+# 通过Sideloadly安装
 ## a.准备事项
 1. [Sideloadly](https://sideloadly.io/#download)
 
 > [!NOTE]
-> 一般下载64Bit版本
+> 一般情况下载64Bit版本
 
 
 2. [iTunes](https://www.apple.com.cn/itunes/)
 
 > [!IMPORTANT]
-> iTunes必须使用Windows版本，在下载页面往下滑动即可找到，一般下载64bit版本。
+> iTunes必须使用Windows版本，在下载页面往下滑动即可找到，一般情况下载64bit版本。
 <img src="https://github.com/user-attachments/assets/234db3e5-583b-4d7d-be91-e09e2ef4d57a" style="width:200px" />
 
 
@@ -89,17 +88,25 @@
 
 ### 解决方法
 
-1. 打开设置  2. 点击通用  3.滑动至底部，点击VPN与设备管理  4.滑动至底部，找到开发者应用并点击  5.点击信任
+1. 打开设置        
 
 <img src="https://github.com/user-attachments/assets/821d1af3-eccc-476b-9e77-60b14ea6608b" style="width:150px"/>
+
+2. 点击通用
+
 <img src="https://github.com/user-attachments/assets/dae3f441-406c-403d-bf7a-9b9e77ee86d4" style="width:150px"/>
+
+3.滑动至底部，点击VPN与设备管理
+
 <img src="https://github.com/user-attachments/assets/7455e32e-26d6-4086-a075-4ad9b344ec31" style="width:150px"/>
+
+4.滑动至底部，找到开发者应用并点击
+
 <img src="https://github.com/user-attachments/assets/83ce4e4e-1601-4ea7-b4fb-365dd47d1dc5" style="width:150px"/>
+
+5.点击信任
+
 <img src="https://github.com/user-attachments/assets/73059227-5697-4c1e-b8d5-8f54887c3b81" style="width:150px"/>
 
 ***
 Kazumi是一个开源项目，使用GPL v3协议发布。 | App Store, iPhone, iPad, iTunes和Apple Account是 Apple Inc. 的注册商标
-
-
-
-
