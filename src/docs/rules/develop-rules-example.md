@@ -45,7 +45,8 @@ https://www.akianime.cc/bgmsearch/-------------.html?wd=@keyword
 ```
 
 当然，不是所有的网站的结构都很清晰完整，可以让你轻松找到对应Xpath，  
-比如网站：https://anime1.me/ 其HTML结构非常特殊，有想挑战的可用试试
+比如网站：https://anime1.me/ 其HTML结构非常特殊，有想挑战的可以试试
+
 
 
 
