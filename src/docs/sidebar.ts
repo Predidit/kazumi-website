@@ -9,7 +9,6 @@ export function docsSidebar(): DefaultTheme.SidebarItem[] {
         { text: '如何下载', link: '/docs/intro/how-to-download' },
         { text: '软件界面', link: '/docs/intro/screenshots' },
         { text: '功能模块', link: '/docs/intro/module_details' },
-        { text: '在iOS系统上安装', link: '/docs/intro/how-to-install-in-ios'}
       ]
     },
     {
@@ -29,7 +28,8 @@ export function docsSidebar(): DefaultTheme.SidebarItem[] {
     },
     {
       items: [
-        { text: '常见问题', link: '/docs/qa' },
+        { text: '常见问题', link: '/docs/misc/qa' },
+        { text: 'iOS 自签', link: '/docs/misc/how-to-install-in-ios'}
       ]
     },
   ]
