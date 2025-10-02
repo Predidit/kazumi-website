@@ -6,7 +6,7 @@
 
 - 对应架构的 [Sideloadly](https://sideloadly.io/#download) (通常为 64 bit)
 
-- 使用邮箱注册的 [Apple Account](https://support.apple.com/zh-cn/apple-account)
+- 使用邮箱注册的 [Apple 账户](https://support.apple.com/zh-cn/apple-account)
 
 - [Kazumi IPA 安装包](https://github.com/Predidit/Kazumi/releases/latest)
 
@@ -18,17 +18,17 @@
 
 ### 安装
 
-逐一安装上述软件并重启电脑，准备好 Apple Account 后就可以开始了。
+逐一安装上述软件并重启电脑，准备好 Apple 账户 后就可以开始了。
 
 1. 启动 Sideloadly。
 
 ![](assets/how-to-install-in-ios/sideloadly.png)
 
-2. 在 `Apple ID` 一栏中输入你的 Apple Account 邮箱。
+2. 在 `Apple ID` 一栏中输入你的 Apple 账户 邮箱。
 
 3. 连接设备
 
-使用一条稳定的数据线将设备链接至电脑。如无意外，你将会在 `iDevice` 一栏中看到你的设备名称。在设备上信任这部电脑并输入你的锁屏密码。
+使用一条稳定的数据线将设备连接至电脑。如无意外，你将会在 `iDevice` 一栏中看到你的设备名称。在设备上信任这部电脑并输入你的锁屏密码。
 
 4. 安装至设备
 
@@ -37,9 +37,9 @@
 ![](assets/how-to-install-in-ios/ready.png)
 
 > [!TIP]
-> `Start` 按钮左边的刷新按钮应该是默认启用的。启用后每 7 天会自动续签，推荐开启。
+> `Start` 按钮左边的刷新按钮应该是默认启用的。启用后，在同一网络环境下，每 7 天会自动续签，推荐开启。
 
-第一次使用会需要你输入 Apple Account 密码，输入后点击 OK。
+第一次使用会需要你输入 Apple 账户 密码，输入后点击 OK。
 
 之后可能手机会跳出需要双重认证，点击允许并在电脑输入验证码就好了。
 
@@ -64,3 +64,4 @@
 ## 其他安装方式
 
 见 [Predidit/Kazumi#819](https://github.com/Predidit/Kazumi/issues/819)
+
