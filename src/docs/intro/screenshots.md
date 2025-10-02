@@ -40,4 +40,6 @@
 
 效果如图：
 
-![](assets/screenshots/ui-dark-oled.png)
+| 开启前                                      | 开启后                                    |
+|-------------------------------------------|----------------------------------------|
+| ![](assets/screenshots/ui-dark.png) | ![](assets/screenshots/ui-dark-oled.png) |
