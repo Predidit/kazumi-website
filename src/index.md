@@ -15,6 +15,9 @@ hero:
     - theme: alt
       text: HarmonyOS 下载
       link: https://github.com/ErBWs/Kazumi/releases/latest
+    - theme: alt
+      text: iOS安装问题
+      link: https://kazumi.app/docs/misc/how-to-install-in-ios
 
 features:
   - icon: 🌟
