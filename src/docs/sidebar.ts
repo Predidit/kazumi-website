@@ -27,8 +27,9 @@ export function docsSidebar(): DefaultTheme.SidebarItem[] {
       ]
     },
     {
+      text: '杂项',
       items: [
-        { text: '常见问题', link: '/docs/misc/qa' },
+        { text: 'Q&A', link: '/docs/misc/qa' },
         { text: 'iOS 自签', link: '/docs/misc/how-to-install-in-ios'}
       ]
     },
