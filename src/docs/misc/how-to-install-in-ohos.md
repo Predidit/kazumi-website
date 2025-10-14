@@ -6,11 +6,7 @@
 ## 准备工作
 
 - [Kazumi hap 安装包](https://github.com/Predidit/Kazumi/releases/latest)
-- (推荐)一台任意非鸿蒙 5.0 及以上的设备。
-
-> [!TIP] 没有其他设备？
->
-> 可以下载 `.apk` 文件安装在卓易通中使用。
+- 一台任意非鸿蒙 5.0 及以上的设备。
 
 ### 小白调试助手
 
@@ -23,8 +19,6 @@
 > **macOS:** 首次运行需要在终端运行 `xattr -d com.apple.quarantine /Applications/小白调试助手.app`。需要 Java 环境。
 > 
 > **Linux:** 不能使用 root 权限，依赖 [zenity](https://gitlab.gnome.org/GNOME/zenity)。
-> 
-> **卓易通:** 账号登录不会提示登录成功，需要手动返回调试助手；安装时容易断连，重新连接即可。
 
 ### 开启无线调试
 
