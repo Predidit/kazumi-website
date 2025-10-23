@@ -5,7 +5,7 @@
 
 ## 准备工作
 
-- [Kazumi hap 安装包](https://github.com/Predidit/Kazumi/releases/latest)
+- [Kazumi hap 安装包](https://github.com/ErBWs/Kazumi/releases/latest)
 - 一台任意非鸿蒙 5.0 及以上的设备。
 
 ### 小白调试助手
@@ -64,3 +64,4 @@
 ## 其他
 
 - 查询调试证书有效期：[网址](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html#/harmonyOSDevPlatform/9249519184596237889)
+
