@@ -64,4 +64,3 @@
 ## 其他
 
 - 查询调试证书有效期：[网址](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html#/harmonyOSDevPlatform/9249519184596237889)
-
