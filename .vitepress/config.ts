@@ -8,7 +8,34 @@ import footnote_plugin from 'markdown-it-footnote'
 export default defineConfig({
   srcDir: "./src",
   title: "Kazumi",
-  head: [["link", { rel: "icon", href: "/favicon.ico" }]],
+  head: [
+    ["link", { rel: "icon", href: "/favicon.ico" }],
+    // 添加自定义样式
+    ["style", {}, `
+      .VPFooter .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        flex-wrap: wrap;
+      }
+      .VPFooter .message {
+        order: 1;
+      }
+      .VPFooter .copyright {
+        order: 2;
+      }
+      @media (max-width: 768px) {
+        .VPFooter .container {
+          flex-direction: column;
+          gap: 8px;
+        }
+        .VPFooter .message, .VPFooter .copyright {
+          order: unset;
+        }
+      }
+    `]
+  ],
 
   markdown: {
     lineNumbers: true,
@@ -84,6 +111,11 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/Predidit/Kazumi' },
-    ]
+    ],
+
+    footer: {
+      message: 'Released under the <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer">GPL-3.0 License</a>.',
+      copyright: 'Copyright © 2024-2025 Predidit. All rights reserved.'
+    }
   }
 })
