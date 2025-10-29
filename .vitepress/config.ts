@@ -11,7 +11,13 @@ export default defineConfig({
     ["style", {}, `
       /* 页脚原有样式（保持紧凑和居中） */
       .VPFooter {
-        padding: 15px 0 !important;
+        padding: 20px 0 !important;
+        border-top: 1px solid #e5e7eb; /* 浅色模式下的浅灰色分割线 */
+      }
+      
+      /* 深色模式下的分割线颜色 */
+      .dark .VPFooter {
+        border-top-color: #374151; /* 深色模式下的深灰色分割线 */
       }
       
       .VPFooter .container {
@@ -25,7 +31,7 @@ export default defineConfig({
       
       .VPFooter .message,
       .VPFooter .copyright {
-        line-height: 1.2;
+        line-height: 1.5;
         font-size: 14px;
         margin: 0;
       }
