@@ -17,7 +17,7 @@ hero:
       link: https://github.com/ErBWs/Kazumi/releases/latest
     - theme: alt
       text: 文档
-      link: https://kazumi.app/docs/intro/what-is-kazumi
+      link: /docs/intro/what-is-kazumi
 
 features:
   - icon: 🌟
