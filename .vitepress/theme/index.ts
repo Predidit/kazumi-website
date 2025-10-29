@@ -3,7 +3,7 @@ import 'virtual:group-icons.css'
 import { useRoute } from 'vitepress';
 import { onMounted, watch, nextTick } from 'vue';
 import mediumZoom from 'medium-zoom';
-import MyLayout from './Layout.vue'
+import MyLayout from './layout.vue'
 
 import "./style.css";
 import "./kbd.css";
