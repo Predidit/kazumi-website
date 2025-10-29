@@ -8,7 +8,6 @@ export default defineConfig({
   title: "Kazumi",
   head: [
     ["link", { rel: "icon", href: "/favicon.ico" }],
-    ["link", { rel: "stylesheet", href: "/footer.css" }] 
   ],
 
   markdown: {

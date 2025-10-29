@@ -12,6 +12,7 @@ import "./custom-block.css";
 import "./font.css";
 import "./medium-zoom.css";
 import "./code-block.css";
+import "./footer.css"
 
 export default {
   ...DefaultTheme,
