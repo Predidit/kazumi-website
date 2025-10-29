@@ -1,0 +1,67 @@
+/* 页脚原有样式（保持紧凑和居中） */
+.VPFooter {
+  padding: 20px 0 !important;
+  border-top: 1px solid #e5e7eb; /* 浅色模式下的浅灰色分割线 */
+}
+
+/* 深色模式下的分割线颜色 */
+.dark .VPFooter {
+  border-top-color: #374151; /* 深色模式下的深灰色分割线 */
+}
+
+.VPFooter .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.VPFooter .message,
+.VPFooter .copyright {
+  line-height: 1.5;
+  font-size: 14px;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .VPFooter .container {
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+  }
+}
+
+/* 链接动画样式 */
+.VPFooter .message a,
+.VPFooter .copyright a {
+  position: relative;
+  display: inline-block;
+  text-decoration: none !important;
+  color: inherit;
+  padding: 2px 0;
+  transition: transform 0.3s ease, color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.VPFooter .message a:hover,
+.VPFooter .copyright a:hover {
+  transform: translateY(-6px);
+  color: #34d399;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.VPFooter a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 1.5px;
+  bottom: 0;
+  left: 0;
+  background-color: #34d399;
+  transition: width 0.3s ease;
+}
+
+.VPFooter a:hover::after {
+  width: 100%;
+}
