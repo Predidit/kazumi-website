@@ -1,8 +1,5 @@
 # ohos 侧载
 
-鸿蒙 5.0 及以上删除了系统中的 AOSP 兼容层，无法通过直接打开 `.hap` 文件进行安装。尽管可以通过卓易通安装 `.apk`，但体验不如原生应用。
-本文档提供如何使用[小白调试助手](https://github.com/likuai2010/auto-installer/)进行侧载安装。
-
 ## 准备工作
 
 - [Kazumi hap 安装包](https://github.com/ErBWs/Kazumi/releases/latest)
