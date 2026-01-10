@@ -274,7 +274,7 @@ const defaultPlatforms = [
   {
     id: 'ohos',
     name: 'OHOS',
-    description: '适用于 HarmonyOS NEXT',
+    description: '适用于 HarmonyOS NEXT (需要侧载)',
     repo: props.ohosRepo, // 使用单独的鸿蒙仓库
     useOhosTag: true, // 使用鸿蒙分支的tag
     links: [
