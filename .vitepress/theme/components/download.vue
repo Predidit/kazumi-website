@@ -287,8 +287,8 @@ const defaultPlatforms = [
   },
   {
     id: 'ohos',
-    name: 'OpenHarmony',
-    description: '适用于 OpenHarmony 4.0 及以上',
+    name: 'OHOS',
+    description: '适用于 HarmonyOS NEXT',
     repo: props.ohosRepo, // 使用单独的鸿蒙仓库
     useOhosTag: true, // 使用鸿蒙分支的tag
     links: [
