@@ -9,7 +9,6 @@
     <div v-if="loading" class="loading-state">
       <div class="loading-spinner"></div>
       <p>正在获取版本信息...</p>
-      <p v-if="usingCache" class="cache-indicator">（使用缓存数据）</p>
     </div>
     
     <!-- 错误状态 -->
@@ -191,7 +190,6 @@ const error = ref(null)
 const latestTag = ref('')
 const currentTag = ref(props.releaseTag || props.fallbackTag)
 const ohosTag = ref(props.ohosTag || props.releaseTag || props.fallbackTag)
-const usingCache = ref(false) // 标记是否使用缓存数据
 const useMirror = ref(props.enableMirror) // 是否使用镜像下载
 
 // 计算属性
@@ -199,61 +197,6 @@ const githubUrl = computed(() => {
   return `https://github.com/${props.githubRepo}/releases`
 })
 
-const apiUrl = computed(() => {
-  if (props.useLatestRelease) {
-    return `https://api.github.com/repos/${props.githubRepo}/releases/latest`
-  }
-  return `https://api.github.com/repos/${props.githubRepo}/releases`
-})
-
-// 鸿蒙API地址
-const ohosApiUrl = computed(() => {
-  return `https://api.github.com/repos/${props.ohosRepo}/releases/latest`
-})
-
-// 生成缓存键
-const getCacheKey = (repo, isLatest = true) => {
-  return `github_release_${repo}_${isLatest ? 'latest' : 'all'}`
-}
-
-// 检查并获取缓存
-const getCachedData = (repo, isLatest = true) => {
-  if (!props.enableCache) return null
-  
-  try {
-    const cacheKey = getCacheKey(repo, isLatest)
-    const cached = localStorage.getItem(cacheKey)
-    
-    if (!cached) return null
-    
-    const { data, timestamp } = JSON.parse(cached)
-    const now = Date.now()
-    
-    // 检查缓存是否过期
-    if (now - timestamp < props.cacheDuration) {
-      return data
-    } else {
-      return null
-    }
-  } catch (error) {
-    return null
-  }
-}
-
-// 保存数据到缓存
-const saveToCache = (data, repo, isLatest = true) => {
-  if (!props.enableCache) return
-  
-  try {
-    const cacheKey = getCacheKey(repo, isLatest)
-    const cacheData = {
-      data,
-      timestamp: Date.now()
-    }
-    localStorage.setItem(cacheKey, JSON.stringify(cacheData))
-  } catch (error) {
-  }
-}
 
 // 默认平台配置
 const defaultPlatforms = [
@@ -403,10 +346,6 @@ const getLinkIcon = (linkType) => {
 
 // 从文件获取release信息
 const fetchFromFile = async () => {
-  if (!props.useFileFirst) {
-    return false
-  }
-  
   try {
     const response = await fetch(props.releasesFile)
     if (!response.ok) {
@@ -427,40 +366,11 @@ const fetchFromFile = async () => {
     
     return true
   } catch (err) {
-    // 文件获取失败，回退到API
-    return false
-  }
-}
-
-// 获取鸿蒙仓库的release信息
-const fetchOhosRelease = async () => {
-  try {
-    // 首先尝试从缓存获取
-    const cachedData = getCachedData(props.ohosRepo, true)
-    if (cachedData) {
-      ohosTag.value = cachedData.tag_name
-      return
-    }
-    
-    const response = await fetch(ohosApiUrl.value, {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json'
-      }
-    })
-    
-    if (!response.ok) {
-      throw new Error(`鸿蒙仓库 GitHub API 错误: ${response.status}`)
-    }
-    
-    const data = await response.json()
-    ohosTag.value = data.tag_name
-    
-    // 保存到缓存
-    saveToCache(data, props.ohosRepo, true)
-    
-  } catch (err) {
-    // 使用props中指定的tag或fallback
+    // 文件获取失败，使用fallback
+    error.value = `无法加载版本信息: ${err.message}`
+    currentTag.value = props.fallbackTag
     ohosTag.value = props.ohosTag || props.fallbackTag
+    return false
   }
 }
 
@@ -477,37 +387,8 @@ const fetchLatestRelease = async () => {
     loading.value = true
     error.value = null
     
-    // 1. 首先尝试从文件获取（如果启用）
-    if (props.useFileFirst) {
-      const fileSuccess = await fetchFromFile()
-      if (fileSuccess) {
-        loading.value = false
-        // 仍然在后台获取最新数据更新缓存
-        setTimeout(() => {
-          fetchFromAPI()
-          fetchOhosRelease()
-        }, 100)
-        return
-      }
-    }
-    
-    // 2. 文件获取失败或未启用，尝试从缓存获取
-    const cachedData = getCachedData(props.githubRepo, props.useLatestRelease)
-    if (cachedData) {
-      usingCache.value = true
-      updateFromData(cachedData)
-      loading.value = false
-      
-      // 仍然在后台获取最新数据更新缓存
-      setTimeout(() => {
-        fetchFromAPI()
-        fetchOhosRelease()
-      }, 100)
-    } else {
-      // 3. 缓存不存在或已过期，从 API 获取
-      await fetchFromAPI()
-      fetchOhosRelease()
-    }
+    // 只从文件获取版本信息
+    await fetchFromFile()
     
   } catch (err) {
     error.value = err.message
@@ -515,44 +396,6 @@ const fetchLatestRelease = async () => {
     ohosTag.value = props.ohosTag || props.fallbackTag
   } finally {
     loading.value = false
-  }
-}
-
-// 从 API 获取数据
-const fetchFromAPI = async () => {
-  try {
-    const response = await fetch(apiUrl.value, {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json'
-      }
-    })
-    
-    if (!response.ok) {
-      throw new Error(`GitHub API 错误: ${response.status}`)
-    }
-    
-    const data = await response.json()
-    
-    // 更新数据并保存到缓存
-    updateFromData(data)
-    saveToCache(data, props.githubRepo, props.useLatestRelease)
-    
-  } catch (err) {
-  }
-}
-
-// 更新数据
-const updateFromData = (data) => {
-  if (props.useLatestRelease) {
-    // 获取最新版本
-    latestTag.value = data.tag_name
-    currentTag.value = latestTag.value
-  } else {
-    // 获取所有版本，使用第一个
-    if (data.length > 0) {
-      latestTag.value = data[0].tag_name
-      currentTag.value = latestTag.value
-    }
   }
 }
 
@@ -568,14 +411,13 @@ watch(() => props.releaseTag, (newTag) => {
 })
 
 watch(() => props.githubRepo, () => {
-  usingCache.value = false
   fetchLatestRelease()
 })
 
 watch(() => props.ohosRepo, () => {
-  // 更新鸿蒙仓库配置并重新获取
+  // 更新鸿蒙仓库配置
   defaultPlatforms.find(p => p.id === 'ohos').repo = props.ohosRepo
-  fetchOhosRelease()
+  fetchLatestRelease()
 })
 
 watch(() => props.ohosTag, (newTag) => {
@@ -638,12 +480,6 @@ onMounted(() => {
   margin-bottom: 1rem;
 }
 
-.cache-indicator {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  color: var(--vp-c-text-3);
-  font-style: italic;
-}
 
 @keyframes spin {
   to { transform: rotate(360deg); }
