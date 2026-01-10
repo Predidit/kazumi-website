@@ -164,6 +164,16 @@ const props = defineProps({
     default: 'tag'
   },
   
+  // 文件配置
+  releasesFile: {
+    type: String,
+    default: '/releases.json'
+  },
+  useFileFirst: {
+    type: Boolean,
+    default: true
+  },
+  
   // 缓存配置
   cacheDuration: {
     type: Number,
@@ -391,6 +401,37 @@ const getLinkIcon = (linkType) => {
   return icons[linkType] || '⬇️'
 }
 
+// 从文件获取release信息
+const fetchFromFile = async () => {
+  if (!props.useFileFirst) {
+    return false
+  }
+  
+  try {
+    const response = await fetch(props.releasesFile)
+    if (!response.ok) {
+      throw new Error(`文件加载失败: ${response.status}`)
+    }
+    
+    const data = await response.json()
+    
+    // 验证数据结构
+    if (data.kazumi && data.kazumi.tag) {
+      currentTag.value = data.kazumi.tag
+      latestTag.value = data.kazumi.tag
+    }
+    
+    if (data.ohos && data.ohos.tag) {
+      ohosTag.value = data.ohos.tag
+    }
+    
+    return true
+  } catch (err) {
+    // 文件获取失败，回退到API
+    return false
+  }
+}
+
 // 获取鸿蒙仓库的release信息
 const fetchOhosRelease = async () => {
   try {
@@ -436,7 +477,21 @@ const fetchLatestRelease = async () => {
     loading.value = true
     error.value = null
     
-    // 1. 首先尝试从缓存获取主仓库数据
+    // 1. 首先尝试从文件获取（如果启用）
+    if (props.useFileFirst) {
+      const fileSuccess = await fetchFromFile()
+      if (fileSuccess) {
+        loading.value = false
+        // 仍然在后台获取最新数据更新缓存
+        setTimeout(() => {
+          fetchFromAPI()
+          fetchOhosRelease()
+        }, 100)
+        return
+      }
+    }
+    
+    // 2. 文件获取失败或未启用，尝试从缓存获取
     const cachedData = getCachedData(props.githubRepo, props.useLatestRelease)
     if (cachedData) {
       usingCache.value = true
@@ -446,14 +501,13 @@ const fetchLatestRelease = async () => {
       // 仍然在后台获取最新数据更新缓存
       setTimeout(() => {
         fetchFromAPI()
+        fetchOhosRelease()
       }, 100)
     } else {
-      // 2. 缓存不存在或已过期，从 API 获取
+      // 3. 缓存不存在或已过期，从 API 获取
       await fetchFromAPI()
+      fetchOhosRelease()
     }
-    
-    // 3. 获取鸿蒙仓库的release信息（并行进行）
-    fetchOhosRelease()
     
   } catch (err) {
     error.value = err.message
