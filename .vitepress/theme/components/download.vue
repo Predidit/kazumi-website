@@ -31,7 +31,7 @@
             <span class="slider"></span>
           </label>
           <span class="mirror-label">
-            {{ useMirror ? '使用镜像下载(OHOS不可用)' : '使用 GitHub 下载' }}
+            使用镜像下载(OHOS不可用)
           </span>
         </div>
       </div>
