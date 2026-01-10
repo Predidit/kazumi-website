@@ -68,24 +68,26 @@
         </div>
       </div>
       
+      <!-- 重新组织发布信息部分 -->
       <div v-if="showReleaseInfo" class="release-info">
-        <div class="release-info-header">
+        <div class="version-info-wrapper">
           <div class="version-info">
             <strong>主仓库版本:</strong> {{ currentTag }}
           </div>
-          <a
-            v-if="githubUrl"
-            :href="githubUrl"
-            class="github-link"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            查看所有版本 →
-          </a>
+          <div v-if="ohosTag" class="ohos-version">
+            <strong>鸿蒙分支版本:</strong> {{ ohosTag }}
+          </div>
         </div>
-      <div v-if="ohosTag" class="ohos-version">
-        <strong>鸿蒙分支版本:</strong> {{ ohosTag }}
-      </div>
+        
+        <a
+          v-if="githubUrl"
+          :href="githubUrl"
+          class="github-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          查看所有版本 →
+        </a>
       </div>
     </template>
   </div>
@@ -426,8 +428,8 @@ onMounted(() => {
 
 <style scoped>
 .github-release-download {
-  margin: 2rem auto;
-  padding: 1.75rem 1.5rem;
+  margin: 1rem auto;
+  padding: 1.25rem 1.5rem;
   background: var(--vp-c-bg-soft);
   border-radius: 12px;
   border: 1px solid var(--vp-c-border);
@@ -435,8 +437,9 @@ onMounted(() => {
   width: calc(100% - 2rem);
   box-sizing: border-box;
 }
+
 .download-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   text-align: center;
 }
 
@@ -471,7 +474,6 @@ onMounted(() => {
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
 }
-
 
 @keyframes spin {
   to { transform: rotate(360deg); }
@@ -582,22 +584,21 @@ onMounted(() => {
   transform: translateY(-1px);
 }
 
-/* 发布信息 */
+/* 发布信息 - 重新设计 */
 .release-info {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: flex-start;
   padding-top: 1rem;
   border-top: 1px solid var(--vp-c-border);
   font-size: 0.9rem;
   color: var(--vp-c-text-2);
 }
 
-.release-info-header {
+.version-info-wrapper {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .version-info {
@@ -609,6 +610,9 @@ onMounted(() => {
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 1rem;
 }
 
 .github-link:hover {
@@ -622,7 +626,7 @@ onMounted(() => {
 
 /* 镜像开关 */
 .mirror-switch {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   padding: 0.75rem 1rem;
   background: var(--vp-c-bg-soft);
   border-radius: 8px;
@@ -699,14 +703,53 @@ input:checked + .slider:before {
     justify-content: flex-start;
   }
   
-  .release-info-header {
+  .release-info {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 1rem;
   }
   
   .github-link {
-    align-self: flex-start;
+    margin-left: 0;
+    order: 3;
+    text-align: left;
+    padding: 0;
+    background: transparent;
+    border: none;
+    margin-top: 0;
+    width: auto;
+  }
+  
+  .github-link:hover {
+    background: transparent;
+    border-color: transparent;
+    text-decoration: underline;
+  }
+  
+  .version-info-wrapper {
+    order: 1;
+    width: 100%;
+  }
+}
+
+/* 小屏幕手机优化 */
+@media (max-width: 480px) {
+  .github-release-download {
+    padding: 1rem;
+  }
+  
+  .download-item {
+    padding: 0.75rem;
+  }
+  
+  .download-links {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .download-link {
+    width: 100%;
+    text-align: center;
   }
 }
 </style>
