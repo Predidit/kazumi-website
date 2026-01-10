@@ -11,6 +11,9 @@ on:
     paths:
       - '.github/workflows/fetch-releases.yaml'
 
+permissions:
+  contents: write
+
 jobs:
   fetch-releases:
     runs-on: ubuntu-latest
