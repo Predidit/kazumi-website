@@ -166,7 +166,7 @@ const defaultPlatforms = [
   {
     id: 'android',
     name: 'Android',
-    description: 'Android 10 及以上',
+    description: '适用于 Android 10 及以上',
     links: [
       { label: 'APK', url: 'Kazumi_android_{tag}.apk' },
       { label: 'F-Droid', url: 'https://f-droid.org/packages/com.predidit.kazumi', external: true }
@@ -175,7 +175,7 @@ const defaultPlatforms = [
   {
     id: 'ios',
     name: 'iOS',
-    description: 'iOS/iPadOS 13 及以上',
+    description: '适用于 iOS/iPadOS 13 及以上',
     links: [
       { label: 'IPA', url: 'Kazumi_ios_{tag}_no_sign.ipa' }
     ]
@@ -183,7 +183,7 @@ const defaultPlatforms = [
   {
     id: 'windows',
     name: 'Windows',
-    description: 'Windows 10 及以上',
+    description: '适用于 Windows 10 及以上',
     links: [
       { label: 'MSIX', url: 'Kazumi_windows_{tag}.msix' },
       { label: '便携版', url: 'Kazumi_windows_{tag}.zip' }
@@ -192,7 +192,7 @@ const defaultPlatforms = [
   {
     id: 'mac',
     name: 'macOS',
-    description: 'MacOS 10.15 及以上',
+    description: '适用于 MacOS 10.15 及以上',
     links: [
       { label: 'DMG', url: 'Kazumi_macos_{tag}.dmg' }
     ]
@@ -210,7 +210,7 @@ const defaultPlatforms = [
   {
     id: 'ohos',
     name: 'OHOS',
-    description: 'HarmonyOS NEXT',
+    description: '适用于 HarmonyOS NEXT',
     repo: props.ohosRepo,
     useOhosTag: true,
     links: [
