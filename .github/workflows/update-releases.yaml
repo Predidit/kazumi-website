@@ -1,0 +1,107 @@
+name: Update Release Tags
+
+on:
+  # 定时触发：每2天运行一次，确保 tag 保持最新
+  schedule:
+    - cron: '0 0 */2 * *'
+  
+  workflow_dispatch:
+
+jobs:
+  update-releases:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Fetch latest release tags
+        id: fetch-tags
+        run: |
+          # 获取 Kazumi 主仓库的最新 release
+          KAZUMI_RESPONSE=$(curl -s -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/Predidit/Kazumi/releases/latest)
+          KAZUMI_TAG=$(echo "$KAZUMI_RESPONSE" | grep '"tag_name"' | cut -d '"' -f 4)
+          KAZUMI_URL=$(echo "$KAZUMI_RESPONSE" | grep '"html_url"' | cut -d '"' -f 4)
+          KAZUMI_TIMESTAMP=$(echo "$KAZUMI_RESPONSE" | grep '"published_at"' | cut -d '"' -f 4)
+          
+          # 获取鸿蒙分支仓库的最新 release
+          OHOS_RESPONSE=$(curl -s -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/ErBWs/Kazumi/releases/latest)
+          OHOS_TAG=$(echo "$OHOS_RESPONSE" | grep '"tag_name"' | cut -d '"' -f 4)
+          OHOS_URL=$(echo "$OHOS_RESPONSE" | grep '"html_url"' | cut -d '"' -f 4)
+          OHOS_TIMESTAMP=$(echo "$OHOS_RESPONSE" | grep '"published_at"' | cut -d '"' -f 4)
+          
+          # 如果获取失败，使用默认值
+          if [ -z "$KAZUMI_TAG" ]; then
+            KAZUMI_TAG="v1.0.0"
+            KAZUMI_URL="https://github.com/Predidit/Kazumi/releases"
+            KAZUMI_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          fi
+          
+          if [ -z "$OHOS_TAG" ]; then
+            OHOS_TAG="v1.0.0"
+            OHOS_URL="https://github.com/ErBWs/Kazumi/releases"
+            OHOS_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          fi
+          
+          # 输出到环境变量供后续步骤使用
+          echo "KAZUMI_TAG=$KAZUMI_TAG" >> $GITHUB_OUTPUT
+          echo "KAZUMI_URL=$KAZUMI_URL" >> $GITHUB_OUTPUT
+          echo "KAZUMI_TIMESTAMP=$KAZUMI_TIMESTAMP" >> $GITHUB_OUTPUT
+          echo "OHOS_TAG=$OHOS_TAG" >> $GITHUB_OUTPUT
+          echo "OHOS_URL=$OHOS_URL" >> $GITHUB_OUTPUT
+          echo "OHOS_TIMESTAMP=$OHOS_TIMESTAMP" >> $GITHUB_OUTPUT
+          
+          # 打印日志
+          echo "Kazumi Tag: $KAZUMI_TAG"
+          echo "Ohos Tag: $OHOS_TAG"
+
+      - name: Create releases.json
+        run: |
+          cat > src/public/releases.json << EOF
+          {
+            "kazumi": {
+              "tag": "${{ steps.fetch-tags.outputs.KAZUMI_TAG }}",
+              "timestamp": "${{ steps.fetch-tags.outputs.KAZUMI_TIMESTAMP }}",
+              "url": "${{ steps.fetch-tags.outputs.KAZUMI_URL }}"
+            },
+            "ohos": {
+              "tag": "${{ steps.fetch-tags.outputs.OHOS_TAG }}",
+              "timestamp": "${{ steps.fetch-tags.outputs.OHOS_TIMESTAMP }}",
+              "url": "${{ steps.fetch-tags.outputs.OHOS_URL }}"
+            }
+          }
+          EOF
+          
+          # 打印生成的文件内容
+          cat src/public/releases.json
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git add src/public/releases.json
+          if git diff --cached --quiet; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push if changes exist
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "chore: update release tags"
+          git push
