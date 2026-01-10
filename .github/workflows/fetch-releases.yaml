@@ -1,0 +1,90 @@
+name: Fetch Latest Releases
+
+on:
+  schedule:
+    # 每天运行一次
+    - cron: '0 0 */1 * *'
+  workflow_dispatch:  # 允许手动触发
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/fetch-releases.yaml'
+
+jobs:
+  fetch-releases:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+
+      - name: Fetch Kazumi latest release
+        id: fetch-kazumi
+        run: |
+          echo "Fetching Kazumi latest release..."
+          KAZUMI_TAG=$(curl -s \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/Predidit/Kazumi/releases/latest \
+            | jq -r '.tag_name')
+          
+          if [ -z "$KAZUMI_TAG" ] || [ "$KAZUMI_TAG" = "null" ]; then
+            echo "Failed to fetch Kazumi tag, using fallback"
+            KAZUMI_TAG="v1.0.0"
+          fi
+          
+          echo "KAZUMI_TAG=$KAZUMI_TAG" >> $GITHUB_OUTPUT
+          echo "Kazumi latest tag: $KAZUMI_TAG"
+
+      - name: Fetch OHOS latest release
+        id: fetch-ohos
+        run: |
+          echo "Fetching OHOS latest release..."
+          OHOS_TAG=$(curl -s \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/ErBWs/Kazumi/releases/latest \
+            | jq -r '.tag_name')
+          
+          if [ -z "$OHOS_TAG" ] || [ "$OHOS_TAG" = "null" ]; then
+            echo "Failed to fetch OHOS tag, using fallback"
+            OHOS_TAG="v1.0.0"
+          fi
+          
+          echo "OHOS_TAG=$OHOS_TAG" >> $GITHUB_OUTPUT
+          echo "OHOS latest tag: $OHOS_TAG"
+
+      - name: Create releases.json
+        run: |
+          cat > src/public/releases.json << EOF
+          {
+            "kazumi": {
+              "tag": "${{ steps.fetch-kazumi.outputs.KAZUMI_TAG }}",
+              "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+              "repo": "Predidit/Kazumi"
+            },
+            "ohos": {
+              "tag": "${{ steps.fetch-ohos.outputs.OHOS_TAG }}",
+              "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+              "repo": "ErBWs/Kazumi"
+            }
+          }
+          EOF
+          
+          echo "Generated releases.json:"
+          cat src/public/releases.json
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          if git diff --quiet src/public/releases.json; then
+            echo "No changes to releases.json"
+          else
+            echo "Changes detected, committing..."
+            git add src/public/releases.json
+            git commit -m "chore: update latest release tags [skip ci]"
+            git push
+          fi
