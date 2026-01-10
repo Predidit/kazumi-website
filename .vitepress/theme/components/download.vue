@@ -217,7 +217,7 @@ const defaultPlatforms = [
   {
     id: 'ios',
     name: 'iOS',
-    description: '适用于 iOS/iPadOS 13 及以上 (需要自签名)',
+    description: '适用于 iOS/iPadOS 13 及以上',
     links: [
       {
         label: '下载 IPA',
@@ -274,7 +274,7 @@ const defaultPlatforms = [
   {
     id: 'ohos',
     name: 'OHOS',
-    description: '适用于 HarmonyOS NEXT (需要侧载)',
+    description: '适用于 HarmonyOS NEXT',
     repo: props.ohosRepo, // 使用单独的鸿蒙仓库
     useOhosTag: true, // 使用鸿蒙分支的tag
     links: [
