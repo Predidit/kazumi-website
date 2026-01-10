@@ -20,6 +20,8 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Setup jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Fetch Kazumi latest release
         id: fetch-kazumi
