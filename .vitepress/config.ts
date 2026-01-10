@@ -28,6 +28,7 @@ export default defineConfig({
     nav: [
       { text: '主页', link: '/' },
       { text: '文档', link: '/docs/intro/what-is-kazumi' },
+      { text: '下载', link: '/download'},
       {
         text: '关于',
         items: [
