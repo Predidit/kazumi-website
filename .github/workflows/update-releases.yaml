@@ -47,13 +47,21 @@ jobs:
             OHOS_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           fi
           
-          # 输出到环境变量供后续步骤使用
-          echo "KAZUMI_TAG=$KAZUMI_TAG" >> $GITHUB_OUTPUT
-          echo "KAZUMI_URL=$KAZUMI_URL" >> $GITHUB_OUTPUT
-          echo "KAZUMI_TIMESTAMP=$KAZUMI_TIMESTAMP" >> $GITHUB_OUTPUT
-          echo "OHOS_TAG=$OHOS_TAG" >> $GITHUB_OUTPUT
-          echo "OHOS_URL=$OHOS_URL" >> $GITHUB_OUTPUT
-          echo "OHOS_TIMESTAMP=$OHOS_TIMESTAMP" >> $GITHUB_OUTPUT
+          # 清理变量：移除可能的换行符和特殊字符
+          KAZUMI_TAG=$(echo "$KAZUMI_TAG" | tr -d '\n\r')
+          KAZUMI_URL=$(echo "$KAZUMI_URL" | tr -d '\n\r')
+          KAZUMI_TIMESTAMP=$(echo "$KAZUMI_TIMESTAMP" | tr -d '\n\r')
+          OHOS_TAG=$(echo "$OHOS_TAG" | tr -d '\n\r')
+          OHOS_URL=$(echo "$OHOS_URL" | tr -d '\n\r')
+          OHOS_TIMESTAMP=$(echo "$OHOS_TIMESTAMP" | tr -d '\n\r')
+          
+          # 输出到环境变量供后续步骤使用 - 使用正确的 GitHub Actions 输出语法
+          echo "KAZUMI_TAG=${KAZUMI_TAG}" >> $GITHUB_OUTPUT
+          echo "KAZUMI_URL=${KAZUMI_URL}" >> $GITHUB_OUTPUT
+          echo "KAZUMI_TIMESTAMP=${KAZUMI_TIMESTAMP}" >> $GITHUB_OUTPUT
+          echo "OHOS_TAG=${OHOS_TAG}" >> $GITHUB_OUTPUT
+          echo "OHOS_URL=${OHOS_URL}" >> $GITHUB_OUTPUT
+          echo "OHOS_TIMESTAMP=${OHOS_TIMESTAMP}" >> $GITHUB_OUTPUT
           
           # 打印日志
           echo "Kazumi Tag: $KAZUMI_TAG"
