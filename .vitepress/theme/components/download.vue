@@ -55,15 +55,13 @@
           
           <div class="download-links">
             <a
-              v-for="link in platform.links"
-              :key="link.type"
+              v-for="(link, index) in platform.links"
+              :key="index"
               :href="getDownloadUrl(platform, link)"
               class="download-link"
               target="_blank"
               rel="noopener noreferrer"
-              @click="trackDownload(platform.id, link.type)"
             >
-              <span class="link-icon" v-html="getLinkIcon(link.type)"></span>
               <span class="link-text">{{ link.label }}</span>
             </a>
           </div>
@@ -206,12 +204,10 @@ const defaultPlatforms = [
     description: '适用于 Android 10 及以上',
     links: [
       {
-        type: 'apk',
         label: '下载 APK',
         url: 'Kazumi_android_{tag}.apk'
       },
       {
-        type: 'fdroid',
         label: 'F-Droid',
         url: 'https://f-droid.org/packages/com.predidit.kazumi',
         external: true // 标记为外部链接
@@ -224,7 +220,6 @@ const defaultPlatforms = [
     description: '适用于 iOS/iPadOS 13 及以上 (需要自签名)',
     links: [
       {
-        type: 'ipa',
         label: '下载 IPA',
         url: 'Kazumi_ios_{tag}_no_sign.ipa'
       }
@@ -236,12 +231,10 @@ const defaultPlatforms = [
     description: '适用于 Windows 10 及以上',
     links: [
       {
-        type: 'msix',
         label: 'MSIX 安装包',
         url: 'Kazumi_windows_{tag}.msix'
       },
       {
-        type: 'zip',
         label: '便携版 (ZIP)',
         url: 'Kazumi_windows_{tag}.zip'
       }
@@ -253,7 +246,6 @@ const defaultPlatforms = [
     description: '适用于 MacOS 10.15 及以上',
     links: [
       {
-        type: 'dmg',
         label: '下载 DMG',
         url: 'Kazumi_macos_{tag}.dmg'
       }
@@ -265,17 +257,14 @@ const defaultPlatforms = [
     description: '适用于 Linux (实验性)',
     links: [
       {
-        type: 'deb',
         label: 'DEB 包',
         url: 'Kazumi_linux_{tag}_amd64.deb'
       },
       {
-        type: 'tar',
         label: '便携版 (TAR.GZ)',
         url: 'Kazumi_linux_{tag}_amd64.tar.gz'
       },
       {
-        type: 'flathub',
         label: 'Flathub',
         url: 'https://flathub.org/en/apps/io.github.Predidit.Kazumi',
         external: true
@@ -290,7 +279,6 @@ const defaultPlatforms = [
     useOhosTag: true, // 使用鸿蒙分支的tag
     links: [
       {
-        type: 'hap',
         label: '下载 HAP',
         url: 'Kazumi_ohos_{tag}_unsigned.hap'
       }
@@ -347,21 +335,6 @@ const getPlatformIcon = (platformId) => {
   return icons[platformId] || '📦'
 }
 
-const getLinkIcon = (linkType) => {
-  const icons = {
-    apk: '📱',
-    fdroid: '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="currentColor" d="M20.472 10.081H3.528a1.59 1.59 0 0 0-1.589 1.589v10.59a1.59 1.59 0 0 0 1.589 1.589h16.944a1.59 1.59 0 0 0 1.589-1.589V11.67a1.59 1.59 0 0 0-1.589-1.589M12 22.525c-3.066 0-5.56-2.494-5.56-5.56s2.494-5.56 5.56-5.56s5.56 2.494 5.56 5.56s-2.494 5.56-5.56 5.56m0-10.114c-2.511 0-4.554 2.043-4.554 4.554S9.489 21.519 12 21.519s4.554-2.043 4.554-4.554s-2.043-4.554-4.554-4.554m0 7.863a3.32 3.32 0 0 1-3.221-2.568h1.67c.275.581.859.979 1.551.979c.96 0 1.721-.761 1.721-1.721S12.96 15.243 12 15.243a1.7 1.7 0 0 0-1.493.874H8.805A3.32 3.32 0 0 1 12 13.655a3.32 3.32 0 0 1 3.309 3.309A3.32 3.32 0 0 1 12 20.274M23.849.396l-.002.003l-.006-.005l.004-.004a.67.67 0 0 0-.519-.238a.65.65 0 0 0-.512.259l-1.818 2.353a1.6 1.6 0 0 0-.523-.095H3.528c-.184 0-.358.038-.523.095L1.187.41A.657.657 0 0 0 .156.389L.16.393L.153.399L.151.396a.66.66 0 0 0-.012.824l1.909 2.471a1.6 1.6 0 0 0-.108.566v3.707a1.59 1.59 0 0 0 1.589 1.589h16.944a1.59 1.59 0 0 0 1.589-1.589V4.257c0-.2-.041-.39-.109-.566l1.909-2.471a.66.66 0 0 0-.013-.824M6.904 8.228a1.787 1.787 0 1 1 0-3.574a1.787 1.787 0 0 1 0 3.574m10.325 0a1.787 1.787 0 1 1 0-3.574a1.787 1.787 0 0 1 0 3.574"/></svg>',
-    ipa: '📱',
-    msix: '🪟',
-    zip: '📦',
-    dmg: '🍎',
-    deb: '🐧',
-    flathub: '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="currentColor" d="M6.068 0a6 6 0 0 0-6 6a6 6 0 0 0 6 6a6 6 0 0 0 5.998-6a6 6 0 0 0-5.998-6m9.15.08a1.656 1.656 0 0 0-1.654 1.656v8.15a1.656 1.656 0 0 0 2.483 1.434l7.058-4.074a1.656 1.656 0 0 0 0-2.869l-1.044-.604l-6.014-3.47a1.66 1.66 0 0 0-.828-.223Zm3.575 13.135a.815.815 0 0 0-.816.818v2.453h-2.454a.817.817 0 1 0 0 1.635h2.454v2.453a.817.817 0 1 0 1.635 0v-2.453h2.452a.817.817 0 1 0 0-1.635h-2.453v-2.453a.817.817 0 0 0-.818-.818M2.865 13.5a2.794 2.794 0 0 0-2.799 2.8v4.9c0 1.55 1.248 2.8 2.8 2.8h4.9c1.55 0 2.8-1.25 2.8-2.8v-4.9c0-1.55-1.25-2.8-2.8-2.8Z"/></svg>',
-    tar: '📦',
-    hap: '📱'
-  }
-  return icons[linkType] || '⬇️'
-}
 
 // 从文件获取release信息
 const fetchFromFile = async () => {
@@ -590,9 +563,6 @@ onMounted(() => {
 }
 
 .download-link {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   padding: 0.5rem 1rem;
   background: var(--vp-c-bg-soft);
   border: 1px solid var(--vp-c-border);
@@ -610,14 +580,6 @@ onMounted(() => {
   border-color: var(--vp-c-brand);
   color: var(--vp-c-brand);
   transform: translateY(-1px);
-}
-
-.link-icon {
-  font-size: 1rem;
-}
-
-.link-text {
-  line-height: 1;
 }
 
 /* 发布信息 */
