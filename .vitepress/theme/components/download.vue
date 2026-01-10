@@ -20,9 +20,26 @@
     
     <!-- 正常状态 -->
     <template v-else>
+      <!-- 镜像下载开关 -->
+      <div v-if="showMirrorSwitch && !loading && !error" class="mirror-switch">
+        <div class="mirror-control">
+          <label class="switch">
+            <input
+              type="checkbox"
+              :checked="useMirror"
+              @change="useMirror = !useMirror"
+            >
+            <span class="slider"></span>
+          </label>
+          <span class="mirror-label">
+            {{ useMirror ? '使用镜像下载(OHOS不可用)' : '使用 GitHub 下载' }}
+          </span>
+        </div>
+      </div>
+      
       <div class="download-list">
-        <div 
-          v-for="platform in platforms" 
+        <div
+          v-for="platform in platforms"
           :key="platform.id"
           class="download-item"
         >
@@ -59,9 +76,9 @@
           <div class="version-info">
             <strong>主仓库版本:</strong> {{ currentTag }}
           </div>
-          <a 
-            v-if="githubUrl" 
-            :href="githubUrl" 
+          <a
+            v-if="githubUrl"
+            :href="githubUrl"
             class="github-link"
             target="_blank"
             rel="noopener noreferrer"
@@ -117,6 +134,20 @@ const props = defineProps({
     default: true
   },
   
+  // 镜像下载配置
+  enableMirror: {
+    type: Boolean,
+    default: false  // 默认不使用镜像
+  },
+  mirrorBaseUrl: {
+    type: String,
+    default: 'https://atomgit.com/gh_mirrors/ka/Kazumi/releases/download'
+  },
+  showMirrorSwitch: {
+    type: Boolean,
+    default: true  // 显示镜像开关
+  },
+  
   // 自定义平台配置
   customPlatforms: {
     type: Array,
@@ -151,6 +182,7 @@ const latestTag = ref('')
 const currentTag = ref(props.releaseTag || props.fallbackTag)
 const ohosTag = ref(props.ohosTag || props.releaseTag || props.fallbackTag)
 const usingCache = ref(false) // 标记是否使用缓存数据
+const useMirror = ref(props.enableMirror) // 是否使用镜像下载
 
 // 计算属性
 const githubUrl = computed(() => {
@@ -319,7 +351,16 @@ const getDownloadUrl = (platform, link) => {
   
   // 如果平台有单独的仓库配置，则使用该仓库
   const repo = platform.repo || props.githubRepo
-  const baseUrl = `https://github.com/${repo}/releases/download`
+  
+  // 确定基础URL：如果使用镜像且不是鸿蒙仓库，则使用镜像URL
+  let baseUrl
+  if (useMirror.value && !platform.useOhosTag && repo === props.githubRepo) {
+    // 只对主仓库使用镜像
+    baseUrl = props.mirrorBaseUrl
+  } else {
+    baseUrl = `https://github.com/${repo}/releases/download`
+  }
+  
   const url = link.url.replace('{tag}', tag)
   return `${baseUrl}/${tag}/${url}`
 }
@@ -706,6 +747,72 @@ onMounted(() => {
 
 .ohos-version {
   margin: 0;
+}
+
+/* 镜像开关 */
+.mirror-switch {
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--vp-c-bg-soft);
+  border-radius: 8px;
+  border: 1px solid var(--vp-c-border);
+}
+
+.mirror-control {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 18px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--vp-c-border);
+  transition: .4s;
+  border-radius: 18px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--vp-c-brand);
+}
+
+input:checked + .slider:before {
+  transform: translateX(18px);
+}
+
+.mirror-label {
+  font-size: 0.85rem;
+  color: var(--vp-c-text-2);
+  font-weight: 500;
 }
 
 /* 响应式设计 */
