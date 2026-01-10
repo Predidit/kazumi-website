@@ -48,7 +48,7 @@
             <div class="platform-title">
               <h4>{{ platform.name }}</h4>
               <p class="platform-description">{{ platform.description }}</p>
-              <p v-if="platform.id === 'ohos' && ohosTag !== currentTag" class="platform-tag-info">
+              <p v-if="platform.id === 'ohos'" class="platform-tag-info">
                 鸿蒙版本: {{ ohosTag }}
               </p>
             </div>
@@ -86,9 +86,9 @@
             查看所有版本 →
           </a>
         </div>
-        <div v-if="ohosTag && ohosTag !== currentTag" class="ohos-version">
-          <strong>鸿蒙分支版本:</strong> {{ ohosTag }}
-        </div>
+      <div v-if="ohosTag" class="ohos-version">
+        <strong>鸿蒙分支版本:</strong> {{ ohosTag }}
+      </div>
       </div>
     </template>
   </div>
