@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: 主流平台下载
-      link: https://github.com/Predidit/Kazumi/releases/latest
+      link: /download
     - theme: alt
       text: HarmonyOS 下载
       link: https://github.com/ErBWs/Kazumi/releases/latest
