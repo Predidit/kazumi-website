@@ -74,6 +74,25 @@
         </div>
       </div>
     </template>
+    
+    <!-- 镜像开关（放在容器最下面） -->
+    <div v-if="showMirrorToggle" class="mirror-toggle-section">
+      <label class="mirror-toggle">
+        <input 
+          type="checkbox" 
+          v-model="useMirror" 
+          @change="handleMirrorToggle"
+          class="mirror-toggle-input"
+        >
+        <span class="mirror-toggle-slider"></span>
+        <span class="mirror-toggle-label">
+          <span class="mirror-toggle-icon">🔄</span>
+          使用 AtomGit 镜像下载
+          <span v-if="useMirror" class="mirror-status-active">(已启用)</span>
+          <span v-else class="mirror-status-inactive">(已禁用)</span>
+        </span>
+      </label>
+    </div>
   </div>
 </template>
 
@@ -141,6 +160,36 @@ const props = defineProps({
   enableCache: {
     type: Boolean,
     default: true
+  },
+  
+  // 镜像配置
+  showMirrorToggle: {
+    type: Boolean,
+    default: true
+  },
+  defaultUseMirror: {
+    type: Boolean,
+    default: false // 默认不使用镜像
+  },
+  mirrorBaseUrl: {
+    type: String,
+    default: 'https://atomgit.com/gh_mirrors/ka/Kazumi/releases/download'
+  },
+  
+  // 显示下载源信息
+  showDownloadSourceInfo: {
+    type: Boolean,
+    default: true
+  },
+  
+  // 本地存储配置
+  saveMirrorPreference: {
+    type: Boolean,
+    default: true
+  },
+  storageKey: {
+    type: String,
+    default: 'github_download_use_mirror'
   }
 })
 
@@ -150,7 +199,8 @@ const error = ref(null)
 const latestTag = ref('')
 const currentTag = ref(props.releaseTag || props.fallbackTag)
 const ohosTag = ref(props.ohosTag || props.releaseTag || props.fallbackTag)
-const usingCache = ref(false) // 标记是否使用缓存数据
+const usingCache = ref(false)
+const useMirror = ref(props.defaultUseMirror) // 镜像开关状态
 
 // 计算属性
 const githubUrl = computed(() => {
@@ -168,6 +218,43 @@ const apiUrl = computed(() => {
 const ohosApiUrl = computed(() => {
   return `https://api.github.com/repos/${props.ohosRepo}/releases/latest`
 })
+
+// 加载镜像偏好设置
+const loadMirrorPreference = () => {
+  if (!props.saveMirrorPreference) {
+    useMirror.value = props.defaultUseMirror
+    return
+  }
+  
+  try {
+    const saved = localStorage.getItem(props.storageKey)
+    if (saved !== null) {
+      useMirror.value = JSON.parse(saved)
+    } else {
+      useMirror.value = props.defaultUseMirror
+    }
+  } catch (error) {
+    useMirror.value = props.defaultUseMirror
+  }
+}
+
+// 保存镜像偏好设置
+const saveMirrorPreference = () => {
+  if (!props.saveMirrorPreference) return
+  
+  try {
+    localStorage.setItem(props.storageKey, JSON.stringify(useMirror.value))
+  } catch (error) {
+    // 忽略存储错误
+  }
+}
+
+// 处理镜像开关变化
+const handleMirrorToggle = () => {
+  saveMirrorPreference()
+  // 触发一个事件，让父组件知道设置已更改
+  emit('mirrorToggle', useMirror.value)
+}
 
 // 生成缓存键
 const getCacheKey = (repo, isLatest = true) => {
@@ -317,7 +404,13 @@ const getDownloadUrl = (platform, link) => {
     tag = ohosTag.value
   }
   
-  // 如果平台有单独的仓库配置，则使用该仓库
+  // 如果使用镜像且不是鸿蒙分支
+  if (useMirror.value && !platform.useOhosTag) {
+    const url = link.url.replace('{tag}', tag)
+    return `${props.mirrorBaseUrl}/${tag}/${url}`
+  }
+  
+  // 否则使用GitHub链接
   const repo = platform.repo || props.githubRepo
   const baseUrl = `https://github.com/${repo}/releases/download`
   const url = link.url.replace('{tag}', tag)
@@ -329,8 +422,7 @@ const getPlatformIcon = (platformId) => {
     android: '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M18.44 5.559q-1.015 1.748-2.028 3.498q-.055-.023-.111-.043a12.1 12.1 0 0 0-8.68.033C7.537 8.897 5.868 6.026 5.6 5.56a1 1 0 0 0-.141-.19a1.104 1.104 0 0 0-1.768 1.298c1.947 3.37-.096-.216 1.948 3.36c.017.03-.495.263-1.393 1.017C2.9 12.176.452 14.772 0 18.99h24a11.7 11.7 0 0 0-.746-3.068a12.1 12.1 0 0 0-2.74-4.184a12 12 0 0 0-2.131-1.687c.66-1.122 1.312-2.256 1.965-3.385a1.11 1.11 0 0 0-.008-1.12a1.1 1.1 0 0 0-.852-.532c-.522-.054-.939.313-1.049.545m-.04 8.46c.395.593.324 1.331-.156 1.65c-.480.32-1.188.1-1.582-.493s-.324-1.33.156-1.65c.473-.316 1.182-.11 1.582.494m-11.193-.492c.48.32.55 1.058.156 1.65c-.394.593-1.103.815-1.584.495c-.48-.32-.55-1.058-.156-1.65c.4-.603 1.109-.811 1.584-.495"/></svg>',
     ios: '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M1.1 6.05c-.614 0-1.1.48-1.1 1.08a1.08 1.08 0 0 0 1.1 1.08c.62 0 1.11-.48 1.11-1.08S1.72 6.05 1.1 6.05m7.61.02c-3.36 0-5.46 2.29-5.46 5.93c0 3.67 2.1 5.95 5.46 5.95c3.34 0 5.45-2.28 5.45-5.95c0-3.64-2.11-5.93-5.45-5.93m10.84 0c-2.5 0-4.28 1.38-4.28 3.43c0 1.63 1.01 2.65 3.13 3.14l1.49.36c1.45.33 2.04.81 2.04 1.64c0 .96-.97 1.64-2.35 1.64c-1.41 0-2.47-.69-2.58-1.75h-2c.08 2.12 1.82 3.42 4.46 3.42c2.79 0 4.54-1.37 4.54-3.55c0-1.71-1-2.68-3.32-3.21l-1.33-.3c-1.41-.34-1.99-.79-1.99-1.55c0-.96.88-1.6 2.18-1.6c1.31 0 2.21.65 2.31 1.72h1.96c-.05-2.02-1.72-3.39-4.26-3.39M8.71 7.82c2.04 0 3.35 1.63 3.35 4.18c0 2.57-1.31 4.2-3.35 4.2c-2.06 0-3.36-1.63-3.36-4.2c0-2.55 1.3-4.18 3.36-4.18M.111 9.31v8.45H2.1V9.31z"/></svg>',
     windows: '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M0 0h11.377v11.372H0Zm12.623 0H24v11.372H12.623ZM0 12.623h11.377V24H0Zm12.623 0H24V24H12.623"/></svg>',
-    mac: '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M0 14.727h.941v-2.453c0-.484.318-.835.771-.835c.439 0 .71.276.71.722v2.566h.915V12.25c0-.48.31-.812.764-.812c.46 0 .718.28.718.77v2.518h.94v-2.748c0-.801-.517-1.334-1.307-1.334c-.578 0-1.054.31-1.247.805h-.023c-.147-.514-.552-.805-1.118-.805c-.545 0-.968.306-1.142.771H.903v-.695H0v4.006zm7.82-.646c-.408 0-.68-.208-.68-.537c0-.318.26-.522.714-.552l.926-.057v.307c0 .483-.427.839-.96.839m-.284.71c.514 0 1.017-.268 1.248-.703h.018v.639h.908v-2.76c0-.804-.647-1.33-1.64-1.33c-1.021 0-1.66.537-1.701 1.285h.873c.06-.332.344-.548.79-.548c.464 0 .748.242.748.662v.287l-1.058.06c-.976.061-1.524.488-1.524 1.199c0 .721.564 1.209 1.338 1.209m6.305-2.642c-.065-.843-.719-1.512-1.777-1.512c-1.164 0-1.92.805-1.92 2.087c0 1.3.756 2.082 1.928 2.082c1.005 0 1.697-.590 1.772-1.485h-.888c-.087.453-.397.725-.873.725c-.597 0-.982-.483-.982-1.322c0-.824.381-1.323.975-1.323c.502 0 .8.321.876.748zm2.906-2.967c-1.591 0-2.589 1.085-2.589 2.82s.998 2.816 2.59 2.816c1.586 0 2.584-1.081 2.584-2.816s-.997-2.82-2.585-2.82m0 .832c.971 0 1.591.77 1.591 1.988c0 1.213-.62 1.984-1.59 1.984c-.976 0-1.592-.770-1.592-1.984c0-1.217.616-1.988 1.591-1.988m2.982 3.178c.042 1.006.866 1.626 2.12 1.626c1.32 0 2.151-.65 2.151-1.686c0-.813-.469-1.27-1.576-1.523l-.627-.144c-.67-.158-.945-.37-.945-.733c0-.453.415-.756 1.032-.756c.623 0 1.05.306 1.096.817h.93c-.023-.96-.817-1.61-2.019-1.61c-1.187 0-2.03.653-2.03 1.62c0 .78.477 1.263 1.482 1.494l.707.166c.688.163.967.39.967.782c0 .454-.457.779-1.115.779c-.665 0-1.167-.329-1.228-.832z"/></svg>',
-    linux: '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M12.504 0q-.232 0-.48.021c-4.226.333-3.105 4.807-3.17 6.298c-.076 1.092-.3 1.953-1.05 3.02c-.885 1.051-2.127 2.75-2.716 4.521c-.278.832-.41 1.684-.287 2.489a.4.4 0 0 0-.11.135c-.26.268-.45.6-.663.839c-.199.199-.485.267-.797.4c-.313.136-.658.269-.864.68c-.09.189-.136.394-.132.602c0 .199.027.4.055.536c.058.399.116.728.04.97c-.249.68-.28 1.145-.106 1.484c.174.334.535.47.94.601c.81.2 1.91.135 2.774.6c.926.466 1.866.67 2.616.47c.526-.116.97-.464 1.208-.946c.587-.003 1.23-.269 2.26-.334c.699-.058 1.574.267 2.577.2c.025.134.063.198.114.333l.003.003c.391.778 1.113 1.132 1.884 1.071s1.592-.536 2.257-1.306c.631-.765 1.683-1.084 2.378-1.503c.348-.199.629-.469.649-.853c.023-.4-.2-.811-.714-1.376v-.097l-.003-.003c-.17-.2-.25-.535-.338-.926c-.085-.401-.182-.786-.492-1.046h-.003c-.059-.054-.123-.067-.188-.135a.36.36 0 0 0-.19-.064c.431-1.278.264-2.55-.173-3.694c-.533-1.41-1.465-2.638-2.175-3.483c-.796-1.005-1.576-1.957-1.56-3.368c.026-2.152.236-6.133-3.544-6.139m.529 3.405h.013c.213 0 .396.062.584.198c.19.135.33.332.438.533c.105.259.158.459.166.724c0-.02.006-.04.006-.06v.105l-.004-.021l-.004-.024a1.8 1.8 0 0 1-.15.706a.95.95 0 0 1-.213.335a1 1 0 0 0-.088-.042c-.104-.045-.198-.064-.284-.133a1.3 1.3 0 0 0-.22-.066c.05-.06.146-.133.183-.198q.08-.193.088-.402v-.02a1.2 1.2 0 0 0-.061-.4c-.045-.134-.101-.2-.183-.333c-.084-.066-.167-.132-.267-.132h-.016c-.093 0-.176.03-.262.132a.8.8 0 0 0-.205.334a1.2 1.2 0 0 0-.09.4v.019q.002.134.02.267c-.193-.067-.438-.135-.607-.202a2 2 0 0 1-.018-.2v-.02a1.8 1.8 0 0 1 .15-.768a1.08 1.08 0 0 1 .43-.533a1 1 0 0 1 .594-.2zm-2.962.059h.036c.142 0 .27.048.399.135c.146.129.264.288.344.465c.09.199.14.4.153.667v.004c.007.134.006.2-.002.266v.08c-.03.007-.056.018-.083.024c-.152.055-.274.135-.393.2q.018-.136.003-.267v-.015c-.012-.133-.04-.2-.082-.333a.6.6 0 0 0-.166-.267a.25.25 0 0 0-.183-.064h-.021c-.071.006-.13.04-.186.132a.55.55 0 0 0-.12.27a1 1 0 0 0-.023.33v.015c.012.135.037.2.08.334c.046.134.098.2.166.268q.014.014.034.024c-.07.057-.117.07-.176.136a.3.3 0 0 1-.131.068a2.6 2.6 0 0 1-.275-.402a1.8 1.8 0 0 1-.155-.667a1.8 1.8 0 0 1 .08-.668a1.4 1.4 0 0 1 .283-.535c.128-.133.26-.2.418-.2m1.37 1.706c.332 0 .733.065 1.216.399c.293.2.523.269 1.052.468h.003c.255.136.405.266.478.399v-.131a.57.57 0 0 1 .016.47c-.123.31-.516.643-1.063.842v.002c-.268.135-.501.333-.775.465c-.276.135-.588.292-1.012.267a1.1 1.1 0 0 1-.448-.067a4 4 0 0 1-.322-.198c-.195-.135-.363-.332-.612-.465v-.005h-.005c-.4-.246-.616-.512-.686-.71q-.104-.403.193-.6c.224-.135.38-.271.483-.336c.104-.074.143-.102.176-.131h.002v-.003c.169-.202.436-.47.839-.601c.139-.036.294-.065.466-.065zm2.8 2.142c.358 1.417 1.196 3.475 1.735 4.473c.286.534.855 1.659 1.102 3.024c.156-.005.33.018.513.064c.646-1.671-.546-3.467-1.089-3.966c-.22-.2-.232-.335-.123-.335c.59.534 1.365 1.572 1.646 2.757c.13.535.16 1.104.021 1.67c.067.028.135.06.205.067c1.032.534 1.413.938 1.23 1.537v-.043c-.06-.003-.12 0-.18 0h-.016c.151-.467-.182-.825-1.065-1.224c-.915-.4-1.646-.336-1.77.465c-.008.043-.013.066-.018.135c-.068.023-.139.053-.209.064c-.43.268-.662.669-.793 1.187c-.13.533-.17 1.156-.205 1.869v.003c-.02.334-.17.838-.319 1.35c-1.5 1.072-3.58 1.538-5.348.334a2.7 2.7 0 0 0-.402-.533a1.5 1.5 0 0 0-.275-.333c.182 0 .338-.03.465-.067a.62.62 0 0 0 .314-.334c.108-.267 0-.697-.345-1.163s-.931-.995-1.788-1.521c-.63-.4-.986-.87-1.15-1.396c-.165-.534-.143-1.085-.015-1.645c.245-1.07.873-2.11 1.274-2.763c.107-.065.037.135-.408.974c-.396.751-1.14 2.497-.122 3.854a8.1 8.1 0 0 1 .647-2.876c.564-1.278 1.743-3.504 1.836-5.268c.048.036.217.135.289.202c.218.133.38.333.59.465c.21.201.477.335.876.335q.058.005.11.006c.412 0 .73-.134.997-.268c.29-.134.52-.334.74-.4h.005c.467-.135.835-.402 1.044-.7zm2.185 8.958c.037.6.343 1.245.882 1.377c.588.134 1.434-.333 1.791-.765l.211-.01c.315-.007.577.01.847.268l.003.003c.208.199.305.53.391.876c.085.4.154.78.409 1.066c.486.527.645.906.636 1.14l.003-.007v.018l-.003-.012c-.015.262-.185.396-.498.595c-.63.401-1.746.712-2.457 1.57c-.618.737-1.37 1.14-2.036 1.191c-.664.053-1.237-.2-1.574-.898l-.005-.003c-.21-.4-.12-1.025.056-1.69c.176-.668.428-1.344.463-1.897c.037-.714.076-1.335.195-1.814c.12-.465.308-.797.641-.984l.045-.022zm-10.814.049h.01q.08 0 .157.014c.376.055.706.333 1.023.752l.91 1.664l.003.003c.243.533.754 1.064 1.189 1.637c.434.598.77 1.131.729 1.57v.006c-.057.744-.48 1.148-1.125 1.294c-.645.135-1.52.002-2.395-.464c-.968-.536-2.118-.469-2.857-.602q-.553-.1-.723-.4c-.11-.2-.113-.602.123-1.23v-.004l.002-.003c.117-.334.03-.752-.027-1.118c-.055-.401-.083-.71.043-.94c.16-.334.396-.4.69-.533c.294-.135.64-.202.915-.47h.002v-.002c.256-.268.445-.601.668-.838c.19-.201.38-.336.663-.336m7.159-9.074c-.435.201-.945.535-1.488.535c-.542 0-.97-.267-1.28-.466c-.154-.134-.28-.268-.373-.335c-.164-.134-.144-.333-.074-.333c.109.016.129.134.199.2c.096.066.215.2.36.333c.292.2.68.467 1.167.467c.485 0 1.053-.267 1.398-.466c.195-.135.445-.334.648-.467c.156-.136.149-.267.279-.267c.128.016.034.134-.147.332a8 8 0 0 1-.69.468zm-1.082-1.583V5.64c-.006-.02.013-.042.029-.05c.074-.043.18-.027.26.004c.063 0 .16.067.15.135c-.006.049-.085.066-.135.066c-.055 0-.092-.043-.141-.068c-.052-.018-.146-.008-.163-.065m-.551 0c-.02.058-.113.049-.166.066c-.047.025-.086.068-.14.068c-.05 0-.13-.02-.136-.068c-.01-.066.088-.133.15-.133c.08-.031.184-.047.259-.005c.019.009.036.03.03.05v.02h.003z"/></svg>',
+    mac: '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M0 14.727h.941v-2.453c0-.484.318-.835.771-.835c.439 0 .71.276.71.722v2.566h.915V12.25c0-.48.31-.812.764-.812c.46 0 .718.28.718.77v2.518h.94v-2.748c0-.801-.517-1.334-1.307-1.334c-.578 0-1.054.31-1.247.805h-.023c-.147-.514-.552-.805-1.118-.805c-.545 0-.968.306-1.142.771H.903v-.695H0v4.006zm7.82-.646c-.408 0-.68-.208-.68-.537c0-.318.26-.522.714-.552l.926-.057v.307c0 .483-.427.839-.96.839m-.284.71c.514 0 1.017-.268 1.248-.703h.018v.639h.908v-2.76c0-.804-.647-1.33-1.64-1.33c-1.021 0-1.66.537-1.701 1.285h.873c.06-.332.344-.548.79-.548c.464 0 .748.242.748.662v.287l-1.058.06c-.976.061-1.524.488-1.524 1.199c0 .721.564 1.209 1.338 1.209m6.305-2.642c-.065-.843-.719-1.512-1.777-1.512c-1.164 0-1.92.805-1.92 2.087c0 1.3.756 2.082 1.928 2.082c1.005 0 1.697-.59 1.772-1.485h-.888c-.087.453-.397.725-.873.725c-.597 0-.982-.483-.982-1.322c0-.824.381-1.323.975-1.323c.502 0 .8.321.876.748zm2.906-2.967c-1.591 0-2.589 1.085-2.589 2.82s.998 2.816 2.59 2.816c1.586 0 2.584-1.081 2.584-2.816s-.997-2.82-2.585-2.82m0 .832c.971 0 1.591.77 1.591 1.988c0 1.213-.62 1.984-1.59 1.984c-.976 0-1.592-.77-1.592-1.984c0-1.217.616-1.988 1.591-1.988m2.982 3.178c.042 1.006.866 1.626 2.12 1.626c1.32 0 2.151-.65 2.151-1.686c0-.813-.469-1.27-1.576-1.523l-.627-.144c-.67-.158-.945-.37-.945-.733c0-.453.415-.756 1.032-.756c.623 0 1.05.306 1.096.817h.93c-.023-.96-.817-1.61-2.019-1.61c-1.187 0-2.03.653-2.03 1.62c0 .78.477 1.263 1.482 1.494l.707.166c.688.163.967.39.967.782c0 .454-.457.779-1.115.779c-.665 0-1.167-.329-1.228-.832z"/></svg>',
     ohos: '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M1.861 0H3.59v3.548h3.861V0H9.19v8.883H7.458V5.136H3.59v3.746H1.858Zm11.993 0h1.706l2.809 4.7h.1L21.278 0h1.719v8.883h-1.719v-4.38l.1-1.489h-.1l-2.334 3.983h-1.039l-2.347-3.983h-.1l.1 1.489v4.38h-1.706Zm4.702 21.648a4 4 0 0 1-1.154-.161a3.4 3.4 0 0 1-1.01-.484a3.5 3.5 0 0 1-.8-.782a3.8 3.8 0 0 1-.538-1.092l1.666-.62a2.4 2.4 0 0 0 .643 1.116a1.68 1.68 0 0 0 1.207.434a2.2 2.2 0 0 0 .524-.062a1.8 1.8 0 0 0 .459-.2a1 1 0 0 0 .328-.335a.9.9 0 0 0 .118-.459a1.05 1.05 0 0 0-.092-.447a1 1 0 0 0-.315-.373a2.5 2.5 0 0 0-.564-.335a8 8 0 0 0-.852-.335l-.577-.2a5 5 0 0 1-.774-.335a3.4 3.4 0 0 1-.7-.509a2.7 2.7 0 0 1-.525-.695a2.1 2.1 0 0 1-.2-.918a2.25 2.25 0 0 1 .21-.968a2.4 2.4 0 0 1 .616-.794a2.9 2.9 0 0 1 .957-.533a3.7 3.7 0 0 1 1.246-.2a3.6 3.6 0 0 1 1.22.186a2.8 2.8 0 0 1 .879.459a2.5 2.5 0 0 1 .59.608a3 3 0 0 1 .328.633l-1.56.62a1.55 1.55 0 0 0-.485-.67a1.4 1.4 0 0 0-.944-.3a1.66 1.66 0 0 0-.957.261a.75.75 0 0 0-.38.658a.84.84 0 0 0 .367.682a4.2 4.2 0 0 0 1.167.534l.59.186a6.3 6.3 0 0 1 1.023.434a3 3 0 0 1 .8.57a2.2 2.2 0 0 1 .511.769a2.4 2.4 0 0 1 .183.98a2.3 2.3 0 0 1-.3 1.2a2.6 2.6 0 0 1-.747.819a3.4 3.4 0 0 1-1.036.484a4.2 4.2 0 0 1-1.128.161Zm-13.028 0a4.44 4.44 0 0 1-3.23-1.34a4.8 4.8 0 0 1-.956-1.476a4.9 4.9 0 0 1-.339-1.824a4.8 4.8 0 0 1 .339-1.811a4.6 4.6 0 0 1 .956-1.477a4.4 4.4 0 0 1 1.427-.992a4.5 4.5 0 0 1 1.8-.36a4.4 4.4 0 0 1 1.79.36a4.3 4.3 0 0 1 1.44.992a4.4 4.4 0 0 1 .944 1.477a4.7 4.7 0 0 1 .351 1.811a4.8 4.8 0 0 1-.351 1.824a4.6 4.6 0 0 1-.944 1.476a4.5 4.5 0 0 1-3.23 1.34Zm0-1.588a2.8 2.8 0 0 0 1.125-.223a2.8 2.8 0 0 0 .92-.621a2.7 2.7 0 0 0 .617-.955a3.3 3.3 0 0 0 .23-1.253a3.2 3.2 0 0 0-.23-1.24a2.7 2.7 0 0 0-.617-.968a2.8 2.8 0 0 0-.92-.62a2.8 2.8 0 0 0-1.125-.223a2.86 2.86 0 0 0-2.057.844a3 3 0 0 0-.617.968a3.4 3.4 0 0 0-.218 1.24a3.5 3.5 0 0 0 .218 1.253a3 3 0 0 0 .617.955a2.86 2.86 0 0 0 2.057.843m-3.297 2.428h6.5V24h-6.5Z"/></svg>'
   }
   return icons[platformId] || '📦'
@@ -349,6 +441,9 @@ const getLinkIcon = (linkType) => {
   }
   return icons[linkType] || '⬇️'
 }
+
+// 定义事件
+const emit = defineEmits(['mirrorToggle'])
 
 // 获取鸿蒙仓库的release信息
 const fetchOhosRelease = async () => {
@@ -489,8 +584,16 @@ watch(() => props.ohosTag, (newTag) => {
   }
 })
 
+// 监听镜像配置变化
+watch(() => props.defaultUseMirror, (newValue) => {
+  useMirror.value = newValue
+})
+
 // 生命周期
 onMounted(() => {
+  // 加载镜像偏好设置
+  loadMirrorPreference()
+  // 获取发布信息
   fetchLatestRelease()
 })
 </script>
@@ -506,6 +609,7 @@ onMounted(() => {
   width: calc(100% - 2rem);
   box-sizing: border-box;
 }
+
 .download-header {
   margin-bottom: 1.5rem;
   text-align: center;
@@ -518,9 +622,106 @@ onMounted(() => {
 }
 
 .description {
-  margin: 0;
+  margin: 0 0 1rem 0;
   color: var(--vp-c-text-2);
   font-size: 0.95rem;
+}
+
+/* 镜像开关样式 */
+.mirror-toggle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: var(--vp-c-bg);
+  border-radius: 8px;
+  border: 1px solid var(--vp-c-border);
+}
+
+.mirror-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.mirror-toggle:hover {
+  background: var(--vp-c-bg-soft);
+}
+
+.mirror-toggle-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.mirror-toggle-slider {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  background-color: var(--vp-c-gray-3);
+  border-radius: 24px;
+  margin-right: 0.75rem;
+  transition: background-color 0.3s;
+}
+
+.mirror-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.mirror-toggle-input:checked + .mirror-toggle-slider {
+  background-color: var(--vp-c-brand);
+}
+
+.mirror-toggle-input:checked + .mirror-toggle-slider:before {
+  transform: translateX(20px);
+}
+
+.mirror-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--vp-c-text-1);
+  font-weight: 500;
+}
+
+.mirror-toggle-icon {
+  font-size: 1.1rem;
+}
+
+.mirror-status-active {
+  color: var(--vp-c-green);
+  font-size: 0.85rem;
+  font-weight: normal;
+}
+
+.mirror-status-inactive {
+  color: var(--vp-c-text-3);
+  font-size: 0.85rem;
+  font-weight: normal;
+}
+
+.mirror-info-text {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.85rem;
+  color: var(--vp-c-text-2);
+  text-align: center;
+  max-width: 400px;
 }
 
 /* 加载状态 */
@@ -657,17 +858,7 @@ onMounted(() => {
 
 .download-link:hover {
   background: var(--vp-c-bg);
-  border-color: var(--vp-c-brand);
-  color: var(--vp-c-brand);
   transform: translateY(-1px);
-}
-
-.link-icon {
-  font-size: 1rem;
-}
-
-.link-text {
-  line-height: 1;
 }
 
 /* 发布信息 */
@@ -708,6 +899,106 @@ onMounted(() => {
   margin: 0;
 }
 
+.mirror-source-info {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--vp-c-text-3);
+}
+
+.mirror-toggle-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--vp-c-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mirror-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.mirror-toggle:hover {
+  background: var(--vp-c-bg-soft);
+}
+
+.mirror-toggle-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.mirror-toggle-slider {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  background-color: var(--vp-c-gray-3);
+  border-radius: 24px;
+  margin-right: 0.75rem;
+  transition: background-color 0.3s;
+}
+
+.mirror-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.mirror-toggle-input:checked + .mirror-toggle-slider {
+  background-color: var(--vp-c-brand);
+}
+
+.mirror-toggle-input:checked + .mirror-toggle-slider:before {
+  transform: translateX(20px);
+}
+
+.mirror-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--vp-c-text-1);
+  font-weight: 500;
+}
+
+.mirror-toggle-icon {
+  font-size: 1.1rem;
+}
+
+.mirror-status-active {
+  color: var(--vp-c-green);
+  font-size: 0.85rem;
+  font-weight: normal;
+}
+
+.mirror-status-inactive {
+  color: var(--vp-c-text-3);
+  font-size: 0.85rem;
+  font-weight: normal;
+}
+
+.mirror-info-text {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.85rem;
+  color: var(--vp-c-text-2);
+  text-align: center;
+  max-width: 400px;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .download-item {
@@ -729,6 +1020,14 @@ onMounted(() => {
   
   .github-link {
     align-self: flex-start;
+  }
+  
+  .mirror-toggle-label {
+    font-size: 0.9rem;
+  }
+  
+  .mirror-info-text {
+    font-size: 0.8rem;
   }
 }
 </style>
