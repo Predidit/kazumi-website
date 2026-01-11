@@ -1,0 +1,45 @@
+name: Fetch Upstream Data
+
+on:
+  schedule:
+    # 每天运行一次（UTC时间午夜）
+    - cron: '0 0 * * *'
+  workflow_dispatch:  # 允许手动触发
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch all data
+        run: |
+          echo "开始获取所有仓库数据..."
+          node fetch-upstream-data.js
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # 检查是否有文件变化
+          git add src/public/contributors.json src/public/releases.json
+          
+          if git diff --cached --quiet; then
+            echo "没有检测到文件变化"
+          else
+            echo "检测到文件变化，正在提交..."
+            git commit -m "chore: update repository data [skip ci]"
+            git push
+          fi
