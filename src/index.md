@@ -10,11 +10,11 @@ hero:
     alt: Kazumi
   actions:
     - theme: brand
-      text: 主流平台下载
+      text: 立即下载下载
       link: /download
     - theme: alt
-      text: HarmonyOS 下载
-      link: https://github.com/ErBWs/Kazumi/releases/latest
+      text: 了解更多
+      link: docs/intro/what-is-kazumi.html
 
 features:
   - icon: 🌟
