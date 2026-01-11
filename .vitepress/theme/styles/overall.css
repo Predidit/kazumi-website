@@ -14,6 +14,15 @@
         transform: translateY(-5px);
     }
 
+    /* 作者卡片悬浮效果 */
+    .VPTeamMembers .item {
+        transition: transform 0.3s;
+    }
+
+    .VPTeamMembers .item:hover {
+        transform: translateY(-5px);
+    }
+
     /* 手机端菜单栏顶部横条隐藏 */
     .VPNavBar.screen-open {
         border-bottom: none;
