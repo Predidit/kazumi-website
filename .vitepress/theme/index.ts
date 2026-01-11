@@ -16,12 +16,14 @@ import "./styles/footer.css"
 
 // 导入自定义组件
 import GitHubReleaseDownload from './components/download.vue'
+import Contributors from './components/ContributorsCards/card.vue'
 
 export default {
   ...DefaultTheme,
   // 注册全局组件
   enhanceApp({ app }: EnhanceAppContext) {
     app.component('GitHubReleaseDownload', GitHubReleaseDownload)
+    app.component('Contributors', Contributors)
   },
   setup() {
     const route = useRoute();
