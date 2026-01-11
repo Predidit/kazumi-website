@@ -13,7 +13,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@10.28.0",
   "devDependencies": {
     "@types/markdown-it-footnote": "^3.0.4",
     "vitepress": "2.0.0-alpha.15"
