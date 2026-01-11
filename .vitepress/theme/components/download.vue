@@ -178,7 +178,8 @@ const defaultPlatforms = [
     name: 'iOS',
     description: '适用于 iOS/iPadOS 13 及以上',
     links: [
-      { label: 'IPA', url: 'Kazumi_ios_{tag}_no_sign.ipa' }
+      { label: 'IPA', url: 'Kazumi_ios_{tag}_no_sign.ipa' },
+      {label: '安装文档', url: 'docs/misc/how-to-install-in-ios', external: true}
     ]
   },
   {
@@ -215,7 +216,16 @@ const defaultPlatforms = [
     repo: props.ohosRepo,
     useOhosTag: true,
     links: [
-      { label: 'HAP', url: 'Kazumi_ohos_{tag}_unsigned.hap' }
+      { label: 'HAP', url: 'Kazumi_ohos_{tag}_unsigned.hap' },
+      {label: '安装文档', url: 'docs/misc/how-to-install-in-ohos', external: true}
+    ]
+  },
+  {
+    id: 'arch',
+    name: 'Arch Linux',
+    description: '实验性支持',
+    links:[
+      {label: '下载文档', url: 'docs/intro/how-to-download#arch-linux', external: true}
     ]
   }
 ]
