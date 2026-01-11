@@ -10,7 +10,7 @@ hero:
     alt: Kazumi
   actions:
     - theme: brand
-      text: 立即下载下载
+      text: 立即下载
       link: /download
     - theme: alt
       text: 了解更多
