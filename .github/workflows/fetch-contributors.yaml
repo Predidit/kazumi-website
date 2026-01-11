@@ -27,7 +27,7 @@ jobs:
         id: fetch-contributors
         run: |
           echo "Fetching contributors from GitHub API..."
-          node fetch-contributors.js
+          node .github/workflows/fetch-contributors.js
 
       - name: Commit and push if changed
         run: |
