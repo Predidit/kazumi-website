@@ -1,0 +1,41 @@
+name: Fetch Contributors
+
+on:
+  schedule:
+    # 每天运行一次
+    - cron: '0 0 */1 * *'
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  fetch-contributors:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch contributors from GitHub API
+        id: fetch-contributors
+        run: |
+          echo "Fetching contributors from GitHub API..."
+          node fetch-contributors.js
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          if git diff --quiet src/public/contributors.json; then
+            echo "No changes to contributors.json"
+          else
+            echo "Changes detected, committing..."
+            git add src/public/contributors.json
+            git commit -m "chore: update contributors list [skip ci]"
+            git push
+          fi
