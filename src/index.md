@@ -27,3 +27,4 @@ features:
     title: 开源免费
     details: 基于 GPL-3.0 开源，免费无广告
 ---
+<Contributors/>
