@@ -4,7 +4,7 @@ import Contributors from './Contributors.vue'
 import { computed, shallowRef } from 'vue'
 
 // 导入贡献者数据
-import contributorsData from '../../../../src/public/contributors.json'
+import contributorsData from '/public/contributors.json'
 
 const members = computed(() => [
   {
