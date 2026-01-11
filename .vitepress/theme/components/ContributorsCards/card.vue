@@ -2,6 +2,7 @@
 import { VPTeamMembers } from 'vitepress/theme'
 import Contributors from './Contributors.vue'
 import { computed, shallowRef } from 'vue'
+import { iconMap } from '../icon'
 
 // 导入贡献者数据
 import contributorsData from '/public/contributors.json'
@@ -21,6 +22,7 @@ const members = computed(() => [
     title: ('鸿蒙版作者'),
     links: [
       { icon: 'github', link: 'https://github.com/ErBWs' },
+      {icon: { svg: iconMap.bilibili }, link: 'https://space.bilibili.com/28325282'}
     ],
   }
 ])
