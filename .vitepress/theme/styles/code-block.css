@@ -1,69 +1,67 @@
-/* 基础代码块样式（单个代码块） */
-.vp-doc *:not(.vp-code-block-title):not(.blocks) > div[class*='language-'] {
-    box-shadow: 0 10px 30px 0 rgb(0 0 0 / 40%); /* 阴影效果 */
-    border-radius: 8px; /* 圆角 */
-    margin-left: 0;
-    margin-right: 0;
-
-    /* macOS圆点 */
-    &::before {
-        content: '';
-        display: block;
-        position: relative;
-        top: 12px;
-        left: -20px;
-        width: 12px;
-        height: 12px;
-        background-color: rgb(243, 93, 85);
-        border-radius: 50%;
-        box-shadow: 20px 0 0 rgb(242, 180, 46), 40px 0 0 rgb(35, 192, 61);
-        z-index: 1;
-    }
-
-    /* 行号样式调整 */
-    .line-numbers-wrapper {
-        padding-top: 32px; /* 顶部留出空间给macOS圆点 */
-        border-right: none; /* 移除行号右侧边框 */
-    }
-
-    /* 代码内容调整 */
-    code {
-        margin-bottom: -10px; /* 减小底部间距 */
-        padding-left: 0; /* 移除左侧内边距 */
-    }
+/* 自定义块基础样式 */
+.custom-block {
+    border-radius: 15px; /* 圆角 */
+    border-left-width: 4px; /* 左侧边框 */
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
 }
 
-/* 代码组样式（多标签代码块） */
-.vp-code-group {
-    border-radius: 8px;
-    box-shadow: 0 10px 30px 0 rgb(0 0 0 / 40%); /* 阴影效果 */
-
-    /* 标签栏样式 */
-    .tabs {
-        padding-top: 20px; /* 顶部留出空间给macOS圆点 */
-        margin-left: 0;
-        margin-right: 0;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-
-        /* 标签栏的macOS圆点 */
-        &::before {
-            content: '';
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            width: 12px;
-            height: 12px;
-            background-color: rgb(243, 93, 85);
-            border-radius: 50%;
-            box-shadow: 20px 0 0 rgb(242, 180, 46), 40px 0 0 rgb(35, 192, 61);
-            z-index: 1;
-        }
-    }
+/* 引用块样式 */
+.vp-doc blockquote {
+    border-radius: 15px;
+    padding: 14px 17px 15px 15px;
+    color: var(--vp-c-text-1);
+    background-color: var(--vp-custom-block-details-bg); /* 背景色 */
+    border-left: 4px solid var(--vp-c-brand-1); /* 左侧边框 */
 }
 
-/* 图片缩放插件层级设置 */
-.medium-zoom-overlay,
-.medium-zoom-image--opened {
-    z-index: 999; /* 确保在最上层 */
+.vp-doc blockquote p {
+    font-size: var(--vp-custom-block-font-size); /* 字体大小 */
+}
+
+/* 自定义块标题图标 */
+.custom-block [class*="custom-block-title"]::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px; /* 图标与文字间距 */
+}
+
+/* 不同类型自定义块的图标 */
+.custom-block.info [class*="custom-block-title"]::before,
+.custom-block.note [class*="custom-block-title"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' data-pointer='none' viewBox='0 0 20 20' fill='%23AAAAAA'%3E%3Cpath d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'%3E%3C/path%3E%3C/svg%3E"); /* info/note图标 */
+}
+
+.custom-block.tip [class*="custom-block-title"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' data-pointer='none' viewBox='0 0 20 20' fill='%2300C800'%3E%3Cpath d='M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z'/%3E%3C/svg%3E%0A"); /* tip图标 */
+}
+
+.custom-block.warning [class*="custom-block-title"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' data-pointer='none' viewBox='0 0 20 20' fill='%23D6B300'%3E%3Cpath d='M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'%3E%3C/path%3E%3C/svg%3E%0A"); /* warning图标 */
+}
+
+.custom-block.danger [class*="custom-block-title"]::before,
+.custom-block.caution [class*="custom-block-title"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' data-pointer='none' viewBox='0 0 20 20' fill='%23CD0000'%3E%3Cpath d='M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'%3E%3C/path%3E%3C/svg%3E%0A"); /* danger/caution图标 */
+}
+
+.custom-block.important [class*="custom-block-title"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' data-pointer='none' viewBox='0 0 20 20' fill='%23A371F7'%3E%3Cpath d='M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'%3E%3C/path%3E%3C/svg%3E%0A"); /* important图标 */
+}
+
+/* 键盘按键样式 */
+kbd {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    font-size: 0.85em;
+    font-weight: 500;
+    line-height: 1.4;
+    border: 1px solid var(--vp-c-border); /* 边框 */
+    border-radius: 4px; /* 小圆角 */
+    box-shadow: 0 2px 0 var(--vp-c-border); /* 底部阴影模拟立体 */
+    vertical-align: middle; /* 垂直居中 */
 }
