@@ -1,6 +1,10 @@
+/* 代码块样式 */
 .vp-doc *:not(.vp-code-block-title):not(.blocks) > div[class*='language-'] {
     /* 代码块阴影 */
     box-shadow: 0 10px 30px 0 rgb(0 0 0 / 40%);
+    border-radius: 8px;
+    margin-left: 0;
+    margin-right: 0;
 
     /* macOS 圆点 */
     &::before {
@@ -20,19 +24,14 @@
     /* 下移行号 */
     .line-numbers-wrapper {
         padding-top: 32px;
+        border-right: none; /* 关闭行号右侧分隔条 */
     }
 
     /* 减小代码块下方 margin */
     code {
         margin-bottom: -10px;
+        padding-left: 0; /* 删除代码左侧 padding */
     }
-}
-
-/* 移动端关闭屏幕宽度代码块 */
-.vp-doc div[class*='language-'] {
-    margin-left: 0;
-    margin-right: 0;
-    border-radius: 8px;
 }
 
 .vp-code-group {
@@ -43,8 +42,6 @@
     /* 代码组 macOS 圆点 */
     .tabs {
         padding-top: 20px;
-
-        /* 移动端关闭屏幕宽度代码块 */
         margin-left: 0;
         margin-right: 0;
         border-top-left-radius: 8px;
@@ -65,17 +62,8 @@
     }
 }
 
-/* 删除代码左侧 padding */
-.vp-doc div[class*='language-'] code {
-    padding-left: 0;
-}
-
-/* 关闭行号右侧分隔条 */
-.vp-doc .line-numbers-wrapper {
-    border-right: none;
-}
-
-/* 关闭代码组 tabs 与 blocks 间的分隔条 */
-:root {
-    --vp-code-tab-divider: transparent;
+/* 图片缩放 */
+.medium-zoom-overlay,
+.medium-zoom-image--opened {
+    z-index: 999;
 }
