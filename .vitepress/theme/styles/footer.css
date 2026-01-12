@@ -11,11 +11,11 @@
 
 .VPFooter .container {
   display: flex;
+  flex-direction: column; /* 改为垂直列布局 */
   justify-content: center;
   align-items: center;
   width: 100%;
-  flex-wrap: wrap;
-  gap: 16px;
+  gap: 8px; /* 调整垂直间距 */
 }
 
 .VPFooter .message,
@@ -25,15 +25,15 @@
   margin: 0;
 }
 
+/* 移动端保持垂直列布局，间距可能更小 */
 @media (max-width: 768px) {
   .VPFooter .container {
-    flex-direction: column;
-    gap: 4px;
+    gap: 4px; /* 移动端间距更小 */
     text-align: center;
   }
 }
 
-/* 链接动画样式 */
+/* 链接样式 */
 .VPFooter .message a,
 .VPFooter .copyright a {
   position: relative;
@@ -51,17 +51,14 @@
   text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
+/* 默认显示下划线，下划线颜色跟随文字变化 */
 .VPFooter a::after {
   content: '';
   position: absolute;
-  width: 0;
+  width: 100%; /* 默认宽度100%显示下划线 */
   height: 1.5px;
   bottom: 0;
   left: 0;
-  background-color: var(--vp-c-brand-1);
-  transition: width 0.3s ease;
-}
-
-.VPFooter a:hover::after {
-  width: 100%;
-}
+  background-color: currentColor; /* 使用currentColor使下划线颜色跟随文字 */
+  opacity: 0.8; /* 添加透明度使下划线不那么显眼 */
+} 
