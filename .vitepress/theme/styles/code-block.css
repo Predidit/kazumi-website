@@ -1,8 +1,11 @@
+/* 基础代码块样式（单个代码块） */
 .vp-doc *:not(.vp-code-block-title):not(.blocks) > div[class*='language-'] {
-    /* 代码块阴影 */
-    box-shadow: 0 10px 30px 0 rgb(0 0 0 / 40%);
+    box-shadow: 0 10px 30px 0 rgb(0 0 0 / 40%); /* 阴影效果 */
+    border-radius: 8px; /* 圆角 */
+    margin-left: 0;
+    margin-right: 0;
 
-    /* macOS 圆点 */
+    /* macOS圆点 */
     &::before {
         content: '';
         display: block;
@@ -17,39 +20,33 @@
         z-index: 1;
     }
 
-    /* 下移行号 */
+    /* 行号样式调整 */
     .line-numbers-wrapper {
-        padding-top: 32px;
+        padding-top: 32px; /* 顶部留出空间给macOS圆点 */
+        border-right: none; /* 移除行号右侧边框 */
     }
 
-    /* 减小代码块下方 margin */
+    /* 代码内容调整 */
     code {
-        margin-bottom: -10px;
+        margin-bottom: -10px; /* 减小底部间距 */
+        padding-left: 0; /* 移除左侧内边距 */
     }
 }
 
-/* 移动端关闭屏幕宽度代码块 */
-.vp-doc div[class*='language-'] {
-    margin-left: 0;
-    margin-right: 0;
-    border-radius: 8px;
-}
-
+/* 代码组样式（多标签代码块） */
 .vp-code-group {
-    /* 代码组阴影 */
     border-radius: 8px;
-    box-shadow: 0 10px 30px 0 rgb(0 0 0 / 40%);
+    box-shadow: 0 10px 30px 0 rgb(0 0 0 / 40%); /* 阴影效果 */
 
-    /* 代码组 macOS 圆点 */
+    /* 标签栏样式 */
     .tabs {
-        padding-top: 20px;
-
-        /* 移动端关闭屏幕宽度代码块 */
+        padding-top: 20px; /* 顶部留出空间给macOS圆点 */
         margin-left: 0;
         margin-right: 0;
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
 
+        /* 标签栏的macOS圆点 */
         &::before {
             content: '';
             position: absolute;
@@ -65,17 +62,8 @@
     }
 }
 
-/* 删除代码左侧 padding */
-.vp-doc div[class*='language-'] code {
-    padding-left: 0;
-}
-
-/* 关闭行号右侧分隔条 */
-.vp-doc .line-numbers-wrapper {
-    border-right: none;
-}
-
-/* 关闭代码组 tabs 与 blocks 间的分隔条 */
-:root {
-    --vp-code-tab-divider: transparent;
+/* 图片缩放插件层级设置 */
+.medium-zoom-overlay,
+.medium-zoom-image--opened {
+    z-index: 999; /* 确保在最上层 */
 }

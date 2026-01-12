@@ -4,28 +4,31 @@ import { docsSidebar } from "../src/docs/sidebar";
 import footnotePlugin from 'markdown-it-footnote'
 
 export default defineConfig({
-  srcDir: "./src",
-  title: "Kazumi",
+  srcDir: "./src", // 源文件目录
+  title: "Kazumi", // 网站标题
+  
   head: [
-    ["link", { rel: "icon", href: "/favicon.ico" }],
+    ["link", { rel: "icon", href: "/favicon.ico" }], // 网站图标
   ],
 
+  // Markdown 配置
   markdown: {
-    lineNumbers: true,
-    image: { lazyLoading: true },
+    lineNumbers: true, // 代码行号
+    image: { lazyLoading: true }, // 图片懒加载
     config: (md) => {
-      md.use(footnotePlugin)
-      md.use(groupIconMdPlugin)
+      md.use(footnotePlugin) // 脚注插件
+      md.use(groupIconMdPlugin) // 图标分组插件
     }
   },
 
-  vite: { plugins: [groupIconVitePlugin()] },
+  vite: { plugins: [groupIconVitePlugin()] }, // Vite 插件
 
-  lastUpdated: true,
+  lastUpdated: true, // 显示最后更新时间
 
+  // 主题配置
   themeConfig: {
-    logo: '/logo.png',
-    nav: [
+    logo: '/logo.png', // 导航栏 Logo
+    nav: [ // 导航菜单
       { text: '主页', link: '/' },
       { text: '文档', link: '/docs/intro/what-is-kazumi' },
       { text: '下载', link: '/download'},
@@ -38,21 +41,21 @@ export default defineConfig({
         ]
       }
     ],
-    sidebar: { '/docs/': docsSidebar() },
-    editLink: {
+    sidebar: { '/docs/': docsSidebar() }, // 文档侧边栏
+    editLink: { // 编辑链接
       pattern: 'https://github.com/Predidit/kazumi-website/edit/main/src/:path',
       text: '帮助我们改进本页面内容'
     },
-    outline: { level: [2, 3], label: '页面导航' },
-    docFooter: { prev: '上一篇', next: '下一篇' },
-    search: { provider: "local" },
-    notFound: { quote: '吔？页面不见了', linkText: '回首页' },
-    darkModeSwitchLabel: '主题',
-    lastUpdated: { text: "上次更新" },
-    socialLinks: [{ icon: 'github', link: 'https://github.com/Predidit/Kazumi' }],
-    footer: {
-      message: 'Released under the <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer">GPL-3.0 License</a>.',
-      copyright: 'Copyright © 2024-2025 <a href="https://github.com/Predidit" target="_blank" rel="noopener noreferrer">Predidit</a>. All rights reserved.'
+    outline: { level: [2, 3], label: '页面导航' }, // 大纲目录
+    docFooter: { prev: '上一篇', next: '下一篇' }, // 文档翻页
+    search: { provider: "local" }, // 本地搜索
+    notFound: { quote: '吔？页面不见了', linkText: '回首页' }, // 404 页面
+    darkModeSwitchLabel: '主题', // 主题切换标签
+    lastUpdated: { text: "上次更新" }, // 最后更新时间文本
+    socialLinks: [{ icon: 'github', link: 'https://github.com/Predidit/Kazumi' }], // 社交链接
+    footer: { // 页脚
+      message: '用❤发电',
+      copyright: '<a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0</a> license © 2024-PRESENT <a href="https://github.com/Predidit">Predidit</a>'
     }
   }
 })

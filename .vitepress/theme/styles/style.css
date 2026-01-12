@@ -1,50 +1,33 @@
-/**
- * Customize default theme styling by overriding CSS variables:
- * https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css
- */
-
-/**
- * Colors
- *
- * Each colors have exact same color scale system with 3 levels of solid
- * colors with different brightness, and 1 soft color.
- *
- * - `XXX-1`: The most solid color used mainly for colored text. It must
- *   satisfy the contrast ratio against when used on top of `XXX-soft`.
- *
- * - `XXX-2`: The color used mainly for hover state of the button.
- *
- * - `XXX-3`: The color for solid background, such as bg color of the button.
- *   It must satisfy the contrast ratio with pure white (#ffffff) text on
- *   top of it.
- *
- * - `XXX-soft`: The color used for subtle background such as custom container
- *   or badges. It must satisfy the contrast ratio when putting `XXX-1` colors
- *   on top of it.
- *
- *   The soft color must be semi transparent alpha channel. This is crucial
- *   because it allows adding multiple "soft" colors on top of each other
- *   to create an accent, such as when having inline code block inside
- *   custom containers.
- *
- * - `default`: The color used purely for subtle indication without any
- *   special meanings attached to it such as bg color for menu hover state.
- *
- * - `brand`: Used for primary brand colors, such as link text, button with
- *   brand theme, etc.
- *
- * - `tip`: Used to indicate useful information. The default theme uses the
- *   brand color for this by default.
- *
- * - `warning`: Used to indicate warning to the users. Used in custom
- *   container, badges, etc.
- *
- * - `danger`: Used to show error, or dangerous message to the users. Used
- *   in custom container, badges, etc.
- * -------------------------------------------------------------------------- */
+/* 导入字体 */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 
 :root {
-  --vp-c-brand-1: rgb(87, 205, 96);
-  --vp-c-brand-2: rgb(20, 152, 30);
-  --vp-c-brand-3: rgb(54, 179, 64);
+    /* 品牌色 */
+    --vp-c-brand-1: rgb(87, 205, 96);
+    --vp-c-brand-2: rgb(20, 152, 30);
+    --vp-c-brand-3: rgb(54, 179, 64);
+    
+    /* 自定义块颜色定义 */
+    --vp-custom-block-info-border: rgb(170, 170, 170);
+    --vp-custom-block-info-bg: rgba(223, 223, 223, 0.3);
+    --vp-custom-block-tip-border: rgb(0, 200, 0);
+    --vp-custom-block-tip-bg: rgba(0, 255, 0, 0.3);
+    --vp-custom-block-warning-border: rgb(214, 179, 0);
+    --vp-custom-block-warning-bg: rgba(255, 213, 0, 0.3);
+    --vp-custom-block-danger-border: rgb(205, 0, 0);
+    --vp-custom-block-danger-bg: rgba(255, 0, 0, 0.3);
+    --vp-custom-block-note-border: rgb(170, 170, 170);
+    --vp-custom-block-note-bg: rgba(223, 223, 223, 0.3);
+    --vp-custom-block-important-border: rgb(163, 113, 247);
+    --vp-custom-block-important-bg: rgba(115, 0, 255, 0.3);
+    --vp-custom-block-caution-border: rgb(205, 0, 0);
+    --vp-custom-block-caution-bg: rgba(255, 0, 0, 0.3);
+    --vp-custom-block-details-border: rgb(170, 170, 170);
+    --vp-custom-block-details-bg: rgba(223, 223, 223, 0.3);
+    
+    /* 代码组标签分隔条透明 */
+    --vp-code-tab-divider: transparent;
+    
+    /* 设置代码字体 */
+    --vp-font-family-mono: 'JetBrains Mono', monospace;
 }
