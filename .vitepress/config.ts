@@ -51,8 +51,8 @@ export default defineConfig({
     lastUpdated: { text: "上次更新" },
     socialLinks: [{ icon: 'github', link: 'https://github.com/Predidit/Kazumi' }],
     footer: {
-      message: 'Released under the <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer">GPL-3.0 License</a>.',
-      copyright: 'Copyright © 2024-2025 <a href="https://github.com/Predidit" target="_blank" rel="noopener noreferrer">Predidit</a>. All rights reserved.'
+      message: '用❤发电',
+      copyright: '<a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0</a> license © 2024-PRESENT <a href="https://github.com/Predidit">Predidit</a>'
     }
   }
 })
