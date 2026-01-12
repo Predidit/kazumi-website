@@ -6,13 +6,9 @@ import mediumZoom from 'medium-zoom';
 import type { EnhanceAppContext } from 'vitepress';
 
 import "./styles/style.css";
-import "./styles/kbd.css";
-import "./styles/overall.css";
 import "./styles/custom-block.css";
-import "./styles/font.css";
-import "./styles/medium-zoom.css";
 import "./styles/code-block.css";
-import "./styles/footer.css"
+import "./styles/layout-components.css"
 
 // 导入自定义组件
 import GitHubReleaseDownload from './components/download.vue'
