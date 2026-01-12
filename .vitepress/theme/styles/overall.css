@@ -5,20 +5,13 @@
         background-color: rgba(255, 255, 255, 0);
     }
 
-    /* 卡片悬浮效果 */
-    .VPFeatures .items .item {
-        transition: transform 0.3s;
-    }
-
-    .VPFeatures .items .item:hover {
-        transform: translateY(-5px);
-    }
-
-    /* 作者卡片悬浮效果 */
+    /* 卡片悬浮效果 - 通用悬浮动画 */
+    .VPFeatures .items .item,
     .VPTeamMembers .item {
         transition: transform 0.3s;
     }
 
+    .VPFeatures .items .item:hover,
     .VPTeamMembers .item:hover {
         transform: translateY(-5px);
     }
