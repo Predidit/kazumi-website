@@ -1,20 +1,20 @@
 /* 页脚样式 */
 .VPFooter {
     padding: 20px 0 !important;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #e5e7eb; /* 浅色边框 */
 }
 
 .dark .VPFooter {
-    border-top-color: #374151;
+    border-top-color: #374151; /* 深色模式边框颜色 */
 }
 
 .VPFooter .container {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* 垂直布局 */
     justify-content: center;
     align-items: center;
     width: 100%;
-    gap: 8px;
+    gap: 8px; /* 子元素间距 */
 }
 
 .VPFooter .message,
@@ -24,13 +24,15 @@
     margin: 0;
 }
 
+/* 移动端适配 */
 @media (max-width: 768px) {
     .VPFooter .container {
-        gap: 4px;
-        text-align: center;
+        gap: 4px; /* 缩小间距 */
+        text-align: center; /* 文字居中 */
     }
 }
 
+/* 页脚链接悬停效果 */
 .VPFooter .message a,
 .VPFooter .copyright a {
     position: relative;
@@ -43,11 +45,12 @@
 
 .VPFooter .message a:hover,
 .VPFooter .copyright a:hover {
-    transform: translateY(-6px);
-    color: var(--vp-c-brand-1);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    transform: translateY(-6px); /* 向上移动 */
+    color: var(--vp-c-brand-1); /* 品牌色 */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* 文字阴影 */
 }
 
+/* 链接下划线效果 */
 .VPFooter a::after {
     content: '';
     position: absolute;
@@ -59,40 +62,40 @@
     opacity: 0.8;
 }
 
-/* 搜索框透明 */
+/* 搜索框透明背景 */
 .DocSearch-Button {
-    background-color: rgba(255, 255, 255, 0);
+    background-color: rgba(255, 255, 255, 0); /* 完全透明 */
 }
 
-/* 卡片悬浮效果 */
+/* 卡片悬停效果 */
 .VPFeatures .items .item,
 .VPTeamMembers .item {
-    transition: transform 0.3s;
+    transition: transform 0.3s; /* 平滑过渡 */
 }
 
 .VPFeatures .items .item:hover,
 .VPTeamMembers .item:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px); /* 向上移动 */
 }
 
-/* 移动端样式 */
+/* 移动端导航栏样式 */
 .VPNavBar.screen-open {
-    border-bottom: none;
+    border-bottom: none; /* 移除底部边框 */
 }
 
 .VPNavScreenMenuLink,
 .VPNavScreenMenuGroup,
 .VPLocalNav {
-    border-bottom: none;
+    border-bottom: none; /* 移除底部边框 */
 }
 
-/* 隐藏元素 */
-.divider,
-.VPLocalNavOutlineDropdown .header {
+/* 隐藏特定元素 */
+.divider, /* 分隔线 */
+.VPLocalNavOutlineDropdown .header { /* 大纲下拉标题 */
     display: none;
 }
 
-/* 透明表格 */
+/* 表格透明背景 */
 tr:nth-child(even) {
-    background-color: transparent;
+    background-color: transparent; /* 偶数行透明 */
 }

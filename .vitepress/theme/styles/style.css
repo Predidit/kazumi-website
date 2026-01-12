@@ -1,4 +1,4 @@
-/* 字体导入 */
+/* 导入字体 */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 
 :root {
@@ -7,7 +7,7 @@
     --vp-c-brand-2: rgb(20, 152, 30);
     --vp-c-brand-3: rgb(54, 179, 64);
     
-    /* 自定义块颜色变量 */
+    /* 自定义块颜色定义 */
     --vp-custom-block-info-border: rgb(170, 170, 170);
     --vp-custom-block-info-bg: rgba(223, 223, 223, 0.3);
     --vp-custom-block-tip-border: rgb(0, 200, 0);
@@ -25,9 +25,9 @@
     --vp-custom-block-details-border: rgb(170, 170, 170);
     --vp-custom-block-details-bg: rgba(223, 223, 223, 0.3);
     
-    /* 代码组分隔条 */
+    /* 代码组标签分隔条透明 */
     --vp-code-tab-divider: transparent;
     
-    /* 字体 */
+    /* 设置代码字体 */
     --vp-font-family-mono: 'JetBrains Mono', monospace;
 }

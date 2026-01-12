@@ -1,5 +1,7 @@
 <template>
+  <!-- 下载组件容器 -->
   <div class="download-container">
+    <!-- 头部标题和描述 -->
     <div class="download-header">
       <h3 v-if="title">{{ title }}</h3>
       <p v-if="description" class="description">{{ description }}</p>
@@ -19,7 +21,7 @@
     
     <!-- 正常状态 -->
     <template v-else>
-      <!-- 镜像开关 -->
+      <!-- 镜像下载开关 -->
       <div v-if="showMirrorSwitch" class="mirror-switch">
         <label class="switch">
           <input type="checkbox" v-model="useMirror">
@@ -28,18 +30,21 @@
         <span>使用镜像下载(OHOS不可用)</span>
       </div>
       
-      <!-- 下载列表 -->
+      <!-- 平台下载列表 -->
       <div class="platforms">
         <div v-for="platform in platforms" :key="platform.id" class="platform-item">
           <div class="platform-info">
+            <!-- 平台图标 -->
             <span class="icon" v-html="iconMap[platform.id]"></span>
             <div>
               <h4>{{ platform.name }}</h4>
               <p>{{ platform.description }}</p>
+              <!-- 鸿蒙版本标签 -->
               <p v-if="platform.id === 'ohos'" class="tag">鸿蒙版本: {{ ohosTag }}</p>
             </div>
           </div>
           
+          <!-- 下载链接 -->
           <div class="links">
             <a
               v-for="(link, index) in platform.links"
@@ -59,11 +64,13 @@
       <div v-if="showReleaseInfo" class="version-info">
         <div>
           <strong>主仓库版本:</strong> {{ currentTag }}
+          <!-- 鸿蒙分支版本 -->
           <span v-if="ohosTag" class="ohos-tag">
             <strong>鸿蒙分支版本:</strong> {{ ohosTag }}
           </span>
         </div>
         
+        <!-- GitHub仓库链接 -->
         <a v-if="githubUrl" :href="githubUrl" class="github-link" target="_blank">
           查看所有版本 →
         </a>
@@ -73,9 +80,12 @@
 </template>
 
 <script setup>
+// 导入Vue组合式API
 import { computed, ref, onMounted } from 'vue'
+// 导入平台图标映射
 import { iconMap } from './icon.ts'
 
+// 定义组件属性
 const props = defineProps({
   title: { type: String, default: '下载 Kazumi' },
   description: { type: String, default: '选择适合您操作系统的版本下载' },
@@ -93,16 +103,16 @@ const props = defineProps({
 })
 
 // 响应式数据
-const loading = ref(true)
-const error = ref(null)
-const currentTag = ref(props.releaseTag || props.fallbackTag)
-const ohosTag = ref(props.ohosTag || props.releaseTag || props.fallbackTag)
-const useMirror = ref(props.enableMirror)
+const loading = ref(true)       // 加载状态
+const error = ref(null)         // 错误信息
+const currentTag = ref(props.releaseTag || props.fallbackTag)  // 当前版本标签
+const ohosTag = ref(props.ohosTag || props.releaseTag || props.fallbackTag)  // 鸿蒙版本标签
+const useMirror = ref(props.enableMirror)  // 是否使用镜像下载
 
-// 计算属性
+// 计算属性：GitHub仓库URL
 const githubUrl = computed(() => `https://github.com/${props.githubRepo}/releases`)
 
-// 平台配置
+// 默认平台配置
 const defaultPlatforms = [
   {
     id: 'android',
@@ -170,45 +180,54 @@ const defaultPlatforms = [
   }
 ]
 
+// 计算属性：使用自定义平台或默认平台
 const platforms = computed(() => 
   props.customPlatforms.length > 0 ? props.customPlatforms : defaultPlatforms
 )
 
-// 方法
+// 方法：获取下载URL
 const getDownloadUrl = (platform, link) => {
+  // 如果是外部链接，直接返回
   if (link.external) return link.url
   
+  // 根据平台选择版本标签
   const tag = platform.useOhosTag ? ohosTag.value : currentTag.value
+  // 根据平台选择仓库
   const repo = platform.repo || props.githubRepo
   
+  // 根据是否使用镜像选择基础URL
   const baseUrl = useMirror.value && !platform.useOhosTag && repo === props.githubRepo
     ? props.mirrorBaseUrl
     : `https://github.com/${repo}/releases/download`
   
+  // 替换URL中的标签并返回完整URL
   return `${baseUrl}/${tag}/${link.url.replace('{tag}', tag)}`
 }
 
-// 从文件获取版本信息
+// 方法：从文件获取版本信息
 const fetchFromFile = async () => {
   try {
     const response = await fetch(props.releasesFile)
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     
     const data = await response.json()
+    // 更新主仓库和鸿蒙版本标签
     if (data.kazumi?.tag) currentTag.value = data.kazumi.tag
     if (data.ohos?.tag) ohosTag.value = data.ohos.tag
     
     return true
   } catch (err) {
     error.value = `无法加载版本信息: ${err.message}`
+    // 出错时使用回退标签
     currentTag.value = props.fallbackTag
     ohosTag.value = props.ohosTag || props.fallbackTag
     return false
   }
 }
 
-// 加载最新版本
+// 方法：加载版本信息
 const loadReleases = async () => {
+  // 如果没有提供releaseTag，则从文件获取
   if (!props.releaseTag) {
     try {
       loading.value = true
@@ -220,16 +239,20 @@ const loadReleases = async () => {
       loading.value = false
     }
   } else {
+    // 如果提供了releaseTag，直接使用
     currentTag.value = props.releaseTag
     ohosTag.value = props.ohosTag || props.releaseTag
     loading.value = false
   }
 }
 
+// 组件挂载时加载版本信息
 onMounted(loadReleases)
 </script>
 
 <style scoped>
+/* 组件样式 - 主要控制下载页面的布局和外观 */
+
 .download-container {
   margin: 1rem auto;
   padding: 1.25rem 1.5rem;
@@ -258,6 +281,7 @@ onMounted(loadReleases)
   font-size: 0.95rem;
 }
 
+/* 加载动画 */
 .loading {
   display: flex;
   flex-direction: column;
@@ -281,6 +305,7 @@ onMounted(loadReleases)
   to { transform: rotate(360deg); }
 }
 
+/* 错误状态样式 */
 .error {
   padding: 2rem;
   text-align: center;
@@ -300,6 +325,7 @@ onMounted(loadReleases)
   font-size: 0.9rem;
 }
 
+/* 镜像开关样式 */
 .mirror-switch {
   display: flex;
   align-items: center;
@@ -358,6 +384,7 @@ input:checked + .slider:before {
   transform: translateX(18px);
 }
 
+/* 平台列表样式 */
 .platforms {
   display: flex;
   flex-direction: column;
@@ -414,6 +441,7 @@ input:checked + .slider:before {
   font-style: italic;
 }
 
+/* 下载链接样式 */
 .links {
   display: flex;
   gap: 0.75rem;
@@ -441,6 +469,7 @@ input:checked + .slider:before {
   transform: translateY(-1px);
 }
 
+/* 版本信息样式 */
 .version-info {
   display: flex;
   justify-content: space-between;
@@ -468,6 +497,7 @@ input:checked + .slider:before {
   text-decoration: underline;
 }
 
+/* 响应式设计 */
 @media (max-width: 768px) {
   .platform-item {
     flex-direction: column;
