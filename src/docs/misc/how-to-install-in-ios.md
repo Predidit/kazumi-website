@@ -12,7 +12,7 @@
 
 - **硬件**：一台 macOS 或 Windows 电脑、一台 iPhone 或 iPad，请使用一根稳定的数据线，否则可能无法正确连接设备。
 - **账号**：一个使用邮箱注册的 [Apple ID](https://support.apple.com/zh-cn/apple-account)。
-- **安装包**：从[下载页面](/download.html)下载 IPA 安装包。
+- **安装包**：从[下载页](/download.html)下载 IPA 安装包。
 - 对于 Windows 用户，必须安装 [iTunes](https://www.apple.com.cn/itunes/)。
 
 > [!IMPORTANT]
