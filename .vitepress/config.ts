@@ -46,7 +46,7 @@ export default defineConfig({
       pattern: 'https://github.com/Predidit/kazumi-website/edit/main/src/:path',
       text: '帮助我们改进本页面内容'
     },
-    outline: { level: [2, 3], label: '页面导航' }, // 大纲目录
+    outline: { level: [1, 4], label: '页面导航' }, // 大纲目录
     docFooter: { prev: '上一篇', next: '下一篇' }, // 文档翻页
     search: { provider: "local" }, // 本地搜索
     notFound: { quote: '吔？页面不见了', linkText: '回首页' }, // 404 页面

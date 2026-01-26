@@ -1,8 +1,15 @@
 # 如何下载
 
+## 下载页（推荐）
+
+主流平台都可以通过 [下载页](/download.html) 页面下载。
+
+> [!TIP]
+> Windows 11 用户推荐使用 `msix` 格式安装包
+
 ## GitHub Release
 
-主流平台都可以通过 [GitHub Release](https://github.com/Predidit/Kazumi/releases/latest) 页面下载。
+主流平台还可以通过 [GitHub Release](https://github.com/Predidit/Kazumi/releases/latest) 页面下载。
 
 > [!TIP]
 > Windows 11 用户推荐使用 `msix` 格式安装包

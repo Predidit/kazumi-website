@@ -2,7 +2,7 @@
 
 ## 准备工作
 
-- [Kazumi hap 安装包](https://github.com/ErBWs/Kazumi/releases/latest)
+- [Kazumi hap 安装包](/download.html)
 - 一台任意非鸿蒙 5.0 及以上的设备。
 
 ### 小白调试助手
