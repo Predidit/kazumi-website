@@ -40,6 +40,6 @@ jobs:
             echo "没有检测到文件变化"
           else
             echo "检测到文件变化，正在提交..."
-            git commit -m "chore: update repository data [skip ci]"
+            git commit -m "chore: update repository data"
             git push
           fi
