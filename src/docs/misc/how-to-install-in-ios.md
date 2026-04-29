@@ -99,7 +99,7 @@
     1.  打开 SideStore，切换到 **Sources** 标签页，点击右上角 **“+”**。
     2.  添加源地址：
         ```
-        https://raw.githubusercontent.com/WingChunWong/Kazumi-AltStore-Source/kazumi/generated/apps.json
+        https://raw.githubusercontent.com/ChouChiu/Kazumi-AltStore-Source/kazumi/generated/apps.json
         ```
     3.  添加后点击 **Kazumi** 源，找到 Kazumi 点击安装。
 
