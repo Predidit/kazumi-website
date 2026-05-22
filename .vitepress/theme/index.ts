@@ -20,7 +20,7 @@ import { BoxCube, Card, CopyText, Links, Pill } from "@theojs/lumen";
 
 // 图片缩放
 import mediumZoom from "medium-zoom";
-import Contributors from "./components/ContributorsCards/card.vue";
+import Contributors from "./components/ContributorsCards/Contributors.vue";
 // 自定义组件
 import GitHubReleaseDownload from "./components/download.vue";
 import Layout from "./components/layout.vue";
