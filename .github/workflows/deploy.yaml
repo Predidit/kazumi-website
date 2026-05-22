@@ -28,8 +28,6 @@ jobs:
         with:
           fetch-depth: 0 # 获取完整的 git 历史记录用于时间戳
       - uses: pnpm/action-setup@v6
-        with:
-          version: latest
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
