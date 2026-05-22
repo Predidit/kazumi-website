@@ -19,6 +19,7 @@
     "vitepress": "2.0.0-alpha.17"
   },
   "dependencies": {
+    "@theojs/lumen": "^6.4.7",
     "markdown-it-footnote": "^4.0.0",
     "medium-zoom": "^1.1.0",
     "vitepress-plugin-group-icons": "^1.7.5",

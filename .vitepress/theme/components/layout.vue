@@ -1,17 +1,22 @@
-<!-- .vitepress/theme/Layout.vue -->
 <script setup lang="ts">
 import { useData } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
-import { nextTick, provide } from 'vue'
+import { nextTick, provide, useSlots } from 'vue'
+import SiteFooter from './footer.vue'
 
 const { isDark } = useData()
+const slots = useSlots()
 
-// 判断是否启用视图过渡
+// 视图过渡
+const isChromium =
+  typeof navigator !== 'undefined' &&
+  (navigator.userAgent.includes('Chrome') || navigator.userAgent.includes('Chromium'))
+
 const enableTransitions = () =>
+  isChromium &&
   'startViewTransition' in document &&
   window.matchMedia('(prefers-reduced-motion: no-preference)').matches
 
-// 提供自定义的切换函数
 provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
   if (!enableTransitions()) {
     isDark.value = !isDark.value
@@ -26,18 +31,16 @@ provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
     )}px at ${x}px ${y}px)`
   ]
 
-  // 开始视图过渡
   await document.startViewTransition(async () => {
     isDark.value = !isDark.value
     await nextTick()
   }).ready
 
-  // 执行动画
   document.documentElement.animate(
     { clipPath: isDark.value ? clipPath.reverse() : clipPath },
     {
-      duration: 450,
-      easing: 'ease-in',
+      duration: 350,
+      easing: 'ease-in-out',
       fill: 'forwards',
       pseudoElement: `::view-transition-${isDark.value ? 'old' : 'new'}(root)`
     }
@@ -46,11 +49,18 @@ provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
 </script>
 
 <template>
-  <DefaultTheme.Layout />
+  <DefaultTheme.Layout>
+    <!-- 透传所有父级插槽（参考 MicYou ViewTrans 模式） -->
+    <template v-for="(_, name) in slots" :key="name" #[name]="slotProps">
+      <slot :name="name" v-bind="slotProps ?? {}" />
+    </template>
+    <template #layout-bottom>
+      <SiteFooter />
+    </template>
+  </DefaultTheme.Layout>
 </template>
 
 <style>
-/* 视图过渡动画的相关样式 */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -65,13 +75,5 @@ provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
 ::view-transition-new(root),
 .dark::view-transition-old(root) {
   z-index: 9999;
-}
-
-.VPSwitchAppearance {
-  width: 22px !important;
-}
-
-.VPSwitchAppearance .check {
-  transform: none !important;
 }
 </style>
