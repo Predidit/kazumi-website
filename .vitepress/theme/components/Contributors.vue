@@ -2,7 +2,7 @@
 import { VPTeamMembers } from "vitepress/theme";
 import { computed } from "vue";
 import contributorsData from "/public/contributors.json";
-import { iconMap } from "../icon";
+import { iconMap } from "./icon";
 
 // 核心团队成员列表
 const members = computed(() => [
