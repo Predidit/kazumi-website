@@ -1,5 +1,4 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
@@ -25,6 +24,7 @@ features:
     details: 支持弹幕、实时超分辨率、一起看等超多功能
   - icon: 📑
     title: 开源免费
-    details: 基于 GPL-3.0 开源，免费无广告
+    details: 基于 MIT 协议开源，免费无广告
 ---
-<Contributors/>
+
+<Contributors />

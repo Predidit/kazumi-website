@@ -1,27 +1,31 @@
 {
   "name": "kazumi-website",
   "version": "1.0.0",
-  "description": "",
+  "description": "Official website of Kazumi",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vitepress dev",
     "build": "vitepress build",
-    "preview": "vitepress preview"
+    "preview": "vitepress preview",
+    "lint": "pnpm biome check .",
+    "format": "pnpm biome check --write ."
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.28.0",
+  "author": "Predidit",
+  "license": "MIT",
+  "packageManager": "pnpm@11.2.2",
   "devDependencies": {
+    "@biomejs/biome": "2.4.15",
     "@types/markdown-it-footnote": "^3.0.4",
-    "vitepress": "2.0.0-alpha.15"
+    "vitepress": "2.0.0-alpha.17"
   },
   "dependencies": {
+    "@theojs/lumen": "^6.4.7",
     "markdown-it-footnote": "^4.0.0",
     "medium-zoom": "^1.1.0",
-    "vitepress-plugin-group-icons": "^1.6.5",
-    "vue": "^3.5.26"
+    "vitepress-plugin-group-icons": "^1.7.5",
+    "vue": "^3.5.34"
   }
 }
