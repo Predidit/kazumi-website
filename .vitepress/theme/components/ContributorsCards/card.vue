@@ -1,43 +1,43 @@
 <script setup lang="ts">
 // 导入VitePress团队组件和工具函数
-import { VPTeamMembers } from 'vitepress/theme'
-import Contributors from './Contributors.vue'
-import { computed, shallowRef } from 'vue'
-import { iconMap } from '../icon'  // 图标映射
-
+import { VPTeamMembers } from "vitepress/theme";
+import { computed, shallowRef } from "vue";
 // 导入贡献者数据
-import contributorsData from '/public/contributors.json'
+import contributorsData from "/public/contributors.json";
+import { iconMap } from "../icon"; // 图标映射
+import Contributors from "./Contributors.vue";
 
 // 核心团队成员列表
 const members = computed(() => [
   {
-    avatar: 'https://github.com/Predidit.png',
-    name: 'Predidit',
-    title: ('作者'),  // 作者
-    links: [
-      { icon: 'github', link: 'https://github.com/Predidit' },
-    ],
+    avatar: "https://github.com/Predidit.png",
+    name: "Predidit",
+    title: "作者", // 作者
+    links: [{ icon: "github", link: "https://github.com/Predidit" }],
   },
   {
-    avatar: 'https://github.com/ErBWs.png',
-    name: 'ErBWs',
-    title: ('鸿蒙版作者'),  // 鸿蒙版作者
+    avatar: "https://github.com/ErBWs.png",
+    name: "ErBWs",
+    title: "鸿蒙版作者", // 鸿蒙版作者
     links: [
-      { icon: 'github', link: 'https://github.com/ErBWs' },
-      {icon: { svg: iconMap.bilibili }, link: 'https://space.bilibili.com/28325282'}  // B站链接
+      { icon: "github", link: "https://github.com/ErBWs" },
+      {
+        icon: { svg: iconMap.bilibili },
+        link: "https://space.bilibili.com/28325282",
+      }, // B站链接
     ],
-  }
-])
+  },
+]);
 
 // 从JSON文件获取贡献者数据
 const contributors = computed(() => {
   // 验证数据格式
-  if (contributorsData && contributorsData.contributors) {
-    return contributorsData.contributors
+  if (contributorsData?.contributors) {
+    return contributorsData.contributors;
   }
   // 数据缺失时返回空数组
-  return []
-})
+  return [];
+});
 </script>
 
 <template>

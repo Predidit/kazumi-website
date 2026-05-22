@@ -1,51 +1,51 @@
 <script setup lang="ts">
-import { useData } from 'vitepress'
-import DefaultTheme from 'vitepress/theme'
-import { nextTick, provide, useSlots } from 'vue'
-import SiteFooter from './footer.vue'
+import { useData } from "vitepress";
+import DefaultTheme from "vitepress/theme";
+import { nextTick, provide, useSlots } from "vue";
+import SiteFooter from "./footer.vue";
 
-const { isDark } = useData()
-const slots = useSlots()
+const { isDark } = useData();
+const slots = useSlots();
 
 // 视图过渡
 const isChromium =
-  typeof navigator !== 'undefined' &&
-  (navigator.userAgent.includes('Chrome') || navigator.userAgent.includes('Chromium'))
+  typeof navigator !== "undefined" &&
+  (navigator.userAgent.includes("Chrome") || navigator.userAgent.includes("Chromium"));
 
 const enableTransitions = () =>
   isChromium &&
-  'startViewTransition' in document &&
-  window.matchMedia('(prefers-reduced-motion: no-preference)').matches
+  "startViewTransition" in document &&
+  window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
 
-provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
+provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
   if (!enableTransitions()) {
-    isDark.value = !isDark.value
-    return
+    isDark.value = !isDark.value;
+    return;
   }
 
   const clipPath = [
     `circle(0px at ${x}px ${y}px)`,
     `circle(${Math.hypot(
       Math.max(x, innerWidth - x),
-      Math.max(y, innerHeight - y)
-    )}px at ${x}px ${y}px)`
-  ]
+      Math.max(y, innerHeight - y),
+    )}px at ${x}px ${y}px)`,
+  ];
 
   await document.startViewTransition(async () => {
-    isDark.value = !isDark.value
-    await nextTick()
-  }).ready
+    isDark.value = !isDark.value;
+    await nextTick();
+  }).ready;
 
   document.documentElement.animate(
     { clipPath: isDark.value ? clipPath.reverse() : clipPath },
     {
       duration: 350,
-      easing: 'ease-in-out',
-      fill: 'forwards',
-      pseudoElement: `::view-transition-${isDark.value ? 'old' : 'new'}(root)`
-    }
-  )
-})
+      easing: "ease-in-out",
+      fill: "forwards",
+      pseudoElement: `::view-transition-${isDark.value ? "old" : "new"}(root)`,
+    },
+  );
+});
 </script>
 
 <template>

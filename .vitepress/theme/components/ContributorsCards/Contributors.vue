@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import ContributorItem from './ContributorsItem.vue'  // 单个贡献者组件
+import ContributorItem from "./ContributorsItem.vue"; // 单个贡献者组件
 
 // 定义组件属性接口
 interface Props {
-    members: {
-        avatar: string
-        name: string
-        link: string
-    }[]
+  members: {
+    avatar: string;
+    name: string;
+    link: string;
+  }[];
 }
 
 // 接收贡献者数据
-const { members } = defineProps<Props>()
-
+const { members } = defineProps<Props>();
 </script>
 
 <template>

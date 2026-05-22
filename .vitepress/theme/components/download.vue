@@ -40,7 +40,7 @@
               <h4>{{ platform.name }}</h4>
               <p>{{ platform.description }}</p>
               <!-- 鸿蒙版本标签 -->
-              <p v-if="platform.id === 'ohos'" class="tag">鸿蒙版本: {{ ohosTag }}</p>
+              <p v-if="platform.id === 'ohos'" class="tag">鸿蒙版本: {{ currentOhosTag }}</p>
             </div>
           </div>
           
@@ -65,8 +65,8 @@
         <div>
           <strong>主仓库版本:</strong> {{ currentTag }}
           <!-- 鸿蒙分支版本 -->
-          <span v-if="ohosTag" class="ohos-tag">
-            <strong>鸿蒙分支版本:</strong> {{ ohosTag }}
+          <span v-if="currentOhosTag" class="ohos-tag">
+            <strong>鸿蒙分支版本:</strong> {{ currentOhosTag }}
           </span>
         </div>
         
@@ -81,173 +81,195 @@
 
 <script setup>
 // 导入Vue组合式API
-import { computed, ref, onMounted } from 'vue'
+import { computed, onMounted, ref } from "vue";
 // 导入平台图标映射
-import { iconMap } from './icon.ts'
+import { iconMap } from "./icon.ts";
 
 // 定义组件属性
 const props = defineProps({
-  title: { type: String, default: '下载 Kazumi' },
-  description: { type: String, default: '选择适合您操作系统的版本下载' },
-  releaseTag: { type: String, default: '' },
-  githubRepo: { type: String, default: 'Predidit/Kazumi' },
-  ohosRepo: { type: String, default: 'ErBWs/Kazumi' },
-  ohosTag: { type: String, default: '' },
+  title: { type: String, default: "下载 Kazumi" },
+  description: { type: String, default: "选择适合您操作系统的版本下载" },
+  releaseTag: { type: String, default: "" },
+  githubRepo: { type: String, default: "Predidit/Kazumi" },
+  ohosRepo: { type: String, default: "ErBWs/Kazumi" },
+  ohosTag: { type: String, default: "" },
   showReleaseInfo: { type: Boolean, default: true },
   enableMirror: { type: Boolean, default: false },
-  mirrorBaseUrl: { type: String, default: 'https://atomgit.com/gh_mirrors/ka/Kazumi/releases/download' },
+  mirrorBaseUrl: {
+    type: String,
+    default: "https://atomgit.com/gh_mirrors/ka/Kazumi/releases/download",
+  },
   showMirrorSwitch: { type: Boolean, default: true },
   customPlatforms: { type: Array, default: () => [] },
-  releasesFile: { type: String, default: '/releases.json' },
-  fallbackTag: { type: String, default: 'tag' }
-})
+  releasesFile: { type: String, default: "/releases.json" },
+  fallbackTag: { type: String, default: "tag" },
+});
 
 // 响应式数据
-const loading = ref(true)       // 加载状态
-const error = ref(null)         // 错误信息
-const currentTag = ref(props.releaseTag || props.fallbackTag)  // 当前版本标签
-const ohosTag = ref(props.ohosTag || props.releaseTag || props.fallbackTag)  // 鸿蒙版本标签
-const useMirror = ref(props.enableMirror)  // 是否使用镜像下载
+const loading = ref(true); // 加载状态
+const error = ref(null); // 错误信息
+const currentTag = ref(props.releaseTag || props.fallbackTag); // 当前版本标签
+const currentOhosTag = ref(props.ohosTag || props.releaseTag || props.fallbackTag); // 鸿蒙版本标签
+const useMirror = ref(props.enableMirror); // 是否使用镜像下载
 
 // 计算属性：GitHub仓库URL
-const githubUrl = computed(() => `https://github.com/${props.githubRepo}/releases`)
+const githubUrl = computed(() => `https://github.com/${props.githubRepo}/releases`);
 
 // 默认平台配置
 const defaultPlatforms = [
   {
-    id: 'android',
-    name: 'Android',
-    description: '适用于 Android 10 及以上',
+    id: "android",
+    name: "Android",
+    description: "适用于 Android 10 及以上",
     links: [
-      { label: 'APK', url: 'Kazumi_android_{tag}.apk' },
-      { label: 'F-Droid', url: 'https://f-droid.org/packages/com.predidit.kazumi', external: true }
-    ]
+      { label: "APK", url: "Kazumi_android_{tag}.apk" },
+      {
+        label: "F-Droid",
+        url: "https://f-droid.org/packages/com.predidit.kazumi",
+        external: true,
+      },
+    ],
   },
   {
-    id: 'ios',
-    name: 'iOS',
-    description: '适用于 iOS/iPadOS 13 及以上',
+    id: "ios",
+    name: "iOS",
+    description: "适用于 iOS/iPadOS 13 及以上",
     links: [
-      { label: 'IPA', url: 'Kazumi_ios_{tag}_no_sign.ipa' },
-      { label: '安装文档', url: 'docs/misc/how-to-install-in-ios', external: true }
-    ]
+      { label: "IPA", url: "Kazumi_ios_{tag}_no_sign.ipa" },
+      {
+        label: "安装文档",
+        url: "docs/misc/how-to-install-in-ios",
+        external: true,
+      },
+    ],
   },
   {
-    id: 'windows',
-    name: 'Windows',
-    description: '适用于 Windows 10 及以上',
+    id: "windows",
+    name: "Windows",
+    description: "适用于 Windows 10 及以上",
     links: [
-      { label: 'MSIX', url: 'Kazumi_windows_{tag}.msix' },
-      { label: '便携版', url: 'Kazumi_windows_{tag}.zip' }
-    ]
+      { label: "MSIX", url: "Kazumi_windows_{tag}.msix" },
+      { label: "便携版", url: "Kazumi_windows_{tag}.zip" },
+    ],
   },
   {
-    id: 'mac',
-    name: 'macOS',
-    description: '适用于 MacOS 10.15 及以上',
-    links: [
-      { label: 'DMG', url: 'Kazumi_macos_{tag}.dmg' }
-    ]
+    id: "mac",
+    name: "macOS",
+    description: "适用于 MacOS 10.15 及以上",
+    links: [{ label: "DMG", url: "Kazumi_macos_{tag}.dmg" }],
   },
   {
-    id: 'linux',
-    name: 'Linux',
-    description: '实验性支持',
+    id: "linux",
+    name: "Linux",
+    description: "实验性支持",
     links: [
-      { label: 'DEB', url: 'Kazumi_linux_{tag}_amd64.deb' },
-      { label: '便携版', url: 'Kazumi_linux_{tag}_amd64.tar.gz' },
-      { label: 'Flathub', url: 'https://flathub.org/en/apps/io.github.Predidit.Kazumi', external: true }
-    ]
+      { label: "DEB", url: "Kazumi_linux_{tag}_amd64.deb" },
+      { label: "便携版", url: "Kazumi_linux_{tag}_amd64.tar.gz" },
+      {
+        label: "Flathub",
+        url: "https://flathub.org/en/apps/io.github.Predidit.Kazumi",
+        external: true,
+      },
+    ],
   },
   {
-    id: 'ohos',
-    name: 'OHOS',
-    description: '适用于 HarmonyOS NEXT',
+    id: "ohos",
+    name: "OHOS",
+    description: "适用于 HarmonyOS NEXT",
     repo: props.ohosRepo,
     useOhosTag: true,
     links: [
-      { label: 'HAP', url: 'Kazumi_ohos_{tag}_unsigned.hap' },
-      { label: '安装文档', url: 'docs/misc/how-to-install-in-ohos', external: true }
-    ]
+      { label: "HAP", url: "Kazumi_ohos_{tag}_unsigned.hap" },
+      {
+        label: "安装文档",
+        url: "docs/misc/how-to-install-in-ohos",
+        external: true,
+      },
+    ],
   },
   {
-    id: 'arch',
-    name: 'Arch Linux',
-    description: '实验性支持',
+    id: "arch",
+    name: "Arch Linux",
+    description: "实验性支持",
     links: [
-      { label: '下载文档', url: 'docs/intro/how-to-download#arch-linux', external: true }
-    ]
-  }
-]
+      {
+        label: "下载文档",
+        url: "docs/intro/how-to-download#arch-linux",
+        external: true,
+      },
+    ],
+  },
+];
 
 // 计算属性：使用自定义平台或默认平台
-const platforms = computed(() => 
-  props.customPlatforms.length > 0 ? props.customPlatforms : defaultPlatforms
-)
+const platforms = computed(() =>
+  props.customPlatforms.length > 0 ? props.customPlatforms : defaultPlatforms,
+);
 
 // 方法：获取下载URL
 const getDownloadUrl = (platform, link) => {
   // 如果是外部链接，直接返回
-  if (link.external) return link.url
-  
+  if (link.external) return link.url;
+
   // 根据平台选择版本标签
-  const tag = platform.useOhosTag ? ohosTag.value : currentTag.value
+  const tag = platform.useOhosTag ? currentOhosTag.value : currentTag.value;
   // 根据平台选择仓库
-  const repo = platform.repo || props.githubRepo
-  
+  const repo = platform.repo || props.githubRepo;
+
   // 根据是否使用镜像选择基础URL
-  const baseUrl = useMirror.value && !platform.useOhosTag && repo === props.githubRepo
-    ? props.mirrorBaseUrl
-    : `https://github.com/${repo}/releases/download`
-  
+  const baseUrl =
+    useMirror.value && !platform.useOhosTag && repo === props.githubRepo
+      ? props.mirrorBaseUrl
+      : `https://github.com/${repo}/releases/download`;
+
   // 替换URL中的标签并返回完整URL
-  return `${baseUrl}/${tag}/${link.url.replace('{tag}', tag)}`
-}
+  return `${baseUrl}/${tag}/${link.url.replace("{tag}", tag)}`;
+};
 
 // 方法：从文件获取版本信息
 const fetchFromFile = async () => {
   try {
-    const response = await fetch(props.releasesFile)
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    
-    const data = await response.json()
+    const response = await fetch(props.releasesFile);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const data = await response.json();
     // 更新主仓库和鸿蒙版本标签
-    if (data.kazumi?.tag) currentTag.value = data.kazumi.tag
-    if (data.ohos?.tag) ohosTag.value = data.ohos.tag
-    
-    return true
+    if (data.kazumi?.tag) currentTag.value = data.kazumi.tag;
+    if (data.ohos?.tag) currentOhosTag.value = data.ohos.tag;
+
+    return true;
   } catch (err) {
-    error.value = `无法加载版本信息: ${err.message}`
+    error.value = `无法加载版本信息: ${err.message}`;
     // 出错时使用回退标签
-    currentTag.value = props.fallbackTag
-    ohosTag.value = props.ohosTag || props.fallbackTag
-    return false
+    currentTag.value = props.fallbackTag;
+    currentOhosTag.value = props.ohosTag || props.fallbackTag;
+    return false;
   }
-}
+};
 
 // 方法：加载版本信息
 const loadReleases = async () => {
   // 如果没有提供releaseTag，则从文件获取
   if (!props.releaseTag) {
     try {
-      loading.value = true
-      error.value = null
-      await fetchFromFile()
+      loading.value = true;
+      error.value = null;
+      await fetchFromFile();
     } catch (err) {
-      error.value = err.message
+      error.value = err.message;
     } finally {
-      loading.value = false
+      loading.value = false;
     }
   } else {
     // 如果提供了releaseTag，直接使用
-    currentTag.value = props.releaseTag
-    ohosTag.value = props.ohosTag || props.releaseTag
-    loading.value = false
+    currentTag.value = props.releaseTag;
+    currentOhosTag.value = props.ohosTag || props.releaseTag;
+    loading.value = false;
   }
-}
+};
 
 // 组件挂载时加载版本信息
-onMounted(loadReleases)
+onMounted(loadReleases);
 </script>
 
 <style scoped>

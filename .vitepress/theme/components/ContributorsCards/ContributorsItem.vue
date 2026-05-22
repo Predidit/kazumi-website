@@ -1,15 +1,15 @@
 <script setup lang="ts">
 // 定义组件属性接口
 interface Props {
-    member: {
-        avatar: string
-        name: string
-        link: string
-    }
+  member: {
+    avatar: string;
+    name: string;
+    link: string;
+  };
 }
 
 // 接收单个贡献者数据
-const { member } = defineProps<Props>()
+const { member } = defineProps<Props>();
 </script>
 
 <template>
