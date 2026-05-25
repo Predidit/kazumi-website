@@ -30,7 +30,7 @@ export function docsSidebar(): DefaultTheme.SidebarItem[] {
       items: [
         { text: "常见问题", link: "/docs/misc/qa" },
         { text: "iOS 自签", link: "/docs/misc/how-to-install-in-ios" },
-        { text: "ohos 侧载", link: "/docs/misc/how-to-install-in-ohos" },
+        { text: "OHOS 侧载", link: "/docs/misc/how-to-install-in-ohos" },
       ],
     },
   ];
