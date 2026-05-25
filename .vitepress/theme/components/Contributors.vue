@@ -14,15 +14,9 @@ const members = computed(() => [
   },
   {
     avatar: "https://github.com/ErBWs.png?size=80",
-    name: "ErBWs",
+    name: "ErBW_s",
     title: "鸿蒙版作者",
-    links: [
-      { icon: "github", link: "https://github.com/ErBWs" },
-      {
-        icon: { svg: iconMap.bilibili },
-        link: "https://space.bilibili.com/28325282",
-      },
-    ],
+    links: [{ icon: "github", link: "https://github.com/ErBWs" }],
   },
 ]);
 
