@@ -26,7 +26,7 @@ jobs:
       - name: Fetch all data
         run: |
           echo "开始获取所有仓库数据..."
-          node  .github/workflows/fetch-upstream-data.js
+          npx --yes tsx .github/workflows/fetch-upstream-data.ts
 
       - name: Commit and push changes
         run: |
