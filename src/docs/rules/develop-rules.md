@@ -223,7 +223,11 @@ https://www.dm539.com/search/-------------.html?wd=@keyword&submit=
 //ul/li/a
 ```
 恭喜你！你已经学会了怎么写一个规则！  
-如果你还是看不懂，或者希望看到动态的教程，可以在视频网站哔哩哔哩搜索“kazumi规则”  
+如果你还是看不懂，或者希望看到动态的教程，可以在视频网站哔哩哔哩搜索“kazumi规则"  
+
+> [!TIP]
+> 开发完成后，你可以使用 Kazumi 应用内的`规则分享`功能导出 Base64 分享链接，然后通过[规则转换工具](https://krc.wwchun.top){target="_blank"}将其转换为 JSON 格式，以便提交到[规则仓库](https://github.com/Predidit/KazumiRules)。
+
 下面，让我们进入你在写规则中可能遇到的一些常见问题！
 
 
