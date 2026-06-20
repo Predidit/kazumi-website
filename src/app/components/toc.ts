@@ -1,20 +1,27 @@
-import { Component, OnDestroy, signal, inject, PLATFORM_ID, afterNextRender } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { CommonModule, isPlatformBrowser } from "@angular/common";
+import {
+	afterNextRender,
+	Component,
+	inject,
+	OnDestroy,
+	PLATFORM_ID,
+	signal,
+} from "@angular/core";
+import { NavigationEnd, Router } from "@angular/router";
+import { Subscription } from "rxjs";
+import { filter } from "rxjs/operators";
 
 interface TocItem {
-  id: string;
-  text: string;
-  level: number;
+	id: string;
+	text: string;
+	level: number;
 }
 
 @Component({
-  selector: 'app-toc',
-  standalone: true,
-  imports: [CommonModule],
-  template: `
+	selector: "app-toc",
+	standalone: true,
+	imports: [CommonModule],
+	template: `
     <nav class="toc">
       @if (items().length > 0) {
         <h4 class="toc-title">页面导航</h4>
@@ -35,7 +42,8 @@ interface TocItem {
       }
     </nav>
   `,
-  styles: [`
+	styles: [
+		`
     .toc {
       position: sticky;
       top: 96px;
@@ -85,77 +93,81 @@ interface TocItem {
       background-color: var(--mat-sys-primary-container);
       font-weight: 500;
     }
-  `]
+  `,
+	],
 })
 export class TocComponent implements OnDestroy {
-  items = signal<TocItem[]>([]);
-  activeId = signal<string>('');
+	items = signal<TocItem[]>([]);
+	activeId = signal<string>("");
 
-  private observer: IntersectionObserver | null = null;
-  private platformId = inject(PLATFORM_ID);
-  private router = inject(Router);
-  private sub: Subscription;
+	private observer: IntersectionObserver | null = null;
+	private platformId = inject(PLATFORM_ID);
+	private router = inject(Router);
+	private sub: Subscription;
 
-  constructor() {
-    this.sub = this.router.events.pipe(
-      filter(e => e instanceof NavigationEnd)
-    ).subscribe(() => {
-      setTimeout(() => this.extract(), 50);
-    });
+	constructor() {
+		this.sub = this.router.events
+			.pipe(filter((e) => e instanceof NavigationEnd))
+			.subscribe(() => {
+				setTimeout(() => this.extract(), 50);
+			});
 
-    afterNextRender(() => this.extract());
-  }
+		afterNextRender(() => this.extract());
+	}
 
-  ngOnDestroy() {
-    this.observer?.disconnect();
-    this.sub.unsubscribe();
-  }
+	ngOnDestroy() {
+		this.observer?.disconnect();
+		this.sub.unsubscribe();
+	}
 
-  scrollTo(event: Event, id: string) {
-    event.preventDefault();
-    if (!isPlatformBrowser(this.platformId)) return;
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      this.activeId.set(id);
-    }
-  }
+	scrollTo(event: Event, id: string) {
+		event.preventDefault();
+		if (!isPlatformBrowser(this.platformId)) return;
+		const el = document.getElementById(id);
+		if (el) {
+			el.scrollIntoView({ behavior: "smooth", block: "start" });
+			this.activeId.set(id);
+		}
+	}
 
-  private extract() {
-    if (!isPlatformBrowser(this.platformId)) return;
-    const container = document.querySelector('.analog-markdown-route');
-    if (!container) return;
+	private extract() {
+		if (!isPlatformBrowser(this.platformId)) return;
+		const container = document.querySelector(".analog-markdown-route");
+		if (!container) return;
 
-    const headings = container.querySelectorAll('h2, h3, h4');
-    const items: TocItem[] = [];
+		const headings = container.querySelectorAll("h1, h2, h3, h4");
+		const items: TocItem[] = [];
 
-    headings.forEach((h) => {
-      if (!h.id) h.id = h.textContent?.trim().replace(/\s+/g, '-').toLowerCase() || '';
-      items.push({
-        id: h.id,
-        text: h.textContent?.trim() || '',
-        level: parseInt(h.tagName.charAt(1))
-      });
-    });
+		headings.forEach((h) => {
+			if (!h.id)
+				h.id = h.textContent?.trim().replace(/\s+/g, "-").toLowerCase() || "";
+			items.push({
+				id: h.id,
+				text: h.textContent?.trim() || "",
+				level: parseInt(h.tagName.charAt(1), 10),
+			});
+		});
 
-    this.items.set(items);
-    this.setupObserver(container);
-  }
+		this.items.set(items);
+		this.setupObserver(container);
+	}
 
-  private setupObserver(container: Element) {
-    this.observer?.disconnect();
+	private setupObserver(container: Element) {
+		this.observer?.disconnect();
 
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            this.activeId.set(entry.target.id);
-          }
-        }
-      },
-      { rootMargin: '-80px 0px -80% 0px', threshold: 0 }
-    );
+		this.observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						this.activeId.set(entry.target.id);
+					}
+				}
+			},
+			{ rootMargin: "-80px 0px -80% 0px", threshold: 0 },
+		);
 
-    container.querySelectorAll('h2, h3, h4').forEach(h => this.observer!.observe(h));
-  }
+		for (const h of container.querySelectorAll("h1, h2, h3, h4")) {
+			this.observer?.observe(h);
+		}
+	}
 }

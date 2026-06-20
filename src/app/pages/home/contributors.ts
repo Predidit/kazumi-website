@@ -244,6 +244,10 @@ export class ContributorsComponent {
 
 	constructor() {
 		afterNextRender(() => {
+			if (!isPlatformBrowser(this.platformId)) {
+				this.loading.set(false);
+				return;
+			}
 			fetch("/contributors.json")
 				.then((res) => res.json())
 				.then((data: ContributorsData) => {

@@ -1,4 +1,11 @@
-import { afterNextRender, Component, signal } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import {
+	afterNextRender,
+	Component,
+	inject,
+	PLATFORM_ID,
+	signal,
+} from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
@@ -374,9 +381,15 @@ export default class DownloadComponent {
 		},
 	];
 
+	private platformId = inject(PLATFORM_ID);
+
 	constructor() {
 		afterNextRender(() => {
-			this.loadReleases();
+			if (isPlatformBrowser(this.platformId)) {
+				this.loadReleases();
+			} else {
+				this.loading.set(false);
+			}
 		});
 	}
 

@@ -1,9 +1,9 @@
-import { Component, signal } from "@angular/core";
+import { Component } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { Router, RouterLink, RouterLinkActive } from "@angular/router";
+import { RouterLink, RouterLinkActive } from "@angular/router";
 
 interface NavItem {
 	label: string;
