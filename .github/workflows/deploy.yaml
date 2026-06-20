@@ -1,58 +1,42 @@
-name: Deploy VitePress GitHub Pages
+name: Deploy
 
 on:
   push:
-  workflow_dispatch:
-  workflow_run:
-    workflows: ["Fetch Upstream Data"]
-    types: [ completed ]
+    branches: [main]
 
-# 设置 GITHUB_TOKEN 的权限，以允许部署到 GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 只允许同时进行一次部署，跳过正在运行和最新队列之间的运行队列
-# 但是，不要取消正在进行的运行，因为我们希望允许这些生产部署完成
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0 # 获取完整的 git 历史记录用于时间戳
-      - uses: pnpm/action-setup@v6
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: pnpm
-      - name: Setup Pages
-        uses: actions/configure-pages@v6
-      - name: Install dependencies
-        run: pnpm install
-      - name: Build with VitePress
-        run: pnpm build
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .vitepress/dist
+      - uses: actions/checkout@v4
 
-  # 部署工作
+      - uses: oven-sh/setup-bun@v2
+        with:
+          cache: true
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/analog/public
+
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    runs-on: ubuntu-latest
-    name: Deploy
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v4

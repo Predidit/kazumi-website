@@ -1,23 +1,18 @@
-name: PR Test
+name: CI
 
 on:
   pull_request:
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v6
+      - uses: oven-sh/setup-bun@v2
+      
+      - run: bun install --frozen-lockfile
 
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "22"
-          cache: pnpm
+      - run: bun run lint
 
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build
-        run: pnpm build
+      - run: bun run build
