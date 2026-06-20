@@ -116,7 +116,7 @@ interface ContributorsData {
     }
 
     .core-card:hover {
-      background-color: var(--mat-sys-surface-container);
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
     }
 
     .core-avatar {
@@ -162,7 +162,7 @@ interface ContributorsData {
     }
 
     .contributor-item:hover {
-      background-color: var(--mat-sys-surface-container);
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
     }
 
     .contributor-avatar {

@@ -148,7 +148,7 @@ import { TocComponent } from "../components/toc";
     }
 
     .sidebar-link:hover {
-      background-color: var(--mat-sys-surface-container);
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
     }
 
     .sidebar-link mat-icon {
@@ -159,13 +159,13 @@ import { TocComponent } from "../components/toc";
     }
 
     .sidebar-link.active-link {
-      background-color: var(--mat-sys-secondary-container);
-      color: var(--mat-sys-on-secondary-container);
+      background-color: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
       font-weight: 600;
     }
 
     .sidebar-link.active-link mat-icon {
-      color: var(--mat-sys-on-secondary-container);
+      color: var(--mat-sys-on-primary-container);
     }
 
     .docs-content {

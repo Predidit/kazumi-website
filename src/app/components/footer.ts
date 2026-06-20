@@ -115,7 +115,7 @@ interface FooterGroup {
 
     .group-links a:hover {
       color: var(--mat-sys-on-surface);
-      background-color: var(--mat-sys-surface-container-high);
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
     }
 
     .link-icon {

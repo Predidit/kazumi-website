@@ -139,8 +139,8 @@ interface NavItem {
     }
 
     .header {
-      background-color: var(--mat-sys-surface-container);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      background-color: var(--mat-sys-surface);
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
       height: 64px;
     }
 
@@ -192,8 +192,8 @@ interface NavItem {
     }
 
     .desktop-nav a.active-link {
-      background-color: var(--mat-sys-secondary-container);
-      color: var(--mat-sys-on-secondary-container);
+      background-color: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
     }
 
     .desktop-nav a mat-icon {
@@ -220,7 +220,7 @@ interface NavItem {
     }
 
     .desktop-nav .nav-trigger:hover {
-      background-color: var(--mat-sys-surface-container-high);
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
     }
 
     .desktop-nav .nav-trigger .arrow {
@@ -252,7 +252,7 @@ interface NavItem {
 export class HeaderComponent {
 	navItems: NavItem[] = [
 		{ label: "首页", route: "/", icon: "home" },
-		{ label: "文档", route: "/docs", icon: "menu_book" },
+		{ label: "文档", route: "/docs/intro/what-is-kazumi", icon: "menu_book" },
 		{ label: "下载", route: "/download", icon: "download" },
 		{
 			label: "关于",

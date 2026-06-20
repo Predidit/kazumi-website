@@ -85,11 +85,11 @@ interface TocItem {
 
     .toc-link:hover {
       color: var(--mat-sys-on-surface);
-      background-color: var(--mat-sys-surface-container);
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
     }
 
     .toc-link.active {
-      color: var(--mat-sys-primary);
+      color: var(--mat-sys-on-primary-container);
       background-color: var(--mat-sys-primary-container);
       font-weight: 500;
     }

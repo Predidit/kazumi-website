@@ -65,7 +65,7 @@ interface Feature {
     }
 
     .feature-card:hover {
-      background-color: var(--mat-sys-surface-container);
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
       transform: translateY(-2px);
     }
 

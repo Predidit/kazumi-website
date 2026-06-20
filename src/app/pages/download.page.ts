@@ -184,7 +184,7 @@ interface Platform {
     }
 
     .platform-item:hover {
-      background: var(--mat-sys-surface-container-high);
+      background: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
     }
 
     .platform-info {
