@@ -62,7 +62,7 @@ interface FooterGroup {
         <div class="footer-bottom">
           <p class="copyright">
             <mat-icon class="copyright-icon">copyright</mat-icon>
-            <span>2024-present <a href="https://github.com/Predidit" target="_blank" rel="noopener noreferrer">Predidit</a> · MIT licensed</span>
+            <span>2025-{{ currentYear }} <a href="https://github.com/Predidit" target="_blank" rel="noopener noreferrer">Predidit</a> · MIT licensed</span>
           </p>
         </div>
       </div>
@@ -91,19 +91,17 @@ interface FooterGroup {
     .group-title {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--mat-sys-on-surface-variant);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      gap: 8px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--mat-sys-on-surface);
       margin-bottom: 20px;
     }
 
     .group-title mat-icon {
-      font-size: 16px;
-      width: 16px;
-      height: 16px;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
     }
 
     .group-links {
@@ -120,11 +118,11 @@ interface FooterGroup {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      color: var(--mat-sys-on-surface-variant);
+      color: var(--mat-sys-outline);
       text-decoration: none;
-      font-size: 0.875rem;
-      padding: 8px 16px;
-      border-radius: 20px;
+      font-size: 0.8125rem;
+      padding: 6px 12px;
+      border-radius: 16px;
       transition: background-color 0.2s, color 0.2s;
     }
 
@@ -191,6 +189,8 @@ interface FooterGroup {
   `,
 })
 export class FooterComponent {
+	currentYear = new Date().getFullYear();
+
 	groups: FooterGroup[] = [
 		{
 			title: "项目",
