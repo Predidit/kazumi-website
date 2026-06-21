@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import { afterNextRender, Component, inject, PLATFORM_ID } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
@@ -48,10 +49,16 @@ interface Feature {
           </div>
         }
       </div>
+
+      <div class="scroll-hint" (click)="scrollDown()">
+        <mat-icon>expand_more</mat-icon>
+      </div>
     </section>
+    <div id="after-hero"></div>
   `,
 	styles: `
     .hero {
+      position: relative;
       min-height: calc(100vh - 64px);
       display: flex;
       flex-direction: column;
@@ -178,6 +185,38 @@ interface Feature {
       line-height: 1.6;
     }
 
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      color: var(--mat-sys-on-surface-variant);
+      cursor: pointer;
+      animation: bounce 2s ease-in-out infinite;
+      transition: color 0.2s;
+    }
+
+    .scroll-hint:hover {
+      color: var(--mat-sys-on-surface);
+    }
+
+    .scroll-hint mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
     @media (max-width: 768px) {
       .hero {
         min-height: auto;
@@ -225,10 +264,16 @@ interface Feature {
         flex-shrink: 0;
         margin-bottom: 0;
       }
+
+      .scroll-hint {
+        display: none;
+      }
     }
   `,
 })
 export class HeroComponent {
+	private platformId = inject(PLATFORM_ID);
+
 	features: Feature[] = [
 		{
 			icon: "devices",
@@ -246,4 +291,33 @@ export class HeroComponent {
 			description: "基于 MIT 协议开源，免费无广告",
 		},
 	];
+
+	constructor() {
+		afterNextRender(() => {
+			if (!isPlatformBrowser(this.platformId)) return;
+
+			let locked = false;
+			const hero = document.querySelector(".hero");
+			const target = document.getElementById("after-hero");
+
+			const onWheel = (e: WheelEvent) => {
+				if (!hero || !target || locked) return;
+				const bottom = hero.getBoundingClientRect().bottom;
+				if (bottom <= window.innerHeight + 10 && e.deltaY > 0) {
+					e.preventDefault();
+					locked = true;
+					target.scrollIntoView({ behavior: "smooth" });
+					setTimeout(() => (locked = false), 1000);
+				}
+			};
+
+			hero?.addEventListener("wheel", onWheel as EventListener, { passive: false });
+		});
+	}
+
+	scrollDown() {
+		document
+			.getElementById("after-hero")
+			?.scrollIntoView({ behavior: "smooth" });
+	}
 }
