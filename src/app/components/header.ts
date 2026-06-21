@@ -79,8 +79,11 @@ interface NavItem {
               </a>
             }
           }
+        </nav>
 
-          <div class="theme-toggle">
+        <span class="nav-divider"></span>
+
+        <div class="theme-toggle">
             @for (opt of themeOptions; track opt.value) {
               <button
                 class="theme-btn"
@@ -92,7 +95,6 @@ interface NavItem {
               </button>
             }
           </div>
-        </nav>
 
         <button
           mat-icon-button
@@ -242,6 +244,13 @@ interface NavItem {
       width: 18px;
       height: 18px;
       margin-left: auto;
+    }
+
+    .nav-divider {
+      width: 1px;
+      height: 24px;
+      background-color: var(--mat-sys-outline-variant);
+      margin: 0 8px;
     }
 
     .theme-toggle {
