@@ -28,7 +28,6 @@ interface NavItem {
       <div class="header-inner">
         <a routerLink="/" class="logo">
           <img src="/logo.png" alt="Kazumi" class="logo-img" />
-          <span class="logo-text">Kazumi</span>
         </a>
 
         <span class="spacer"></span>
@@ -124,7 +123,6 @@ interface NavItem {
         <div class="sidebar-header">
           <a routerLink="/" class="sidebar-logo" (click)="menuOpen.set(false)">
             <img src="/logo.png" alt="Kazumi" class="logo-img" />
-            <span class="logo-text">Kazumi</span>
           </a>
           <button mat-icon-button class="sidebar-close" (click)="menuOpen.set(false)" aria-label="关闭菜单">
             <mat-icon>close</mat-icon>
