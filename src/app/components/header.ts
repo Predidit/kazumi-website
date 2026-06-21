@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
@@ -109,59 +109,107 @@ interface NavItem {
 
         <button
           mat-icon-button
-          [matMenuTriggerFor]="mobileMenu"
           class="mobile-menu-btn"
           aria-label="导航菜单"
+          (click)="menuOpen.set(true)"
         >
           <mat-icon>menu</mat-icon>
         </button>
       </div>
     </header>
 
-    <mat-menu #mobileMenu="matMenu">
-      @for (item of navItems; track item.label) {
-        @if (item.children) {
-          <button mat-menu-item [matMenuTriggerFor]="subMenu">
-            @if (item.icon) {
-              <mat-icon>{{ item.icon }}</mat-icon>
-            }
-            {{ item.label }}
-          </button>
-          <mat-menu #subMenu="matMenu">
-            @for (child of item.children; track child.route) {
-              @if (child.route.startsWith('http')) {
-                <a mat-menu-item [href]="child.route" target="_blank" rel="noopener">
-                  @if (child.icon) {
-                    <mat-icon>{{ child.icon }}</mat-icon>
-                  }
-                  {{ child.label }}
-                </a>
-              } @else {
-                <a mat-menu-item [routerLink]="child.route">
-                  @if (child.icon) {
-                    <mat-icon>{{ child.icon }}</mat-icon>
-                  }
-                  {{ child.label }}
-                </a>
-              }
-            }
-          </mat-menu>
-        } @else {
-          <a mat-menu-item [routerLink]="item.route">
-            @if (item.icon) {
-              <mat-icon>{{ item.icon }}</mat-icon>
-            }
-            {{ item.label }}
+    @if (menuOpen()) {
+      <div class="menu-overlay" (click)="menuOpen.set(false)"></div>
+      <aside class="mobile-sidebar">
+        <div class="sidebar-header">
+          <a routerLink="/" class="sidebar-logo" (click)="menuOpen.set(false)">
+            <img src="/logo.png" alt="Kazumi" class="logo-img" />
+            <span class="logo-text">Kazumi</span>
           </a>
-        }
-      }
-      <a mat-menu-item href="https://github.com/Predidit/Kazumi" target="_blank" rel="noopener noreferrer">
-        GitHub
-      </a>
-      <a mat-menu-item href="https://t.me/kazumi_app" target="_blank" rel="noopener noreferrer">
-        Telegram
-      </a>
-    </mat-menu>
+          <button mat-icon-button class="sidebar-close" (click)="menuOpen.set(false)" aria-label="关闭菜单">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <nav class="sidebar-nav">
+          @for (item of navItems; track item.label) {
+            @if (item.children) {
+              <div class="sidebar-group">
+                <button class="sidebar-group-trigger" (click)="toggleGroup(item.label)">
+                  @if (item.icon) {
+                    <mat-icon>{{ item.icon }}</mat-icon>
+                  }
+                  <span>{{ item.label }}</span>
+                  <mat-icon class="arrow" [class.expanded]="expandedGroups().includes(item.label)">expand_more</mat-icon>
+                </button>
+                @if (expandedGroups().includes(item.label)) {
+                  <div class="sidebar-group-items">
+                    @for (child of item.children; track child.route) {
+                      @if (child.route.startsWith('http')) {
+                        <a class="sidebar-link child" [href]="child.route" target="_blank" rel="noopener" (click)="menuOpen.set(false)">
+                          @if (child.icon) {
+                            <mat-icon>{{ child.icon }}</mat-icon>
+                          }
+                          {{ child.label }}
+                        </a>
+                      } @else {
+                        <a class="sidebar-link child" [routerLink]="child.route" routerLinkActive="active-link" (click)="menuOpen.set(false)">
+                          @if (child.icon) {
+                            <mat-icon>{{ child.icon }}</mat-icon>
+                          }
+                          {{ child.label }}
+                        </a>
+                      }
+                    }
+                  </div>
+                }
+              </div>
+            } @else {
+              <a class="sidebar-link" [routerLink]="item.route" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: item.route === '/' }" (click)="menuOpen.set(false)">
+                @if (item.icon) {
+                  <mat-icon>{{ item.icon }}</mat-icon>
+                }
+                {{ item.label }}
+              </a>
+            }
+          }
+        </nav>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section">
+          <span class="sidebar-section-label">主题</span>
+          <div class="sidebar-theme-toggle">
+            @for (opt of themeOptions; track opt.value) {
+              <button
+                class="theme-btn"
+                [class.active]="theme.mode() === opt.value"
+                (click)="theme.mode.set(opt.value)"
+                [attr.aria-label]="opt.label"
+              >
+                <mat-icon>{{ opt.icon }}</mat-icon>
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section">
+          <span class="sidebar-section-label">链接</span>
+          <div class="sidebar-social">
+            <a href="https://github.com/Predidit/Kazumi" target="_blank" rel="noopener noreferrer" class="sidebar-link">
+              <span class="mdi mdi-github"></span>
+              GitHub
+            </a>
+            <a href="https://t.me/kazumi_app" target="_blank" rel="noopener noreferrer" class="sidebar-link">
+              <span class="mdi mdi-telegram"></span>
+              Telegram
+            </a>
+          </div>
+        </div>
+      </aside>
+    }
   `,
 	styles: `
     :host {
@@ -339,6 +387,190 @@ interface NavItem {
       display: none;
     }
 
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1001;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .mobile-sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 280px;
+      max-width: 80vw;
+      background: var(--mat-sys-surface);
+      z-index: 1002;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      animation: slideIn 0.3s cubic-bezier(0.2, 0, 0, 1);
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--mat-sys-on-surface);
+    }
+
+    .sidebar-close {
+      color: var(--mat-sys-on-surface-variant);
+    }
+
+    .sidebar-nav {
+      padding: 8px 0;
+      flex: 1;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--mat-sys-on-surface-variant);
+      text-decoration: none;
+      transition: background-color 0.15s, color 0.15s;
+    }
+
+    .sidebar-link mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .sidebar-link:hover {
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
+    }
+
+    .sidebar-link.active-link {
+      background-color: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
+    }
+
+    .sidebar-link.child {
+      padding-left: 52px;
+      font-size: 0.875rem;
+    }
+
+    .sidebar-group-trigger {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 10px 20px;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--mat-sys-on-surface-variant);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background-color 0.15s;
+    }
+
+    .sidebar-group-trigger:hover {
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
+    }
+
+    .sidebar-group-trigger mat-icon:first-child {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .sidebar-group-trigger span {
+      flex: 1;
+      text-align: left;
+    }
+
+    .sidebar-group-trigger .arrow {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .sidebar-group-trigger .arrow.expanded {
+      transform: rotate(180deg);
+    }
+
+    .sidebar-group-items {
+      animation: expandDown 0.2s ease;
+    }
+
+    @keyframes expandDown {
+      from { opacity: 0; max-height: 0; }
+      to { opacity: 1; max-height: 300px; }
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: var(--mat-sys-outline-variant);
+      margin: 4px 16px;
+    }
+
+    .sidebar-section {
+      padding: 12px 20px;
+    }
+
+    .sidebar-section-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--mat-sys-on-surface-variant);
+      margin-bottom: 8px;
+    }
+
+    .sidebar-theme-toggle {
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      border-radius: 20px;
+      background-color: var(--mat-sys-surface-container);
+      width: fit-content;
+    }
+
+    .sidebar-social {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-social .sidebar-link {
+      padding: 8px 0;
+    }
+
+    .sidebar-social .mdi {
+      font-size: 20px;
+    }
+
     @media (max-width: 768px) {
       .desktop-nav,
       .theme-toggle,
@@ -359,6 +591,17 @@ interface NavItem {
 })
 export class HeaderComponent {
 	theme = inject(ThemeService);
+
+	menuOpen = signal(false);
+	expandedGroups = signal<string[]>([]);
+
+	toggleGroup(label: string) {
+		this.expandedGroups.update((groups) =>
+			groups.includes(label)
+				? groups.filter((g) => g !== label)
+				: [...groups, label],
+		);
+	}
 
 	themeOptions = [
 		{ value: "light" as ThemeMode, icon: "light_mode", label: "浅色" },
