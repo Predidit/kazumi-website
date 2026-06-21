@@ -39,7 +39,6 @@
 		"marked-mangle": "^1.1.10",
 		"marked-shiki": "^1.2.1",
 		"prismjs": "^1.29.0",
-		"remark-github-blockquote-alert": "^2.1.0",
 		"rxjs": "~7.8.0",
 		"tslib": "^2.3.0"
 	},

@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-@import 'remark-github-blockquote-alert/alert.css';
 @import 'prismjs/themes/prism-tomorrow.css';
 
 html {
@@ -268,5 +267,125 @@ img {
     border-top: 1px solid var(--mat-sys-outline-variant);
     font-size: 0.9em;
     color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// ── GitHub-style blockquote alerts (MD3) ──────────────────────────
+.markdown-alert {
+  border-left: 3px solid var(--mat-sys-outline-variant);
+  background-color: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface);
+  margin: 1.25em 0;
+  padding: 0.75em 1em;
+  border-radius: 0 12px 12px 0;
+
+  > p {
+    margin-bottom: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.markdown-alert-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 4px;
+
+  + p {
+    margin-top: 0;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+}
+
+.markdown-alert-note {
+  border-left-color: var(--mat-sys-primary);
+
+  .markdown-alert-title {
+    color: var(--mat-sys-primary);
+  }
+}
+
+.markdown-alert-tip {
+  border-left-color: #1a7f37;
+
+  .markdown-alert-title {
+    color: #1a7f37;
+  }
+}
+
+.markdown-alert-important {
+  border-left-color: #8250df;
+
+  .markdown-alert-title {
+    color: #8250df;
+  }
+}
+
+.markdown-alert-warning {
+  border-left-color: #9a6700;
+
+  .markdown-alert-title {
+    color: #9a6700;
+  }
+}
+
+.markdown-alert-caution {
+  border-left-color: #d1242f;
+
+  .markdown-alert-title {
+    color: #d1242f;
+  }
+}
+
+html[data-theme="dark"],
+html:not([data-theme]) {
+  @media (prefers-color-scheme: dark) {
+    .markdown-alert-tip {
+      border-left-color: #3fb950;
+      .markdown-alert-title { color: #3fb950; }
+    }
+    .markdown-alert-important {
+      border-left-color: #a371f7;
+      .markdown-alert-title { color: #a371f7; }
+    }
+    .markdown-alert-warning {
+      border-left-color: #d29922;
+      .markdown-alert-title { color: #d29922; }
+    }
+    .markdown-alert-caution {
+      border-left-color: #f85149;
+      .markdown-alert-title { color: #f85149; }
+    }
+  }
+}
+
+html[data-theme="dark"] {
+  .markdown-alert-tip {
+    border-left-color: #3fb950;
+    .markdown-alert-title { color: #3fb950; }
+  }
+  .markdown-alert-important {
+    border-left-color: #a371f7;
+    .markdown-alert-title { color: #a371f7; }
+  }
+  .markdown-alert-warning {
+    border-left-color: #d29922;
+    .markdown-alert-title { color: #d29922; }
+  }
+  .markdown-alert-caution {
+    border-left-color: #f85149;
+    .markdown-alert-title { color: #f85149; }
   }
 }
