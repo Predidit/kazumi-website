@@ -43,6 +43,30 @@ html {
     --mat-sys-primary-container: #005225;
     --mat-sys-on-primary-container: #B8F0B5;
   }
+
+  @media (prefers-color-scheme: dark) {
+    &:not([data-theme]) {
+      @include mat.theme((
+        color: (
+          theme-type: dark,
+          primary: mat.$green-palette,
+          tertiary: mat.$spring-green-palette,
+        ),
+        typography: (
+          brand-family: 'Roboto, "Noto Sans SC", sans-serif',
+          plain-family: 'Roboto, "Noto Sans SC", sans-serif',
+          bold-weight: 700,
+          medium-weight: 500,
+          regular-weight: 400,
+        ),
+        density: 0,
+      ));
+      --mat-sys-primary: #A1D39A;
+      --mat-sys-on-primary: #003915;
+      --mat-sys-primary-container: #005225;
+      --mat-sys-on-primary-container: #B8F0B5;
+    }
+  }
 }
 
 ::view-transition-old(root) {
