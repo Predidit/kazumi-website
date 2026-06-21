@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 import {
 	provideClientHydration,
-	withEventReplay,
+	withNoIncrementalHydration,
 } from "@angular/platform-browser";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 
@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
 		provideBrowserGlobalErrorListeners(),
 		provideFileRouter(),
 		provideHttpClient(withInterceptors([requestContextInterceptor])),
-		provideClientHydration(withEventReplay()),
+		provideClientHydration(withNoIncrementalHydration()),
 		provideAnimationsAsync(),
 		provideContent(withMarkdownRenderer()),
 	],

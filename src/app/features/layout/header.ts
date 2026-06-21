@@ -26,7 +26,7 @@ interface NavItem {
 	template: `
     <header class="header">
       <div class="header-inner">
-        <a routerLink="/" href="/" class="logo">
+        <a routerLink="/" class="logo">
           <img src="/logo.png" alt="Kazumi" class="logo-img" />
         </a>
 
@@ -55,7 +55,7 @@ interface NavItem {
                       {{ child.label }}
                     </a>
                   } @else {
-                    <a mat-menu-item [routerLink]="child.route" [href]="child.route">
+                    <a mat-menu-item [routerLink]="child.route">
                       @if (child.icon) {
                         <mat-icon>{{ child.icon }}</mat-icon>
                       }
@@ -68,7 +68,6 @@ interface NavItem {
               <a
                 mat-button
                 [routerLink]="item.route"
-                [href]="item.route"
                 routerLinkActive="active-link"
                 [routerLinkActiveOptions]="{ exact: item.route === '/' }"
               >
@@ -122,7 +121,7 @@ interface NavItem {
       <div class="menu-overlay" (click)="menuOpen.set(false)"></div>
       <aside class="mobile-sidebar">
         <div class="sidebar-header">
-          <a routerLink="/" href="/" class="sidebar-logo" (click)="menuOpen.set(false)">
+          <a routerLink="/" class="sidebar-logo" (click)="menuOpen.set(false)">
             <img src="/logo.png" alt="Kazumi" class="logo-img" />
           </a>
           <button mat-icon-button class="sidebar-close" (click)="menuOpen.set(false)" aria-label="关闭菜单">
@@ -152,7 +151,7 @@ interface NavItem {
                           {{ child.label }}
                         </a>
                       } @else {
-                        <a class="sidebar-link child" [routerLink]="child.route" [href]="child.route" routerLinkActive="active-link" (click)="menuOpen.set(false)">
+                        <a class="sidebar-link child" [routerLink]="child.route" routerLinkActive="active-link" (click)="menuOpen.set(false)">
                           @if (child.icon) {
                             <mat-icon>{{ child.icon }}</mat-icon>
                           }
@@ -164,7 +163,7 @@ interface NavItem {
                 }
               </div>
             } @else {
-              <a class="sidebar-link" [routerLink]="item.route" [href]="item.route" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: item.route === '/' }" (click)="menuOpen.set(false)">
+              <a class="sidebar-link" [routerLink]="item.route" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: item.route === '/' }" (click)="menuOpen.set(false)">
                 @if (item.icon) {
                   <mat-icon>{{ item.icon }}</mat-icon>
                 }

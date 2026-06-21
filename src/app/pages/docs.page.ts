@@ -30,7 +30,6 @@ import { TocComponent } from "../features/docs/toc";
                 <a
                   class="sidebar-link"
                   [routerLink]="page.route"
-                  [href]="page.route"
                   routerLinkActive="active-link"
                 >
                   <mat-icon>{{ page.icon }}</mat-icon>

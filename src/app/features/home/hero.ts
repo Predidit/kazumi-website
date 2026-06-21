@@ -23,11 +23,11 @@ interface Feature {
           </p>
           <p class="hero-subtitle">绝赞开发中 ～</p>
           <div class="hero-actions">
-            <a mat-fab extended routerLink="/download" href="/download" class="fab-primary">
+            <a mat-fab extended routerLink="/download" class="fab-primary">
               <mat-icon>download</mat-icon>
               立即下载
             </a>
-            <a mat-stroked-button routerLink="/docs/intro/what-is-kazumi" href="/docs/intro/what-is-kazumi" class="fab-secondary">
+            <a mat-stroked-button routerLink="/docs/intro/what-is-kazumi" class="fab-secondary">
               <mat-icon>menu_book</mat-icon>
               了解更多
             </a>
