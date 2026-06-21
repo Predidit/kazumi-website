@@ -1,6 +1,7 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { HeaderComponent } from "./components/header";
+import { CodeCopyService } from "./services/code-copy";
 
 @Component({
 	selector: "app-root",
@@ -23,4 +24,8 @@ import { HeaderComponent } from "./components/header";
     }
   `,
 })
-export class App {}
+export class App {
+	constructor() {
+		inject(CodeCopyService);
+	}
+}
