@@ -52,6 +52,10 @@ interface Feature {
   `,
 	styles: `
     .hero {
+      min-height: calc(100vh - 64px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       padding: 80px 24px;
       background-color: var(--mat-sys-surface);
     }
@@ -176,6 +180,7 @@ interface Feature {
 
     @media (max-width: 768px) {
       .hero {
+        min-height: auto;
         padding: 64px 16px;
       }
 
