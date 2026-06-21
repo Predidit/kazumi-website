@@ -69,6 +69,12 @@ html {
   }
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 ::view-transition-old(root) {
   animation: fade-out 0.25s ease-out;
 }
