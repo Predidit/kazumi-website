@@ -1,23 +1,11 @@
 # Kazumi Website
 
-基于 VitePress / TypeScript / Vue。
+[Kazumi](https://github.com/Predidit/Kazumi) 官方网站，基于 AnalogJS + Angular 22 + Vite 构建。
 
-## 部署
+## 贡献
 
-安装依赖
+欢迎参与贡献！请阅读 [CONTRIBUTING.md](./CONTRIBUTING.md) 了解开发规范。
 
-```shell
-pnpm install
-```
+## 许可证
 
-运行
-
-```shell
-pnpm run dev
-```
-
-## 依赖
-
-- [medium-zoom](https://github.com/francoischalifour/medium-zoom)
-- [vitepress-plugin-group-icons](https://github.com/yuyinws/vitepress-plugin-group-icons)
-- [markdown-it-footnote](https://github.com/markdown-it/markdown-it-footnote)
+[MIT](./LICENSE)

@@ -1,23 +1,23 @@
-name: PR Test
+name: CI
 
 on:
   pull_request:
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout code
+        uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "22"
-          cache: pnpm
-
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      
       - name: Install dependencies
-        run: pnpm install
+        run: bun install
 
-      - name: Build
-        run: pnpm build
+      - name: Run linting
+        run: bun run lint
+
+      - name: Build project
+        run: bun run build

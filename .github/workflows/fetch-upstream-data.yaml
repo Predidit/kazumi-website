@@ -18,15 +18,13 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Fetch all data
         run: |
           echo "开始获取所有仓库数据..."
-          npx --yes tsx .github/workflows/fetch-upstream-data.ts
+          bun run .github/workflows/fetch-upstream-data.ts
 
       - name: Commit and push changes
         run: |
@@ -34,12 +32,12 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
           # 检查是否有文件变化
-          git add src/public/contributors.json src/public/releases.json
+          git add public/contributors.json public/releases.json
           
           if git diff --cached --quiet; then
             echo "没有检测到文件变化"
           else
             echo "检测到文件变化，正在提交..."
-            git commit -m "chore: update repository data [skip ci]"
+            git commit -m "chore: update repository data"
             git push
           fi

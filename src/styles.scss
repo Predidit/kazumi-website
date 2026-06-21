@@ -1,0 +1,485 @@
+@use '@angular/material' as mat;
+@import 'prismjs/themes/prism-tomorrow.css';
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$green-palette,
+      tertiary: mat.$spring-green-palette,
+    ),
+    typography: (
+      brand-family: 'Roboto, "Noto Sans SC", sans-serif',
+      plain-family: 'Roboto, "Noto Sans SC", sans-serif',
+      bold-weight: 700,
+      medium-weight: 500,
+      regular-weight: 400,
+    ),
+    density: 0,
+  ));
+  --mat-sys-primary: #3B6939;
+  --mat-sys-on-primary: #FFFFFF;
+  --mat-sys-primary-container: #B8F0B5;
+  --mat-sys-on-primary-container: #002200;
+
+  &[data-theme="dark"] {
+    @include mat.theme((
+      color: (
+        theme-type: dark,
+        primary: mat.$green-palette,
+        tertiary: mat.$spring-green-palette,
+      ),
+      typography: (
+        brand-family: 'Roboto, "Noto Sans SC", sans-serif',
+        plain-family: 'Roboto, "Noto Sans SC", sans-serif',
+        bold-weight: 700,
+        medium-weight: 500,
+        regular-weight: 400,
+      ),
+      density: 0,
+    ));
+    --mat-sys-primary: #A1D39A;
+    --mat-sys-on-primary: #003915;
+    --mat-sys-primary-container: #005225;
+    --mat-sys-on-primary-container: #B8F0B5;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &:not([data-theme]) {
+      @include mat.theme((
+        color: (
+          theme-type: dark,
+          primary: mat.$green-palette,
+          tertiary: mat.$spring-green-palette,
+        ),
+        typography: (
+          brand-family: 'Roboto, "Noto Sans SC", sans-serif',
+          plain-family: 'Roboto, "Noto Sans SC", sans-serif',
+          bold-weight: 700,
+          medium-weight: 500,
+          regular-weight: 400,
+        ),
+        density: 0,
+      ));
+      --mat-sys-primary: #A1D39A;
+      --mat-sys-on-primary: #003915;
+      --mat-sys-primary-container: #005225;
+      --mat-sys-on-primary-container: #B8F0B5;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+::view-transition-old(root) {
+  animation: fade-out 0.25s ease-out;
+}
+
+::view-transition-new(root) {
+  animation: fade-in 0.25s ease-in;
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  display: block;
+  height: 100%;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--mat-sys-typescale-body-large-font);
+  color: var(--mat-sys-on-surface);
+  background-color: var(--mat-sys-surface);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--mat-sys-typescale-headline-large-font);
+  font-weight: var(--mat-sys-typescale-headline-large-weight);
+  line-height: 1.3;
+  color: var(--mat-sys-on-surface);
+}
+
+a {
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+::selection {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+// ─── Markdown / Prose content styles ──────────────────────────────
+
+.markdown-body {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--mat-sys-on-surface);
+  word-break: break-word;
+  overflow-wrap: break-word;
+
+  // ── Headings ──
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--mat-sys-typescale-headline-large-font);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--mat-sys-on-surface);
+    margin-top: 2em;
+    margin-bottom: 0.75em;
+    scroll-margin-top: 80px;
+  }
+
+  h1 {
+    font-size: 2em;
+    padding-bottom: 0.4em;
+    border-bottom: 2px solid var(--mat-sys-outline-variant);
+  }
+
+  h2 {
+    font-size: 1.5em;
+    padding-bottom: 0.35em;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  }
+
+  h3 {
+    font-size: 1.25em;
+  }
+
+  h4 {
+    font-size: 1.1em;
+  }
+
+  // ── Paragraphs & text ──
+  p {
+    margin-bottom: 1em;
+  }
+
+  strong {
+    font-weight: 700;
+    color: var(--mat-sys-on-surface);
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  // ── Links ──
+  a {
+    color: var(--mat-sys-primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-bottom-color: var(--mat-sys-primary);
+    }
+  }
+
+  // ── Lists ──
+  ul, ol {
+    margin-bottom: 1em;
+    padding-left: 2em;
+  }
+
+  li {
+    margin-bottom: 0.4em;
+    line-height: 1.8;
+
+    & > ul, & > ol {
+      margin-top: 0.4em;
+      margin-bottom: 0;
+    }
+  }
+
+  // ── Blockquotes ──
+  blockquote {
+    margin: 1em 0;
+    padding: 0.75em 1.25em;
+    border-left: 4px solid var(--mat-sys-primary);
+    background: var(--mat-sys-surface-container);
+    border-radius: 0 12px 12px 0;
+    color: var(--mat-sys-on-surface-variant);
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // ── Code ──
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+    font-size: 0.875em;
+    padding: 0.15em 0.4em;
+    background: var(--mat-sys-surface-container);
+    border-radius: 6px;
+    color: var(--mat-sys-on-surface);
+  }
+
+  pre {
+    position: relative;
+    margin: 1.25em 0;
+    padding: 1.25em;
+    background: var(--mat-sys-surface-container-highest);
+    border-radius: 16px;
+    overflow-x: auto;
+    line-height: 1.6;
+
+    code {
+      padding: 0;
+      background: none;
+      border-radius: 0;
+      font-size: 0.875em;
+      color: var(--mat-sys-on-surface);
+    }
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: var(--mat-sys-surface-container);
+    color: var(--mat-sys-on-surface-variant);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s, color 0.2s, background-color 0.2s;
+
+    .mdi {
+      font-size: 16px;
+    }
+
+    &:hover {
+      background: var(--mat-sys-surface-container-high);
+      color: var(--mat-sys-on-surface);
+    }
+
+    &.copied {
+      color: var(--mat-sys-primary);
+    }
+  }
+
+  pre:hover .copy-btn {
+    opacity: 1;
+  }
+
+  // ── Tables ──
+  table {
+    width: 100%;
+    margin: 1.25em 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--mat-sys-outline-variant);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  th {
+    background: var(--mat-sys-surface-container);
+    font-weight: 600;
+    text-align: left;
+    padding: 0.75em 1em;
+    border-bottom: 2px solid var(--mat-sys-outline-variant);
+    border-right: 1px solid var(--mat-sys-outline-variant);
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  td {
+    padding: 0.75em 1em;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    border-right: 1px solid var(--mat-sys-outline-variant);
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  // ── Horizontal rule ──
+  hr {
+    margin: 2em 0;
+    border: none;
+    border-top: 2px solid var(--mat-sys-outline-variant);
+  }
+
+  // ── Images ──
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.25em auto;
+    border-radius: 0;
+    object-fit: contain;
+  }
+
+  // ── Footnotes ──
+  .footnotes {
+    margin-top: 2em;
+    padding-top: 1em;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+    font-size: 0.9em;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// ── GitHub-style blockquote alerts (MD3) ──────────────────────────
+.markdown-alert {
+  border-left: 3px solid var(--mat-sys-outline-variant);
+  background-color: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface);
+  margin: 1.25em 0;
+  padding: 0.75em 1em;
+  border-radius: 0 12px 12px 0;
+
+  > p {
+    margin-bottom: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.markdown-alert-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 4px;
+
+  + p {
+    margin-top: 0;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+}
+
+.markdown-alert-note {
+  border-left-color: var(--mat-sys-primary);
+
+  .markdown-alert-title {
+    color: var(--mat-sys-primary);
+  }
+}
+
+.markdown-alert-tip {
+  border-left-color: #1a7f37;
+
+  .markdown-alert-title {
+    color: #1a7f37;
+  }
+}
+
+.markdown-alert-important {
+  border-left-color: #8250df;
+
+  .markdown-alert-title {
+    color: #8250df;
+  }
+}
+
+.markdown-alert-warning {
+  border-left-color: #9a6700;
+
+  .markdown-alert-title {
+    color: #9a6700;
+  }
+}
+
+.markdown-alert-caution {
+  border-left-color: #d1242f;
+
+  .markdown-alert-title {
+    color: #d1242f;
+  }
+}
+
+html[data-theme="dark"],
+html:not([data-theme]) {
+  @media (prefers-color-scheme: dark) {
+    .markdown-alert-tip {
+      border-left-color: #3fb950;
+      .markdown-alert-title { color: #3fb950; }
+    }
+    .markdown-alert-important {
+      border-left-color: #a371f7;
+      .markdown-alert-title { color: #a371f7; }
+    }
+    .markdown-alert-warning {
+      border-left-color: #d29922;
+      .markdown-alert-title { color: #d29922; }
+    }
+    .markdown-alert-caution {
+      border-left-color: #f85149;
+      .markdown-alert-title { color: #f85149; }
+    }
+  }
+}
+
+html[data-theme="dark"] {
+  .markdown-alert-tip {
+    border-left-color: #3fb950;
+    .markdown-alert-title { color: #3fb950; }
+  }
+  .markdown-alert-important {
+    border-left-color: #a371f7;
+    .markdown-alert-title { color: #a371f7; }
+  }
+  .markdown-alert-warning {
+    border-left-color: #d29922;
+    .markdown-alert-title { color: #d29922; }
+  }
+  .markdown-alert-caution {
+    border-left-color: #f85149;
+    .markdown-alert-title { color: #f85149; }
+  }
+}
