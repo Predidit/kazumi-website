@@ -27,7 +27,7 @@ interface Feature {
               <mat-icon>download</mat-icon>
               立即下载
             </a>
-            <a mat-fab extended routerLink="/docs/intro/what-is-kazumi" class="fab-secondary">
+            <a mat-stroked-button routerLink="/docs/intro/what-is-kazumi" class="fab-secondary">
               <mat-icon>menu_book</mat-icon>
               了解更多
             </a>
@@ -116,8 +116,13 @@ interface Feature {
     }
 
     .fab-secondary {
-      --md-fab-container-color: var(--mat-sys-secondary-container);
-      --md-fab-icon-color: var(--mat-sys-on-secondary-container);
+      height: 56px;
+      padding: 0 24px;
+      border-radius: 16px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.1px;
+      color: var(--mat-sys-primary);
     }
 
     .hero-visual {
