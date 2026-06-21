@@ -122,6 +122,7 @@ interface Feature {
 
     .hero-visual {
       flex-shrink: 0;
+      margin-right: 80px;
     }
 
     .hero-logo {
@@ -142,8 +143,8 @@ interface Feature {
     .feature-card {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
+      align-items: flex-start;
+      text-align: left;
       padding: 32px 24px;
       border-radius: 16px;
       background-color: var(--mat-sys-surface-container-low);
