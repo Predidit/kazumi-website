@@ -3,6 +3,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatListModule } from "@angular/material/list";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { RouterModule, RouterOutlet } from "@angular/router";
+import { DocFooterComponent } from "../components/doc-footer";
 import { TocComponent } from "../components/toc";
 
 @Component({
@@ -15,6 +16,7 @@ import { TocComponent } from "../components/toc";
 		MatIconModule,
 		RouterModule,
 		TocComponent,
+		DocFooterComponent,
 	],
 	template: `
     <mat-sidenav-container class="docs-container">
@@ -90,6 +92,7 @@ import { TocComponent } from "../components/toc";
         <div class="content-layout">
           <div class="content-main">
             <router-outlet />
+            <app-doc-footer />
           </div>
           <aside class="content-toc">
             <app-toc />
