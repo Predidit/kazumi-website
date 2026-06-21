@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { ViewportScroller } from "@angular/common";
+import { Component, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
@@ -285,6 +286,7 @@ interface Feature {
   `,
 })
 export class HeroComponent {
+	private readonly viewportScroller = inject(ViewportScroller);
 	private scrollLocked = false;
 
 	features: Feature[] = [
@@ -323,8 +325,6 @@ export class HeroComponent {
 	}
 
 	scrollDown() {
-		document
-			.getElementById("after-hero")
-			?.scrollIntoView({ behavior: "smooth" });
+		this.viewportScroller.scrollToAnchor("after-hero");
 	}
 }
