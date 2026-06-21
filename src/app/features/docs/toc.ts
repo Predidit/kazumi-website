@@ -1,4 +1,4 @@
-import { Component, input, signal } from "@angular/core";
+import { Component, input, output, signal } from "@angular/core";
 import { TocItem } from "./docs-state.service";
 
 const TOC_TITLE = "页面导航";
@@ -6,6 +6,9 @@ const TOC_TITLE = "页面导航";
 @Component({
 	selector: "app-toc",
 	standalone: true,
+	host: {
+		"[class.embedded]": "embedded()",
+	},
 	template: `
     <nav class="toc">
       @if (items().length > 0) {
@@ -17,7 +20,7 @@ const TOC_TITLE = "页面导航";
                 [href]="'#' + item.id"
                 class="toc-link"
                 [class.active]="activeId() === item.id"
-                (click)="activeId.set(item.id)"
+                (click)="onLinkClick(item.id)"
               >
                 {{ item.text }}
               </a>
@@ -36,6 +39,12 @@ const TOC_TITLE = "页面导航";
       overflow-y: auto;
       padding-left: 24px;
       border-left: 1px solid var(--mat-sys-outline-variant);
+    }
+
+    :host(.embedded) .toc {
+      position: static;
+      top: auto;
+      max-height: none;
     }
 
     .toc-title {
@@ -83,6 +92,13 @@ const TOC_TITLE = "页面导航";
 })
 export class TocComponent {
 	readonly items = input<TocItem[]>([]);
+	readonly embedded = input(false);
 	readonly activeId = signal("");
 	readonly title = TOC_TITLE;
+	readonly linkClick = output<string>();
+
+	onLinkClick(id: string) {
+		this.activeId.set(id);
+		this.linkClick.emit(id);
+	}
 }

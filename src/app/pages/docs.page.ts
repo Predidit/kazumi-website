@@ -30,21 +30,6 @@ import { TocComponent } from "../features/docs/toc";
         (openedChange)="syncNavState($event)"
         class="docs-sidebar"
       >
-        @if (isMobile()) {
-          <div class="sidebar-header">
-            <span class="sidebar-heading">文档目录</span>
-            <button
-              mat-icon-button
-              type="button"
-              class="sidebar-close"
-              aria-label="关闭文档目录"
-              (click)="docsNavOpen.set(false)"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
-          </div>
-        }
-
         <nav class="sidebar-nav">
           @for (section of sections; track section.title) {
             <div class="sidebar-section">
@@ -65,17 +50,19 @@ import { TocComponent } from "../features/docs/toc";
         </nav>
       </mat-sidenav>
 
-      <mat-sidenav-content class="docs-content">
-        <button
-          mat-stroked-button
-          type="button"
-          class="docs-nav-toggle"
-          (click)="docsNavOpen.set(true)"
-        >
-          <mat-icon>menu_book</mat-icon>
-          文档目录
-        </button>
+      <mat-sidenav
+        position="end"
+        mode="over"
+        [opened]="tocOpen()"
+        (openedChange)="syncTocState($event)"
+        class="toc-sidebar"
+      >
+        <div class="toc-sidebar-content">
+          <app-toc [items]="docsState.toc()" [embedded]="true" (linkClick)="tocOpen.set(false)" />
+        </div>
+      </mat-sidenav>
 
+      <mat-sidenav-content class="docs-content">
         <div class="content-layout">
           <div class="content-main">
             <router-outlet />
@@ -86,6 +73,28 @@ import { TocComponent } from "../features/docs/toc";
         </div>
       </mat-sidenav-content>
     </mat-sidenav-container>
+
+    @if (isMobile()) {
+      <div class="mobile-bottom-bar">
+        <button
+          type="button"
+          class="bottom-bar-btn"
+          (click)="openDocsNav()"
+        >
+          <mat-icon>menu_book</mat-icon>
+          <span>文档目录</span>
+        </button>
+        <div class="bottom-bar-divider"></div>
+        <button
+          type="button"
+          class="bottom-bar-btn"
+          (click)="openToc()"
+        >
+          <mat-icon>toc</mat-icon>
+          <span>页面导航</span>
+        </button>
+      </div>
+    }
   `,
 	styles: [
 		`
@@ -93,32 +102,28 @@ import { TocComponent } from "../features/docs/toc";
       height: calc(100vh - 64px);
     }
 
+    mat-sidenav.docs-sidebar,
+    mat-sidenav.toc-sidebar {
+      border-radius: 0;
+    }
+
     .docs-sidebar {
       width: 260px;
       background: var(--mat-sys-surface-container-low);
       border-right: none;
-      border-radius: 0;
       padding: 16px 12px;
       overflow-y: auto;
     }
 
-    .sidebar-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 4px 12px 16px;
-      margin-bottom: 4px;
-      border-bottom: 1px solid var(--mat-sys-outline-variant);
+    .toc-sidebar {
+      width: min(300px, 86vw);
+      background: var(--mat-sys-surface-container-low);
+      border-left: none;
     }
 
-    .sidebar-heading {
-      color: var(--mat-sys-on-surface);
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .sidebar-close {
-      color: var(--mat-sys-on-surface-variant);
+    .toc-sidebar-content {
+      padding: 16px 16px 16px;
+      overflow-y: auto;
     }
 
     .sidebar-nav {
@@ -177,21 +182,9 @@ import { TocComponent } from "../features/docs/toc";
     }
 
     .docs-content {
-      padding: 0 24px;
+      padding: 0 24px 24px;
       background: var(--mat-sys-surface);
       overflow-y: auto;
-    }
-
-    .docs-nav-toggle {
-      display: none;
-      margin: 16px 0 0;
-      border-radius: 20px;
-    }
-
-    .docs-nav-toggle mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
     }
 
     .content-layout {
@@ -211,6 +204,59 @@ import { TocComponent } from "../features/docs/toc";
       flex-shrink: 0;
     }
 
+    .mobile-bottom-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      height: 48px;
+      align-items: center;
+      background: var(--mat-sys-surface);
+      border-top: 1px solid var(--mat-sys-outline-variant);
+      border-radius: 0;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .bottom-bar-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 100%;
+      border: none;
+      border-radius: 0;
+      background: none;
+      color: var(--mat-sys-on-surface-variant);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 0.15s, color 0.15s;
+    }
+
+    .bottom-bar-btn:hover {
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
+    }
+
+    .bottom-bar-btn:active {
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+    }
+
+    .bottom-bar-btn mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .bottom-bar-divider {
+      width: 1px;
+      height: 24px;
+      background: var(--mat-sys-outline-variant);
+    }
+
     @media (max-width: 1100px) {
       .content-toc {
         display: none;
@@ -218,17 +264,17 @@ import { TocComponent } from "../features/docs/toc";
     }
 
     @media (max-width: 768px) {
+      .docs-container {
+        height: calc(100vh - 64px - 48px);
+      }
+
       .docs-sidebar {
         width: min(320px, 86vw);
         padding: 16px 12px;
       }
 
       .docs-content {
-        padding: 0 16px;
-      }
-
-      .docs-nav-toggle {
-        display: inline-flex;
+        padding: 0 16px 16px;
       }
 
       .content-layout {
@@ -239,6 +285,10 @@ import { TocComponent } from "../features/docs/toc";
 
       .content-main {
         width: 100%;
+      }
+
+      .mobile-bottom-bar {
+        display: flex;
       }
     }
 
@@ -251,6 +301,7 @@ import { TocComponent } from "../features/docs/toc";
 export default class DocsComponent {
 	readonly sections = DOC_SECTIONS;
 	readonly docsNavOpen = signal(false);
+	readonly tocOpen = signal(false);
 	private readonly breakpointObserver = inject(BreakpointObserver);
 	readonly isMobile = toSignal(
 		this.breakpointObserver
@@ -264,12 +315,29 @@ export default class DocsComponent {
 	closeMobileNav() {
 		if (this.isMobile()) {
 			this.docsNavOpen.set(false);
+			this.tocOpen.set(false);
 		}
+	}
+
+	openDocsNav() {
+		this.tocOpen.set(false);
+		this.docsNavOpen.set(true);
+	}
+
+	openToc() {
+		this.docsNavOpen.set(false);
+		this.tocOpen.set(true);
 	}
 
 	syncNavState(opened: boolean) {
 		if (this.isMobile()) {
 			this.docsNavOpen.set(opened);
+		}
+	}
+
+	syncTocState(opened: boolean) {
+		if (this.isMobile()) {
+			this.tocOpen.set(opened);
 		}
 	}
 }
