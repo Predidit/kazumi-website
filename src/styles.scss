@@ -2,10 +2,10 @@
 @import 'prismjs/themes/prism-tomorrow.css';
 
 html {
-  color-scheme: light dark;
   @include mat.theme((
     color: (
-      primary: mat.$chartreuse-palette,
+      theme-type: light,
+      primary: mat.$green-palette,
       tertiary: mat.$spring-green-palette,
     ),
     typography: (
@@ -17,13 +17,31 @@ html {
     ),
     density: 0,
   ));
-
-  &[data-theme="light"] {
-    color-scheme: light;
-  }
+  --mat-sys-primary: #3B6939;
+  --mat-sys-on-primary: #FFFFFF;
+  --mat-sys-primary-container: #B8F0B5;
+  --mat-sys-on-primary-container: #002200;
 
   &[data-theme="dark"] {
-    color-scheme: dark;
+    @include mat.theme((
+      color: (
+        theme-type: dark,
+        primary: mat.$green-palette,
+        tertiary: mat.$spring-green-palette,
+      ),
+      typography: (
+        brand-family: 'Roboto, "Noto Sans SC", sans-serif',
+        plain-family: 'Roboto, "Noto Sans SC", sans-serif',
+        bold-weight: 700,
+        medium-weight: 500,
+        regular-weight: 400,
+      ),
+      density: 0,
+    ));
+    --mat-sys-primary: #A1D39A;
+    --mat-sys-on-primary: #003915;
+    --mat-sys-primary-container: #005225;
+    --mat-sys-on-primary-container: #B8F0B5;
   }
 }
 
