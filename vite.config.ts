@@ -1,8 +1,28 @@
 /// <reference types="vitest" />
 
-import analog from "@analogjs/platform";
+import analog, { type PrerenderContentFile } from "@analogjs/platform";
 import markedAlert from "marked-alert";
 import { defineConfig } from "vite";
+
+function filterDocsContentRoutes() {
+	return {
+		name: "filter-docs-content-routes",
+		enforce: "post" as const,
+		transform(code: string, id: string) {
+			if (
+				!id.includes("@analogjs/router") ||
+				!code.includes("ANALOG_CONTENT_ROUTE_FILES")
+			) {
+				return;
+			}
+
+			return code.replace(
+				/"[^"]*\/src\/content\/docs\/[^"]+\.md":\s*\(\) => import\('[^']+'\)\.then\(m => m\.default\),?/g,
+				"",
+			);
+		},
+	};
+}
 
 // https://vitejs.dev/config/
 export default defineConfig(() => ({
@@ -28,21 +48,23 @@ export default defineConfig(() => ({
 					"/",
 					"/download",
 					"/about/icon",
-					"/docs/intro/what-is-kazumi",
-					"/docs/intro/how-to-download",
-					"/docs/intro/screenshots",
-					"/docs/intro/module-details",
-					"/docs/rules/introduce-rules",
-					"/docs/rules/develop-rules",
-					"/docs/rules/develop-rules-example",
-					"/docs/architecture/video-parser",
-					"/docs/architecture/bbcode",
-					"/docs/misc/qa",
-					"/docs/misc/how-to-install-in-ios",
-					"/docs/misc/how-to-install-in-ohos",
+					{
+						contentDir: "src/content/docs",
+						recursive: true,
+						transform: (file: PrerenderContentFile) => {
+							if (file.extension !== "md") {
+								return false;
+							}
+							const slug = file.attributes.slug || file.name;
+							return file.relativePath
+								? `/docs/${file.relativePath}/${slug}`
+								: `/docs/${slug}`;
+						},
+					},
 				],
 			},
 		}),
+		filterDocsContentRoutes(),
 	],
 	test: {
 		globals: true,

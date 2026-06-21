@@ -1,20 +1,23 @@
 import { isPlatformBrowser } from "@angular/common";
 import {
 	Component,
+	computed,
 	inject,
-	OnDestroy,
 	PLATFORM_ID,
 	signal,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
 import { NavigationEnd, Router, RouterLink } from "@angular/router";
-import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
+import { DOC_PAGES, normalizeDocRoute, routeToContentPath } from "./docs-nav";
 
-interface DocPage {
-	route: string;
-	title: string;
-}
+const FOOTER_LABELS = {
+	edit: "\u5e2e\u52a9\u6211\u4eec\u6539\u8fdb\u672c\u9875\u9762\u5185\u5bb9",
+	lastUpdated: "\u4e0a\u6b21\u66f4\u65b0",
+	prev: "\u4e0a\u4e00\u9875",
+	next: "\u4e0b\u4e00\u9875",
+};
 
 @Component({
 	selector: "app-doc-footer",
@@ -24,10 +27,10 @@ interface DocPage {
       <div class="edit-bar">
         <a [href]="editUrl()" target="_blank" rel="noopener noreferrer" class="edit-link">
           <mat-icon>edit</mat-icon>
-          帮助我们改进本页面内容
+          {{ labels.edit }}
         </a>
         @if (lastUpdated()) {
-          <span class="last-updated">上次更新: {{ lastUpdated() }}</span>
+          <span class="last-updated">{{ labels.lastUpdated }}: {{ lastUpdated() }}</span>
         }
       </div>
 
@@ -36,7 +39,7 @@ interface DocPage {
       <div class="nav-links">
         @if (prev()) {
           <a [routerLink]="prev()!.route" class="nav-link prev">
-            <span class="nav-label">上一页</span>
+            <span class="nav-label">{{ labels.prev }}</span>
             <span class="nav-title">{{ prev()!.title }}</span>
           </a>
         } @else {
@@ -44,7 +47,7 @@ interface DocPage {
         }
         @if (next()) {
           <a [routerLink]="next()!.route" class="nav-link next">
-            <span class="nav-label">下一页</span>
+            <span class="nav-label">{{ labels.next }}</span>
             <span class="nav-title">{{ next()!.title }}</span>
           </a>
         } @else {
@@ -146,82 +149,51 @@ interface DocPage {
     }
   `,
 })
-export class DocFooterComponent implements OnDestroy {
-	private router = inject(Router);
-	private platformId = inject(PLATFORM_ID);
-	private updatesCache: Record<string, string> | null = null;
-	private sub: Subscription;
+export class DocFooterComponent {
+	private readonly router = inject(Router);
+	private readonly platformId = inject(PLATFORM_ID);
+	private readonly updatesCache = signal<Record<string, string>>({});
+	private readonly currentRoute = signal(normalizeDocRoute(this.router.url));
+	readonly labels = FOOTER_LABELS;
 
-	prev = signal<DocPage | null>(null);
-	next = signal<DocPage | null>(null);
-	editUrl = signal("");
-	lastUpdated = signal("");
+	private readonly pageIndex = computed(() =>
+		DOC_PAGES.findIndex((page) => page.route === this.currentRoute()),
+	);
 
-	private pages: DocPage[] = [
-		{ route: "/docs/intro/what-is-kazumi", title: "Kazumi 是什么？" },
-		{ route: "/docs/intro/how-to-download", title: "如何下载" },
-		{ route: "/docs/intro/screenshots", title: "软件界面" },
-		{ route: "/docs/intro/module-details", title: "功能模块" },
-		{ route: "/docs/rules/introduce-rules", title: "规则介绍" },
-		{ route: "/docs/rules/develop-rules", title: "规则开发" },
-		{ route: "/docs/rules/develop-rules-example", title: "规则示例" },
-		{ route: "/docs/architecture/video-parser", title: "视频嗅探" },
-		{ route: "/docs/architecture/bbcode", title: "BBCode 解析" },
-		{ route: "/docs/misc/qa", title: "常见问题" },
-		{ route: "/docs/misc/how-to-install-in-ios", title: "iOS 自签" },
-		{ route: "/docs/misc/how-to-install-in-ohos", title: "OHOS 侧载" },
-	];
+	readonly prev = computed(() => {
+		const index = this.pageIndex();
+		return index > 0 ? DOC_PAGES[index - 1] : null;
+	});
+
+	readonly next = computed(() => {
+		const index = this.pageIndex();
+		return index >= 0 && index < DOC_PAGES.length - 1
+			? DOC_PAGES[index + 1]
+			: null;
+	});
+
+	readonly editUrl = computed(() => {
+		const contentPath = routeToContentPath(this.currentRoute());
+		return `https://github.com/Predidit/kazumi-website/edit/main/src/content/docs/${contentPath}.md`;
+	});
+
+	readonly lastUpdated = computed(
+		() => this.updatesCache()[this.currentRoute()] ?? "",
+	);
 
 	constructor() {
-		this.sub = this.router.events
-			.pipe(filter((e) => e instanceof NavigationEnd))
-			.subscribe(() => this.update());
+		this.router.events
+			.pipe(filter((event) => event instanceof NavigationEnd))
+			.pipe(takeUntilDestroyed())
+			.subscribe(() =>
+				this.currentRoute.set(normalizeDocRoute(this.router.url)),
+			);
 
 		if (isPlatformBrowser(this.platformId)) {
 			fetch("/doc-updates.json")
-				.then((r) => r.json())
-				.then((data: Record<string, string>) => {
-					this.updatesCache = data;
-					this.updateLastUpdated();
-				})
+				.then((response) => response.json())
+				.then((data: Record<string, string>) => this.updatesCache.set(data))
 				.catch(() => {});
 		}
-
-		this.update();
-	}
-
-	private update() {
-		const url = this.router.url;
-		const idx = this.pages.findIndex((p) => p.route === url);
-
-		if (idx > 0) {
-			this.prev.set(this.pages[idx - 1]);
-		} else {
-			this.prev.set(null);
-		}
-
-		if (idx >= 0 && idx < this.pages.length - 1) {
-			this.next.set(this.pages[idx + 1]);
-		} else {
-			this.next.set(null);
-		}
-
-		const contentPath = url.replace("/docs/", "");
-		this.editUrl.set(
-			`https://github.com/Predidit/kazumi-website/edit/main/src/content/docs/${contentPath}.md`,
-		);
-
-		this.updateLastUpdated();
-	}
-
-	private updateLastUpdated() {
-		if (!this.updatesCache) return;
-		const url = this.router.url;
-		const date = this.updatesCache[url];
-		this.lastUpdated.set(date || "");
-	}
-
-	ngOnDestroy() {
-		this.sub.unsubscribe();
 	}
 }

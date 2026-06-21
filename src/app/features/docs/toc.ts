@@ -1,30 +1,15 @@
-import { CommonModule, isPlatformBrowser } from "@angular/common";
-import {
-	afterNextRender,
-	Component,
-	inject,
-	OnDestroy,
-	PLATFORM_ID,
-	signal,
-} from "@angular/core";
-import { NavigationEnd, Router } from "@angular/router";
-import { Subscription } from "rxjs";
-import { filter } from "rxjs/operators";
+import { Component, input, signal } from "@angular/core";
+import { TocItem } from "./docs-state.service";
 
-interface TocItem {
-	id: string;
-	text: string;
-	level: number;
-}
+const TOC_TITLE = "\u9875\u9762\u5bfc\u822a";
 
 @Component({
 	selector: "app-toc",
 	standalone: true,
-	imports: [CommonModule],
 	template: `
     <nav class="toc">
       @if (items().length > 0) {
-        <h4 class="toc-title">页面导航</h4>
+        <h4 class="toc-title">{{ title }}</h4>
         <ul class="toc-list">
           @for (item of items(); track item.id) {
             <li [style.padding-left.px]="(item.level - 1) * 16">
@@ -32,7 +17,7 @@ interface TocItem {
                 [href]="'#' + item.id"
                 class="toc-link"
                 [class.active]="activeId() === item.id"
-                (click)="scrollTo($event, item.id)"
+                (click)="activeId.set(item.id)"
               >
                 {{ item.text }}
               </a>
@@ -96,78 +81,8 @@ interface TocItem {
   `,
 	],
 })
-export class TocComponent implements OnDestroy {
-	items = signal<TocItem[]>([]);
-	activeId = signal<string>("");
-
-	private observer: IntersectionObserver | null = null;
-	private platformId = inject(PLATFORM_ID);
-	private router = inject(Router);
-	private sub: Subscription;
-
-	constructor() {
-		this.sub = this.router.events
-			.pipe(filter((e) => e instanceof NavigationEnd))
-			.subscribe(() => {
-				setTimeout(() => this.extract(), 50);
-			});
-
-		afterNextRender(() => this.extract());
-	}
-
-	ngOnDestroy() {
-		this.observer?.disconnect();
-		this.sub.unsubscribe();
-	}
-
-	scrollTo(event: Event, id: string) {
-		event.preventDefault();
-		if (!isPlatformBrowser(this.platformId)) return;
-		const el = document.getElementById(id);
-		if (el) {
-			el.scrollIntoView({ behavior: "smooth", block: "start" });
-			this.activeId.set(id);
-		}
-	}
-
-	private extract() {
-		if (!isPlatformBrowser(this.platformId)) return;
-		const container = document.querySelector(".analog-markdown-route");
-		if (!container) return;
-
-		const headings = container.querySelectorAll("h1, h2, h3");
-		const items: TocItem[] = [];
-
-		headings.forEach((h) => {
-			if (!h.id)
-				h.id = h.textContent?.trim().replace(/\s+/g, "-").toLowerCase() || "";
-			items.push({
-				id: h.id,
-				text: h.textContent?.trim() || "",
-				level: parseInt(h.tagName.charAt(1), 10),
-			});
-		});
-
-		this.items.set(items);
-		this.setupObserver(container);
-	}
-
-	private setupObserver(container: Element) {
-		this.observer?.disconnect();
-
-		this.observer = new IntersectionObserver(
-			(entries) => {
-				for (const entry of entries) {
-					if (entry.isIntersecting) {
-						this.activeId.set(entry.target.id);
-					}
-				}
-			},
-			{ rootMargin: "-80px 0px -80% 0px", threshold: 0 },
-		);
-
-		for (const h of container.querySelectorAll("h1, h2, h3")) {
-			this.observer?.observe(h);
-		}
-	}
+export class TocComponent {
+	readonly items = input<TocItem[]>([]);
+	readonly activeId = signal("");
+	readonly title = TOC_TITLE;
 }

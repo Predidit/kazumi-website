@@ -34,7 +34,7 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
           # 检查是否有文件变化
-          git add src/public/contributors.json src/public/releases.json
+          git add public/contributors.json public/releases.json
           
           if git diff --cached --quiet; then
             echo "没有检测到文件变化"

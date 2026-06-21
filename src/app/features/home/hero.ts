@@ -1,5 +1,5 @@
-import { isPlatformBrowser } from "@angular/common";
-import { afterNextRender, Component, inject, PLATFORM_ID } from "@angular/core";
+import { ViewportScroller } from "@angular/common";
+import { Component, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
@@ -14,7 +14,7 @@ interface Feature {
 	selector: "app-hero",
 	imports: [RouterLink, MatButtonModule, MatIconModule],
 	template: `
-    <section class="hero">
+    <section class="hero" (wheel)="onWheel($event)">
       <div class="hero-container">
         <div class="hero-content">
           <h1 class="hero-title">Kazumi</h1>
@@ -286,7 +286,8 @@ interface Feature {
   `,
 })
 export class HeroComponent {
-	private platformId = inject(PLATFORM_ID);
+	private readonly viewportScroller = inject(ViewportScroller);
+	private scrollLocked = false;
 
 	features: Feature[] = [
 		{
@@ -306,34 +307,24 @@ export class HeroComponent {
 		},
 	];
 
-	constructor() {
-		afterNextRender(() => {
-			if (!isPlatformBrowser(this.platformId)) return;
+	onWheel(event: WheelEvent) {
+		const hero =
+			event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+		if (!hero || this.scrollLocked || event.deltaY <= 0) return;
 
-			let locked = false;
-			const hero = document.querySelector(".hero");
-			const target = document.getElementById("after-hero");
+		const isHeroBottomVisible =
+			hero.getBoundingClientRect().bottom <= window.innerHeight + 10;
+		if (!isHeroBottomVisible) return;
 
-			const onWheel = (e: WheelEvent) => {
-				if (!hero || !target || locked) return;
-				const bottom = hero.getBoundingClientRect().bottom;
-				if (bottom <= window.innerHeight + 10 && e.deltaY > 0) {
-					e.preventDefault();
-					locked = true;
-					target.scrollIntoView({ behavior: "smooth" });
-					setTimeout(() => (locked = false), 1000);
-				}
-			};
-
-			hero?.addEventListener("wheel", onWheel as EventListener, {
-				passive: false,
-			});
-		});
+		event.preventDefault();
+		this.scrollLocked = true;
+		this.scrollDown();
+		setTimeout(() => {
+			this.scrollLocked = false;
+		}, 1000);
 	}
 
 	scrollDown() {
-		document
-			.getElementById("after-hero")
-			?.scrollIntoView({ behavior: "smooth" });
+		this.viewportScroller.scrollToAnchor("after-hero");
 	}
 }

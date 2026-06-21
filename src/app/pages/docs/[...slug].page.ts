@@ -1,0 +1,179 @@
+import { type ContentFile, parseRawContentFile } from "@analogjs/content";
+import {
+	Component,
+	computed,
+	effect,
+	inject,
+	OnDestroy,
+	resource,
+} from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { DomSanitizer, type SafeHtml } from "@angular/platform-browser";
+import { NavigationEnd, Router } from "@angular/router";
+import { Marked, type Token } from "marked";
+import markedAlert from "marked-alert";
+import {
+	getHeadingList,
+	gfmHeadingId,
+	resetHeadings,
+} from "marked-gfm-heading-id";
+import { filter, map, startWith } from "rxjs/operators";
+import { CodeBlockComponent } from "../../features/docs/code-block";
+import { routeToContentPath } from "../../features/docs/docs-nav";
+import {
+	DocsStateService,
+	type TocItem,
+} from "../../features/docs/docs-state.service";
+
+const DOC_CONTENT_FILES = import.meta.glob<string>(
+	"/src/content/docs/**/*.md",
+	{
+		query: "?raw",
+		import: "default",
+	},
+);
+const HEADING_ID_OPTIONS = { globalSlugs: true } as { prefix?: string } & {
+	globalSlugs: boolean;
+};
+
+type DocContentFile = ContentFile<Record<string, never>>;
+
+type RenderSegment =
+	| {
+			type: "html";
+			html: SafeHtml;
+	  }
+	| {
+			type: "code";
+			code: string;
+			language: string;
+	  };
+
+interface RenderedDoc {
+	segments: RenderSegment[];
+	toc: TocItem[];
+}
+
+@Component({
+	selector: "app-doc-content",
+	imports: [CodeBlockComponent],
+	template: `
+    @if (segments().length > 0) {
+      <article class="markdown-body">
+        @for (segment of segments(); track $index) {
+          @if (segment.type === "code") {
+            <app-code-block [code]="segment.code" [language]="segment.language" />
+          } @else {
+            <div [innerHTML]="segment.html"></div>
+          }
+        }
+      </article>
+    }
+  `,
+})
+export default class DocContentComponent implements OnDestroy {
+	private readonly docsState = inject(DocsStateService);
+	private readonly router = inject(Router);
+	private readonly sanitizer = inject(DomSanitizer);
+	private readonly markdown = new Marked(
+		gfmHeadingId(HEADING_ID_OPTIONS),
+		markedAlert(),
+	);
+	private readonly currentPath = toSignal(
+		this.router.events.pipe(
+			filter((event) => event instanceof NavigationEnd),
+			startWith(null),
+			map(() => routeToContentPath(this.router.url)),
+		),
+		{ initialValue: routeToContentPath(this.router.url) },
+	);
+	private readonly docResource = resource<DocContentFile | null, string>({
+		params: () => this.currentPath(),
+		loader: ({ params }) => this.loadDoc(params),
+	});
+
+	private readonly doc = computed(() => this.docResource.value());
+
+	private readonly renderedDoc = computed<RenderedDoc>(() => {
+		const content = this.doc()?.content;
+		return typeof content === "string"
+			? this.render(content)
+			: { segments: [], toc: [] };
+	});
+
+	readonly segments = computed(() => this.renderedDoc().segments);
+
+	constructor() {
+		effect(() => {
+			this.docsState.setToc(this.renderedDoc().toc);
+		});
+	}
+
+	ngOnDestroy() {
+		this.docsState.clearToc();
+	}
+
+	private async loadDoc(path: string): Promise<DocContentFile | null> {
+		const filename = `/src/content/docs/${path}.md`;
+		const loadContent = DOC_CONTENT_FILES[filename];
+
+		if (!loadContent) {
+			return null;
+		}
+
+		const { content, attributes } = parseRawContentFile<Record<string, never>>(
+			await loadContent(),
+		);
+
+		return {
+			filename: filename.replace(/\.md$/, ""),
+			slug: path,
+			attributes,
+			content,
+			toc: [],
+		};
+	}
+
+	private render(content: string): RenderedDoc {
+		resetHeadings();
+
+		const tokens = this.markdown.lexer(content);
+		const segments: RenderSegment[] = [];
+		let htmlTokens: Token[] = [];
+
+		const flushHtml = () => {
+			if (htmlTokens.length === 0) return;
+			const html = this.markdown.parse(
+				htmlTokens.map((token) => token.raw).join(""),
+			) as string;
+			segments.push({
+				type: "html",
+				html: this.sanitizer.bypassSecurityTrustHtml(html),
+			});
+			htmlTokens = [];
+		};
+
+		for (const token of tokens) {
+			if (token.type === "code") {
+				flushHtml();
+				segments.push({
+					type: "code",
+					code: token.text,
+					language: token.lang ?? "",
+				});
+			} else {
+				htmlTokens.push(token);
+			}
+		}
+
+		flushHtml();
+		return {
+			segments,
+			toc: getHeadingList().map(({ id, level, raw }) => ({
+				id,
+				level,
+				text: raw,
+			})),
+		};
+	}
+}
