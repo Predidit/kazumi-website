@@ -63,12 +63,13 @@ interface Feature {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 80px 24px;
+      padding: 80px 48px;
       background-color: var(--mat-sys-surface);
     }
 
     .hero-container {
-      max-width: 960px;
+      width: 100%;
+      max-width: 1080px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -133,7 +134,8 @@ interface Feature {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
-      max-width: 960px;
+      width: 100%;
+      max-width: 1080px;
       margin: 64px auto 0;
     }
 
@@ -220,7 +222,7 @@ interface Feature {
     @media (max-width: 768px) {
       .hero {
         min-height: auto;
-        padding: 64px 16px;
+        padding: 64px 24px;
       }
 
       .hero-container {
@@ -288,7 +290,7 @@ export class HeroComponent {
 		{
 			icon: "code",
 			title: "开源免费",
-			description: "基于 MIT 协议开源，免费无广告",
+			description: "基于 GPL 3.0 协议开源，免费无广告",
 		},
 	];
 
@@ -311,7 +313,9 @@ export class HeroComponent {
 				}
 			};
 
-			hero?.addEventListener("wheel", onWheel as EventListener, { passive: false });
+			hero?.addEventListener("wheel", onWheel as EventListener, {
+				passive: false,
+			});
 		});
 	}
 
