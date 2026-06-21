@@ -173,17 +173,31 @@ interface FooterGroup {
 
     @media (max-width: 768px) {
       .footer {
-        padding: 40px 0 24px;
+        padding: 36px 0 20px;
       }
 
       .footer-container {
-        padding: 0 16px;
+        padding: 0 20px;
       }
 
       .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 32px;
-        margin-bottom: 32px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px 32px;
+        margin-bottom: 28px;
+      }
+
+      .group-title {
+        font-size: 0.8125rem;
+        margin-bottom: 14px;
+      }
+
+      .group-links li {
+        margin-bottom: 6px;
+      }
+
+      .group-links a {
+        font-size: 0.8125rem;
+        padding: 4px 10px;
       }
     }
   `,
