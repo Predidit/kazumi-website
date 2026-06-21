@@ -71,7 +71,7 @@ interface FooterGroup {
 	styles: `
     .footer {
       background-color: var(--mat-sys-surface-container);
-      padding: 56px 0 32px;
+      padding: 32px 0 20px;
       margin-top: 0;
     }
 
@@ -85,7 +85,7 @@ interface FooterGroup {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 48px;
-      margin-bottom: 48px;
+      margin-bottom: 16px;
     }
 
     .group-title {
@@ -143,7 +143,7 @@ interface FooterGroup {
     }
 
     .footer-bottom {
-      padding-top: 24px;
+      padding-top: 16px;
       text-align: center;
     }
 
