@@ -1,8 +1,8 @@
 import { Component, computed, input, signal } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
-const COPY_LABEL = "\u590d\u5236\u4ee3\u7801";
-const COPIED_LABEL = "\u5df2\u590d\u5236\u4ee3\u7801";
+const COPY_LABEL = "复制代码";
+const COPIED_LABEL = "已复制代码";
 
 @Component({
 	selector: "app-code-block",

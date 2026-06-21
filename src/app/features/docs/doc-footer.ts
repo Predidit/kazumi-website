@@ -13,10 +13,10 @@ import { filter } from "rxjs/operators";
 import { DOC_PAGES, normalizeDocRoute, routeToContentPath } from "./docs-nav";
 
 const FOOTER_LABELS = {
-	edit: "\u5e2e\u52a9\u6211\u4eec\u6539\u8fdb\u672c\u9875\u9762\u5185\u5bb9",
-	lastUpdated: "\u4e0a\u6b21\u66f4\u65b0",
-	prev: "\u4e0a\u4e00\u9875",
-	next: "\u4e0b\u4e00\u9875",
+	edit: "帮助我们改进本页面内容",
+	lastUpdated: "上次更新",
+	prev: "上一页",
+	next: "下一页",
 };
 
 @Component({

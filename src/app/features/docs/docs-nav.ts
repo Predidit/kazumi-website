@@ -11,81 +11,81 @@ export interface DocSection {
 
 export const DOC_SECTIONS: DocSection[] = [
 	{
-		title: "\u7b80\u4ecb",
+		title: "简介",
 		pages: [
 			{
 				route: "/docs/intro/what-is-kazumi",
-				title: "Kazumi \u662f\u4ec0\u4e48\uff1f",
+				title: "Kazumi 是什么？",
 				icon: "info",
 			},
 			{
 				route: "/docs/intro/how-to-download",
-				title: "\u5982\u4f55\u4e0b\u8f7d",
+				title: "如何下载",
 				icon: "download",
 			},
 			{
 				route: "/docs/intro/screenshots",
-				title: "\u8f6f\u4ef6\u754c\u9762",
+				title: "软件界面",
 				icon: "photo_library",
 			},
 			{
 				route: "/docs/intro/module-details",
-				title: "\u529f\u80fd\u6a21\u5757",
+				title: "功能模块",
 				icon: "widgets",
 			},
 		],
 	},
 	{
-		title: "\u89c4\u5219\u6307\u5357",
+		title: "规则指南",
 		pages: [
 			{
 				route: "/docs/rules/introduce-rules",
-				title: "\u89c4\u5219\u4ecb\u7ecd",
+				title: "规则介绍",
 				icon: "description",
 			},
 			{
 				route: "/docs/rules/develop-rules",
-				title: "\u89c4\u5219\u5f00\u53d1",
+				title: "规则开发",
 				icon: "code",
 			},
 			{
 				route: "/docs/rules/develop-rules-example",
-				title: "\u89c4\u5219\u793a\u4f8b",
+				title: "规则示例",
 				icon: "snippet_folder",
 			},
 		],
 	},
 	{
-		title: "\u67b6\u6784",
+		title: "架构",
 		pages: [
 			{
 				route: "/docs/architecture/video-parser",
-				title: "\u89c6\u9891\u55c5\u63a2",
+				title: "视频嗅探",
 				icon: "video_library",
 			},
 			{
 				route: "/docs/architecture/bbcode",
-				title: "BBCode \u89e3\u6790",
+				title: "BBCode 解析",
 				icon: "text_fields",
 			},
 		],
 	},
 	{
-		title: "\u5176\u4ed6",
+		title: "其他",
 		pages: [
 			{
 				route: "/docs/misc/qa",
-				title: "\u5e38\u89c1\u95ee\u9898",
+				title: "常见问题",
 				icon: "help",
 			},
 			{
 				route: "/docs/misc/how-to-install-in-ios",
-				title: "iOS \u81ea\u7b7e",
+				title: "iOS 自签",
 				icon: "phone_iphone",
 			},
 			{
 				route: "/docs/misc/how-to-install-in-ohos",
-				title: "OHOS \u4fa7\u8f7d",
+				title: "OHOS 侧载",
 				icon: "phone_android",
 			},
 		],

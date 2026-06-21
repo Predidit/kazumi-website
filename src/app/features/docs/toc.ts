@@ -1,7 +1,7 @@
 import { Component, input, signal } from "@angular/core";
 import { TocItem } from "./docs-state.service";
 
-const TOC_TITLE = "\u9875\u9762\u5bfc\u822a";
+const TOC_TITLE = "页面导航";
 
 @Component({
 	selector: "app-toc",
