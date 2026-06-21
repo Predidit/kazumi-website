@@ -9,6 +9,7 @@
 		"ng": "ng",
 		"dev": "vite",
 		"start": "bun run dev",
+		"prebuild": "bun scripts/generate-doc-updates.ts",
 		"build": "vite build",
 		"watch": "vite build --watch",
 		"test": "vitest",

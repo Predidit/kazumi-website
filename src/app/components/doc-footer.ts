@@ -1,4 +1,5 @@
-import { Component, inject, signal } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { NavigationEnd, Router, RouterLink } from "@angular/router";
 import { filter } from "rxjs/operators";
@@ -18,6 +19,9 @@ interface DocPage {
           <mat-icon>edit</mat-icon>
           帮助我们改进本页面内容
         </a>
+        @if (lastUpdated()) {
+          <span class="last-updated">上次更新: {{ lastUpdated() }}</span>
+        }
       </div>
 
       <hr class="divider" />
@@ -50,7 +54,8 @@ interface DocPage {
 
     .edit-bar {
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .edit-link {
@@ -72,6 +77,11 @@ interface DocPage {
       font-size: 16px;
       width: 16px;
       height: 16px;
+    }
+
+    .last-updated {
+      font-size: 0.8125rem;
+      color: var(--mat-sys-outline);
     }
 
     .divider {
@@ -131,10 +141,13 @@ interface DocPage {
 })
 export class DocFooterComponent {
 	private router = inject(Router);
+	private platformId = inject(PLATFORM_ID);
+	private updatesCache: Record<string, string> | null = null;
 
 	prev = signal<DocPage | null>(null);
 	next = signal<DocPage | null>(null);
 	editUrl = signal("");
+	lastUpdated = signal("");
 
 	private pages: DocPage[] = [
 		{ route: "/docs/intro/what-is-kazumi", title: "Kazumi 是什么？" },
@@ -155,6 +168,16 @@ export class DocFooterComponent {
 		this.router.events
 			.pipe(filter((e) => e instanceof NavigationEnd))
 			.subscribe(() => this.update());
+
+		if (isPlatformBrowser(this.platformId)) {
+			fetch("/doc-updates.json")
+				.then((r) => r.json())
+				.then((data: Record<string, string>) => {
+					this.updatesCache = data;
+					this.updateLastUpdated();
+				})
+				.catch(() => {});
+		}
 
 		this.update();
 	}
@@ -179,5 +202,14 @@ export class DocFooterComponent {
 		this.editUrl.set(
 			`https://github.com/Predidit/kazumi-website/edit/angular/src/content/docs/${contentPath}.md`,
 		);
+
+		this.updateLastUpdated();
+	}
+
+	private updateLastUpdated() {
+		if (!this.updatesCache) return;
+		const url = this.router.url;
+		const date = this.updatesCache[url];
+		this.lastUpdated.set(date || "");
 	}
 }
