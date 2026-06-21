@@ -3,24 +3,31 @@ import {
 	afterNextRender,
 	Injectable,
 	inject,
+	OnDestroy,
 	PLATFORM_ID,
 } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
+import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
 
 @Injectable({ providedIn: "root" })
-export class CodeCopyService {
+export class CodeCopyService implements OnDestroy {
 	private platformId = inject(PLATFORM_ID);
 	private router = inject(Router);
+	private sub: Subscription | null = null;
 
 	constructor() {
 		if (!isPlatformBrowser(this.platformId)) return;
 
 		afterNextRender(() => this.addButtons());
 
-		this.router.events
+		this.sub = this.router.events
 			.pipe(filter((e) => e instanceof NavigationEnd))
 			.subscribe(() => setTimeout(() => this.addButtons(), 100));
+	}
+
+	ngOnDestroy() {
+		this.sub?.unsubscribe();
 	}
 
 	private addButtons() {

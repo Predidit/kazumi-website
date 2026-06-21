@@ -1,7 +1,14 @@
 import { isPlatformBrowser } from "@angular/common";
-import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
+import {
+	Component,
+	inject,
+	OnDestroy,
+	PLATFORM_ID,
+	signal,
+} from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { NavigationEnd, Router, RouterLink } from "@angular/router";
+import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
 
 interface DocPage {
@@ -139,10 +146,11 @@ interface DocPage {
     }
   `,
 })
-export class DocFooterComponent {
+export class DocFooterComponent implements OnDestroy {
 	private router = inject(Router);
 	private platformId = inject(PLATFORM_ID);
 	private updatesCache: Record<string, string> | null = null;
+	private sub: Subscription;
 
 	prev = signal<DocPage | null>(null);
 	next = signal<DocPage | null>(null);
@@ -165,7 +173,7 @@ export class DocFooterComponent {
 	];
 
 	constructor() {
-		this.router.events
+		this.sub = this.router.events
 			.pipe(filter((e) => e instanceof NavigationEnd))
 			.subscribe(() => this.update());
 
@@ -200,7 +208,7 @@ export class DocFooterComponent {
 
 		const contentPath = url.replace("/docs/", "");
 		this.editUrl.set(
-			`https://github.com/Predidit/kazumi-website/edit/angular/src/content/docs/${contentPath}.md`,
+			`https://github.com/Predidit/kazumi-website/edit/main/src/content/docs/${contentPath}.md`,
 		);
 
 		this.updateLastUpdated();
@@ -211,5 +219,9 @@ export class DocFooterComponent {
 		const url = this.router.url;
 		const date = this.updatesCache[url];
 		this.lastUpdated.set(date || "");
+	}
+
+	ngOnDestroy() {
+		this.sub.unsubscribe();
 	}
 }
