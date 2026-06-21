@@ -10,13 +10,15 @@ AnalogJS + Angular 22 + Vite. SSR with prerendered static routes. Angular Materi
 bun install          # install deps (bun.lock is the lockfile, not pnpm)
 bun run dev          # dev server (port 5173)
 bun run build        # production build (prebuild auto-generates public/doc-updates.json from git log)
-bun run test         # vitest
-bun run lint         # biome check (lint + format check)
-bun run format       # biome check --write (auto-fix)
+bun run test         # vitest (no tests exist yet — passes vacuously)
+bun run lint         # biome check src/ (lint + format check)
+bun run format       # biome check src/ --write (auto-fix)
 bun run preview      # serve production build locally
 ```
 
-CI runs `lint` + `build` on PRs (`.github/workflows/pr-test.yml`). No tests exist yet — `bun run test` passes vacuously.
+CI on PRs: `bun run lint` then `bun run build` (`.github/workflows/pr-test.yml`). Deploy to GitHub Pages on push to default branch (`.github/workflows/deploy.yaml`).
+
+Run `bun run lint && bun run build` before committing. There is no typecheck-only script — `bun run build` is the typecheck gate.
 
 ## Code Style
 
@@ -29,9 +31,10 @@ CI runs `lint` + `build` on PRs (`.github/workflows/pr-test.yml`). No tests exis
 - Files named `*.page.ts` in `src/app/pages/` define routes
 - Page components must be **default exported**
 - Nested dirs = nested routes (e.g., `pages/about/icon.page.ts` → `/about/icon`)
-- Docs content pages live in `src/content/docs/` as `.md` with frontmatter
-- New docs pages must be added to the prerender list in `vite.config.ts`
-- Sidebar nav is hardcoded in `src/app/pages/docs.page.ts` (not a separate config file)
+- Docs content pages live in `src/content/docs/` as `.md` with frontmatter (required: `title`, `description`, `section`, `icon`; optional: `order`, `slug`)
+- Docs sidebar nav data is in `src/app/features/docs/docs-nav.ts` (`DOC_SECTIONS`), not in the page component
+- Adding a new doc requires: (1) the `.md` file, (2) an entry in `docs-nav.ts`, (3) prerender coverage in `vite.config.ts`
+- Prerender routes are in `vite.config.ts` under `analog({ prerender: { routes: [...] } })` — the `contentDir` transformer handles docs automatically, but top-level routes like `/download` must be listed explicitly
 
 ## Key Conventions
 
@@ -40,6 +43,7 @@ CI runs `lint` + `build` on PRs (`.github/workflows/pr-test.yml`). No tests exis
 - Signals for state (`signal()`, not BehaviorSubject)
 - SCSS for styles, using `var(--mat-sys-*)` CSS custom properties from Material 3
 - Components use inline `template` + `styles` (not separate files)
+- Component files: kebab-case (e.g. `my-component.ts`), classes: PascalCase
 
 ## Project Structure
 
@@ -51,15 +55,17 @@ src/
     app.config.server.ts # server providers
     features/
       layout/           # header, footer, theme
-      docs/             # toc, doc-footer, code-copy
+      docs/             # toc, doc-footer, code-copy, docs-nav.ts
       home/             # hero, contributors
     pages/              # route pages (*.page.ts)
   content/
-    docs/               # markdown content
+    docs/               # markdown content (intro/, rules/, architecture/, misc/)
   main.ts               # client bootstrap
   main.server.ts        # SSR entry
+scripts/
+  generate-doc-updates.ts  # prebuild: git log → public/doc-updates.json
 ```
 
-## Prerender
+## Full Contributor Guide
 
-Static routes are explicitly listed in `vite.config.ts` under `analog({ prerender: { routes: [...] } })`. Add new content pages there or they won't be built.
+See `CONTRIBUTING.md` for detailed doc contribution workflow, frontmatter reference, component development examples, and CI/PR expectations.
