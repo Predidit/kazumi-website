@@ -14,8 +14,8 @@
 		"watch": "vite build --watch",
 		"test": "vitest",
 		"preview": "node dist/analog/server/index.mjs",
-		"lint": "biome check .",
-		"format": "biome check . --write"
+		"lint": "biome check src/",
+		"format": "biome check src/ --write"
 	},
 	"private": true,
 	"dependencies": {

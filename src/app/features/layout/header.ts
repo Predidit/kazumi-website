@@ -4,7 +4,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { RouterLink, RouterLinkActive } from "@angular/router";
-import { ThemeMode, ThemeService } from "../services/theme";
+import { ThemeMode, ThemeService } from "./theme.service";
 
 interface NavItem {
 	label: string;

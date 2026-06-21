@@ -8,14 +8,15 @@ AnalogJS + Angular 22 + Vite. SSR with prerendered static routes. Angular Materi
 
 ```sh
 bun install          # install deps (bun.lock is the lockfile, not pnpm)
-bun run dev          # dev server
-bun run build        # production build
+bun run dev          # dev server (port 5173)
+bun run build        # production build (prebuild auto-generates public/doc-updates.json from git log)
 bun run test         # vitest
 bun run lint         # biome check (lint + format check)
 bun run format       # biome check --write (auto-fix)
+bun run preview      # serve production build locally
 ```
 
-Run lint before committing. No CI workflow exists in this repo.
+CI runs `lint` + `build` on PRs (`.github/workflows/pr-test.yml`). No tests exist yet — `bun run test` passes vacuously.
 
 ## Code Style
 
@@ -30,6 +31,7 @@ Run lint before committing. No CI workflow exists in this repo.
 - Nested dirs = nested routes (e.g., `pages/about/icon.page.ts` → `/about/icon`)
 - Docs content pages live in `src/content/docs/` as `.md` with frontmatter
 - New docs pages must be added to the prerender list in `vite.config.ts`
+- Sidebar nav is hardcoded in `src/app/pages/docs.page.ts` (not a separate config file)
 
 ## Key Conventions
 
@@ -47,11 +49,13 @@ src/
     app.ts              # root component
     app.config.ts       # client providers
     app.config.server.ts # server providers
-    components/         # shared: header, footer, toc
+    features/
+      layout/           # header, footer, theme
+      docs/             # toc, doc-footer, code-copy
+      home/             # hero, contributors
     pages/              # route pages (*.page.ts)
-    models/             # (currently empty)
   content/
-    docs/               # markdown content + sidebar nav
+    docs/               # markdown content
   main.ts               # client bootstrap
   main.server.ts        # SSR entry
 ```

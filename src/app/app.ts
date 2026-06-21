@@ -1,7 +1,7 @@
 import { Component, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { HeaderComponent } from "./components/header";
-import { CodeCopyService } from "./services/code-copy";
+import { CodeCopyService } from "./features/docs/code-copy.service";
+import { HeaderComponent } from "./features/layout/header";
 
 @Component({
 	selector: "app-root",

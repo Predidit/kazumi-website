@@ -3,8 +3,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatListModule } from "@angular/material/list";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { RouterModule, RouterOutlet } from "@angular/router";
-import { DocFooterComponent } from "../components/doc-footer";
-import { TocComponent } from "../components/toc";
+import { DocFooterComponent } from "../features/docs/doc-footer";
+import { TocComponent } from "../features/docs/toc";
 
 @Component({
 	selector: "app-docs",

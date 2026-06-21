@@ -135,7 +135,7 @@ export class TocComponent implements OnDestroy {
 		const container = document.querySelector(".analog-markdown-route");
 		if (!container) return;
 
-		const headings = container.querySelectorAll("h1, h2, h3, h4");
+		const headings = container.querySelectorAll("h1, h2, h3");
 		const items: TocItem[] = [];
 
 		headings.forEach((h) => {
@@ -166,7 +166,7 @@ export class TocComponent implements OnDestroy {
 			{ rootMargin: "-80px 0px -80% 0px", threshold: 0 },
 		);
 
-		for (const h of container.querySelectorAll("h1, h2, h3, h4")) {
+		for (const h of container.querySelectorAll("h1, h2, h3")) {
 			this.observer?.observe(h);
 		}
 	}

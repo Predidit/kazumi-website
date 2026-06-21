@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
-import { FooterComponent } from "../components/footer";
-import { ContributorsComponent } from "./home/contributors";
-import { HeroComponent } from "./home/hero";
+import { ContributorsComponent } from "../features/home/contributors";
+import { HeroComponent } from "../features/home/hero";
+import { FooterComponent } from "../features/layout/footer";
 
 @Component({
 	selector: "app-home",
