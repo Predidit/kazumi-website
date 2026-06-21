@@ -8,6 +8,7 @@ import {
 	resource,
 } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, type SafeHtml } from "@angular/platform-browser";
 import { NavigationEnd, Router } from "@angular/router";
 import { Marked, type Token } from "marked";
@@ -19,6 +20,7 @@ import {
 } from "marked-gfm-heading-id";
 import { filter, map, startWith } from "rxjs/operators";
 import { CodeBlockComponent } from "../../features/docs/code-block";
+import { DocFooterComponent } from "../../features/docs/doc-footer";
 import { routeToContentPath } from "../../features/docs/docs-nav";
 import {
 	DocsStateService,
@@ -56,9 +58,14 @@ interface RenderedDoc {
 
 @Component({
 	selector: "app-doc-content",
-	imports: [CodeBlockComponent],
+	imports: [CodeBlockComponent, DocFooterComponent, MatProgressBarModule],
 	template: `
-    @if (segments().length > 0) {
+    @if (isLoading()) {
+      <div class="doc-loading" aria-live="polite">
+        <mat-progress-bar mode="indeterminate" />
+        <span>正在加载文档...</span>
+      </div>
+    } @else if (segments().length > 0) {
       <article class="markdown-body">
         @for (segment of segments(); track $index) {
           @if (segment.type === "code") {
@@ -68,6 +75,17 @@ interface RenderedDoc {
           }
         }
       </article>
+      <app-doc-footer />
+    }
+  `,
+	styles: `
+    .doc-loading {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 48px 0;
+      color: var(--mat-sys-on-surface-variant);
+      font-size: 0.875rem;
     }
   `,
 })
@@ -93,8 +111,10 @@ export default class DocContentComponent implements OnDestroy {
 	});
 
 	private readonly doc = computed(() => this.docResource.value());
+	readonly isLoading = this.docResource.isLoading;
 
 	private readonly renderedDoc = computed<RenderedDoc>(() => {
+		if (this.isLoading()) return { segments: [], toc: [] };
 		const content = this.doc()?.content;
 		return typeof content === "string"
 			? this.render(content)

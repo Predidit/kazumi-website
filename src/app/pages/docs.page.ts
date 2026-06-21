@@ -2,7 +2,6 @@ import { Component } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
-import { DocFooterComponent } from "../features/docs/doc-footer";
 import { DOC_SECTIONS } from "../features/docs/docs-nav";
 import { DocsStateService } from "../features/docs/docs-state.service";
 import { TocComponent } from "../features/docs/toc";
@@ -17,7 +16,6 @@ import { TocComponent } from "../features/docs/toc";
 		RouterLink,
 		RouterLinkActive,
 		TocComponent,
-		DocFooterComponent,
 	],
 	template: `
     <mat-sidenav-container class="docs-container">
@@ -45,7 +43,6 @@ import { TocComponent } from "../features/docs/toc";
         <div class="content-layout">
           <div class="content-main">
             <router-outlet />
-            <app-doc-footer />
           </div>
           <aside class="content-toc">
             <app-toc [items]="docsState.toc()" />

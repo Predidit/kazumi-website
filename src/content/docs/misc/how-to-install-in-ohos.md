@@ -2,7 +2,7 @@
 
 ## 准备工作
 
-- [Kazumi hap 安装包](/download.html)
+- [Kazumi hap 安装包](/download)
 - 一台任意非鸿蒙 5.0 及以上的设备。
 
 ### 小白调试助手
@@ -10,11 +10,11 @@
 从 GitHub 仓库 [Release](https://github.com/likuai2010/auto-installer/releases) 中下载两个平台的安装包，其中一个需要为 `.hap` 安装包，用于后续软件更新使用；另一个可以为任意平台。
 
 > [!IMPORTANT] 注意事项
-> 
+>
 > **Windows:** 首次打开会提示安装 Java，下载安装即可。
-> 
+>
 > **macOS:** 首次运行需要在终端运行 `xattr -d com.apple.quarantine /Applications/小白调试助手.app`。需要 Java 环境。
-> 
+>
 > **Linux:** 不能使用 root 权限，依赖 [zenity](https://gitlab.gnome.org/GNOME/zenity)。
 
 ### 开启无线调试
