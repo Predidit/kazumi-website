@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { MatCardModule } from "@angular/material/card";
+import { SeoService } from "../../features/seo/seo.service";
 
 @Component({
 	selector: "app-icon-page",
@@ -75,4 +76,8 @@ import { MatCardModule } from "@angular/material/card";
     }
   `,
 })
-export default class IconPageComponent {}
+export default class IconPageComponent {
+	constructor() {
+		inject(SeoService).setIcon();
+	}
+}

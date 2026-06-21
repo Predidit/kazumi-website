@@ -21,11 +21,12 @@ import {
 import { filter, map, startWith } from "rxjs/operators";
 import { CodeBlockComponent } from "../../features/docs/code-block";
 import { DocFooterComponent } from "../../features/docs/doc-footer";
-import { routeToContentPath } from "../../features/docs/docs-nav";
+import { DOC_PAGES, routeToContentPath } from "../../features/docs/docs-nav";
 import {
 	DocsStateService,
 	type TocItem,
 } from "../../features/docs/docs-state.service";
+import { SeoService } from "../../features/seo/seo.service";
 
 const DOC_CONTENT_FILES = import.meta.glob<string>(
 	"/src/content/docs/**/*.md",
@@ -92,6 +93,7 @@ interface RenderedDoc {
 export default class DocContentComponent implements OnDestroy {
 	private readonly docsState = inject(DocsStateService);
 	private readonly router = inject(Router);
+	private readonly seo = inject(SeoService);
 	private readonly sanitizer = inject(DomSanitizer);
 	private readonly markdown = new Marked(
 		gfmHeadingId(HEADING_ID_OPTIONS),
@@ -124,6 +126,12 @@ export default class DocContentComponent implements OnDestroy {
 	readonly segments = computed(() => this.renderedDoc().segments);
 
 	constructor() {
+		effect(() => {
+			const route = `/docs/${this.currentPath()}`;
+			const page = DOC_PAGES.find((docPage) => docPage.route === route);
+			this.seo.setDoc(route, page?.title ?? "Kazumi 文档");
+		});
+
 		effect(() => {
 			this.docsState.setToc(this.renderedDoc().toc);
 		});

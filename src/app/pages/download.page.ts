@@ -11,6 +11,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { SeoService } from "../features/seo/seo.service";
 
 interface PlatformLink {
 	label: string;
@@ -382,8 +383,10 @@ export default class DownloadComponent {
 	];
 
 	private platformId = inject(PLATFORM_ID);
+	private seo = inject(SeoService);
 
 	constructor() {
+		this.seo.setDownload();
 		afterNextRender(() => {
 			if (isPlatformBrowser(this.platformId)) {
 				this.loadReleases();
