@@ -71,6 +71,7 @@ export default defineConfig(() => ({
 		environment: "jsdom",
 		setupFiles: ["src/test-setup.ts"],
 		include: ["**/*.spec.ts"],
+		exclude: ["**/node_modules/**", "**/.git/**", "dist/**"],
 		reporters: ["default"],
 	},
 }));

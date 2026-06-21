@@ -12,7 +12,7 @@
 		"prebuild": "bun scripts/generate-doc-updates.ts && bun scripts/generate-sitemap.ts",
 		"build": "vite build",
 		"watch": "vite build --watch",
-		"test": "vitest",
+		"test": "vitest --passWithNoTests",
 		"preview": "node dist/analog/server/index.mjs",
 		"lint": "biome check src/",
 		"format": "biome check src/ --write"

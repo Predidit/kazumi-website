@@ -244,11 +244,6 @@ interface NavItem {
       border-radius: 12px;
     }
 
-    .logo-text {
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-
     .spacer {
       flex: 1;
     }

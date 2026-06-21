@@ -1,124 +1,114 @@
 # 贡献指南
 
-感谢你对 Kazumi Website 项目的关注！以下是参与贡献的说明。
+感谢你对 Kazumi Website 项目的关注！这个仓库是 [Kazumi](https://github.com/Predidit/Kazumi) 的官方网站，基于 AnalogJS + Angular 22 + Vite 构建。
 
-## 开发环境搭建
+## 开发环境
 
 ### 前置要求
 
 - **Node.js** >= 20.19.1
-- **[bun](https://bun.sh)**（包管理器和运行时）
+- **[Bun](https://bun.sh)** 作为包管理器和运行时
+
+项目使用 `bun.lock` 作为锁文件，请不要混用 pnpm、npm 或 yarn 生成新的锁文件。
 
 ### 安装与启动
 
 ```shell
-# 克隆仓库
 git clone https://github.com/Predidit/kazumi-website.git
 cd kazumi-website
-
-# 安装依赖
 bun install
-
-# 启动开发服务器
 bun run dev
 ```
+
+开发服务器默认运行在 `http://localhost:5173`。
 
 ### 常用命令
 
 | 命令 | 说明 |
-|------|------|
+| --- | --- |
+| `bun install` | 安装依赖 |
 | `bun run dev` | 启动开发服务器 |
-| `bun run build` | 构建生产版本 |
-| `bun run test` | 运行测试（Vitest） |
-| `bun run lint` | 代码检查（Biome） |
-| `bun run format` | 自动格式化代码 |
+| `bun run build` | 生产构建，构建前会生成文档更新时间和站点地图 |
+| `bun run test` | 运行 Vitest |
+| `bun run lint` | 运行 Biome 检查 |
+| `bun run format` | 使用 Biome 自动修复可修复问题 |
+| `bun run preview` | 本地预览生产构建 |
 
-## 项目结构说明
+## 项目结构
 
-```
+```text
 kazumi-website/
-├── public/                      # 静态资源
+├── public/
 │   ├── docs/                    # 文档图片
 │   ├── contributors.json        # 贡献者数据
 │   ├── releases.json            # 版本数据
 │   └── logo.png
+├── scripts/
+│   ├── generate-doc-updates.ts  # 从 git log 生成文档更新时间
+│   └── generate-sitemap.ts      # 生成 sitemap
 ├── src/
 │   ├── app/
-│   │   ├── app.ts               # 根组件
-│   │   ├── app.config.ts        # 客户端 Provider 配置
-│   │   ├── app.config.server.ts # 服务端 Provider 配置
-│   │   ├── components/          # 共享组件
-│   │   │   ├── header.ts
-│   │   │   ├── footer.ts
-│   │   │   └── toc.ts
-│   │   ├── pages/               # 路由页面（*.page.ts 自动注册路由）
-│   │   │   ├── index.page.ts    # 首页
-│   │   │   ├── about.page.ts    # 关于页
-│   │   │   ├── download.page.ts # 下载页
-│   │   │   ├── docs.page.ts     # 文档页
-│   │   │   ├── home/            # 首页子组件
-│   │   │   └── about/           # 关于子路由
-│   │   └── models/              # 数据模型
+│   │   ├── app.ts
+│   │   ├── app.config.ts
+│   │   ├── app.config.server.ts
+│   │   ├── features/
+│   │   │   ├── docs/            # 文档导航、TOC、页脚、代码块
+│   │   │   ├── home/            # 首页模块
+│   │   │   ├── layout/          # Header、Footer、主题
+│   │   │   └── seo/             # SEO 配置与服务
+│   │   └── pages/               # AnalogJS 文件路由
 │   ├── content/
-│   │   └── docs/                # Markdown 文档
-│   │       ├── intro/           # 介绍
-│   │       ├── rules/           # 规则
-│   │       ├── architecture/    # 架构
-│   │       ├── misc/            # 其他
-│   │       └── sidebar.ts       # 侧边栏导航配置
-│   ├── main.ts                  # 客户端入口
-│   └── main.server.ts           # SSR 入口
-├── vite.config.ts               # Vite + AnalogJS 配置（含 prerender 路由）
-├── biome.json                   # Biome 代码规范配置
+│   │   └── docs/                # Markdown 文档内容
+│   ├── main.ts
+│   └── main.server.ts
+├── vite.config.ts               # Vite + AnalogJS + prerender 配置
+├── biome.json
 └── package.json
 ```
 
-### 路由
+## 路由与文档
 
-项目使用 AnalogJS 基于文件系统的路由：
-
-- `src/app/pages/` 下的 `*.page.ts` 文件自动注册为路由
-- 页面组件必须 **默认导出**
-- 嵌套目录 = 嵌套路由（如 `pages/about/icon.page.ts` → `/about/icon`）
-
-### 内容管理
-
-- Markdown 文档放在 `src/content/docs/` 目录下
-- 使用 frontmatter 配置页面元数据
-- **新文档必须添加到 `vite.config.ts` 的 prerender 路由列表中**，否则不会被构建
+- `src/app/pages/` 下的 `*.page.ts` 文件会注册为路由，页面组件必须默认导出。
+- 嵌套目录对应嵌套路由，例如 `src/app/pages/about/icon.page.ts` 对应 `/about/icon`。
+- 文档内容位于 `src/content/docs/`，由 `@analogjs/content` 读取 Markdown 并渲染。
+- 文档侧边栏导航维护在 `src/app/features/docs/docs-nav.ts`。
+- 新增文档时需要同时确认：
+  - Markdown 文件放在正确的 `src/content/docs/` 子目录。
+  - `docs-nav.ts` 中加入对应导航项。
+  - `vite.config.ts` 的 prerender 配置能够覆盖该文档路径。
+  - 文档图片放在 `public/docs/assets/` 下，并使用 `/docs/assets/...` 引用。
 
 ## 代码规范
 
-项目使用 [Biome](https://biomejs.dev/) 进行代码检查和格式化，提交前请运行 `bun run lint`。
+项目使用 Biome 2.5 进行格式和 lint 检查。
 
-### 核心规则
+- 缩进使用 Tab。
+- 字符串使用双引号。
+- 使用 standalone components，不使用 NgModule。
+- 使用 Angular 22 `@if` / `@for` 控制流语法。
+- 状态优先使用 signals。
+- 组件使用内联 `template` 和 `styles`。
+- 样式使用 SCSS 和 Material 3 的 `var(--mat-sys-*)` 变量。
+- 除非确有必要，不在代码中添加注释。
 
-- **缩进**: Tab
-- **引号**: 双引号 `"`
-- **组件**: 使用 standalone 组件（不使用 NgModule）
-- **控制流**: 使用 Angular 22 的 `@if` / `@for` 语法（不使用 `*ngIf` / `*ngFor`）
-- **状态管理**: 使用 signals（`signal()`），不使用 BehaviorSubject
-- **样式**: SCSS，使用 `var(--mat-sys-*)` Material 3 CSS 自定义属性
-- **模板**: 组件使用内联 `template` + `styles`（不使用单独的模板文件）
-- **注释**: 除非明确要求，不添加注释
-
-### 自动修复
+提交前请至少运行：
 
 ```shell
-bun run format
+bun run lint
+bun run build
 ```
 
-## 提交规范
+## CI 与 Pull Request
 
-### Commit Message
+PR 会通过 `.github/workflows/pr-test.yml` 运行 CI，当前检查包括：
 
-使用 [Conventional Commits](https://www.conventionalcommits.org/) 规范。
+- `bun install`
+- `bun run lint`
+- `bun run build`
 
-### Pull Request 流程
+贡献流程：
 
-1. Fork 仓库并创建你的分支
-2. 确保 `bun run lint` 通过
-3. 确保 `bun run test` 通过
-4. 提交 PR，说明变更内容和原因
-
-> 项目目前没有 CI 工作流，请在本地完成检查后再提交。
+1. Fork 仓库并创建你的开发分支。
+2. 使用 Conventional Commits 风格编写提交信息。
+3. 确认本地检查通过。
+4. 提交 PR，并说明变更内容、原因和验证方式。

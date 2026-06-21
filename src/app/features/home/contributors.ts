@@ -6,7 +6,6 @@ import {
 	PLATFORM_ID,
 	signal,
 } from "@angular/core";
-import { MatIconModule } from "@angular/material/icon";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 interface Contributor {
@@ -23,14 +22,12 @@ interface CoreMember {
 }
 
 interface ContributorsData {
-	generated_at: string;
-	count: number;
 	contributors: Contributor[];
 }
 
 @Component({
 	selector: "app-contributors",
-	imports: [MatIconModule, MatProgressSpinnerModule],
+	imports: [MatProgressSpinnerModule],
 	template: `
     <section class="contributors">
       <div class="contributors-container">
