@@ -1,9 +1,10 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { RouterLink, RouterLinkActive } from "@angular/router";
+import { ThemeMode, ThemeService } from "../services/theme";
 
 interface NavItem {
 	label: string;
@@ -78,6 +79,19 @@ interface NavItem {
               </a>
             }
           }
+
+          <div class="theme-toggle">
+            @for (opt of themeOptions; track opt.value) {
+              <button
+                class="theme-btn"
+                [class.active]="theme.mode() === opt.value"
+                (click)="theme.mode.set(opt.value)"
+                [attr.aria-label]="opt.label"
+              >
+                <mat-icon>{{ opt.icon }}</mat-icon>
+              </button>
+            }
+          </div>
         </nav>
 
         <button
@@ -230,6 +244,45 @@ interface NavItem {
       margin-left: auto;
     }
 
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin-left: 8px;
+      padding: 4px;
+      border-radius: 20px;
+      background-color: var(--mat-sys-surface-container);
+    }
+
+    .theme-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 16px;
+      background: none;
+      color: var(--mat-sys-on-surface-variant);
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .theme-btn mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    .theme-btn:hover {
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
+    }
+
+    .theme-btn.active {
+      background-color: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
+    }
+
     .mobile-menu-btn {
       display: none;
     }
@@ -250,6 +303,18 @@ interface NavItem {
   `,
 })
 export class HeaderComponent {
+	theme = inject(ThemeService);
+
+	themeOptions = [
+		{ value: "light" as ThemeMode, icon: "light_mode", label: "浅色" },
+		{ value: "dark" as ThemeMode, icon: "dark_mode", label: "深色" },
+		{
+			value: "system" as ThemeMode,
+			icon: "brightness_auto",
+			label: "跟随系统",
+		},
+	];
+
 	navItems: NavItem[] = [
 		{ label: "首页", route: "/", icon: "home" },
 		{ label: "文档", route: "/docs/intro/what-is-kazumi", icon: "menu_book" },
