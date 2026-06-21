@@ -45,3 +45,6 @@ Thumbs.db
 
 # Environment files
 .env*
+
+# Generated
+public/doc-updates.json
