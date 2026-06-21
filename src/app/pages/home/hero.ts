@@ -122,7 +122,6 @@ interface Feature {
 
     .hero-visual {
       flex-shrink: 0;
-      margin-right: 80px;
     }
 
     .hero-logo {
@@ -228,8 +227,13 @@ interface Feature {
 
       .hero-container {
         flex-direction: column-reverse;
+        align-items: center;
         gap: 32px;
         text-align: center;
+      }
+
+      .hero-visual {
+        margin-right: 0;
       }
 
       .hero-logo {
@@ -269,6 +273,10 @@ interface Feature {
       }
 
       .scroll-hint {
+        display: none;
+      }
+
+      #after-hero {
         display: none;
       }
     }

@@ -340,7 +340,10 @@ interface NavItem {
     }
 
     @media (max-width: 768px) {
-      .desktop-nav {
+      .desktop-nav,
+      .theme-toggle,
+      .nav-divider,
+      .social-links {
         display: none;
       }
 
