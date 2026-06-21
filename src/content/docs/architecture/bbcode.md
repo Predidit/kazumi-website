@@ -1,3 +1,11 @@
+---
+title: "BBCode 解析"
+description: "了解 Kazumi 评论区的 BBCode 解析实现，使用 ANTLR v4 解析 Bangumi API 返回的 BBCode 格式字符串。"
+section: "架构"
+icon: "text_fields"
+order: 2
+---
+
 # BBCode 解析
 
 Kazumi 的评论区来自 Bangumi 平台。查询 Bangumi API 会返回 BBCode 格式字符串，通过 ANTLR v4 进行解析，使用 RichText 组件进行显示。

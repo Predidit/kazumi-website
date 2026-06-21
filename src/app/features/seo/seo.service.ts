@@ -59,6 +59,28 @@ export class SeoService {
 			path: "/download",
 			keywords:
 				"Kazumi 下载, Kazumi Android, Kazumi Windows, Kazumi macOS, Kazumi Linux, Kazumi iOS, Kazumi OHOS, Kazumi 官网",
+			structuredData: {
+				"@context": "https://schema.org",
+				"@type": "SoftwareApplication",
+				name: "Kazumi",
+				url: `${SEO_CONFIG.siteUrl}/download`,
+				applicationCategory: "MultimediaApplication",
+				operatingSystem: "Android, Windows, macOS, Linux, iOS, HarmonyOS",
+				description:
+					"在 Kazumi 官网下载 Kazumi，获取 Android、Windows、macOS、Linux、iOS 和 OHOS 版本安装包，并查看安装教程与最新版本信息。",
+				image: this.absoluteUrl(SEO_CONFIG.defaultImage),
+				author: {
+					"@type": "Person",
+					name: "Predidit",
+					url: "https://github.com/Predidit",
+				},
+				downloadUrl: `${SEO_CONFIG.siteUrl}/download`,
+				offers: {
+					"@type": "Offer",
+					price: "0",
+					priceCurrency: "CNY",
+				},
+			},
 		});
 	}
 
@@ -69,6 +91,19 @@ export class SeoService {
 				"了解 Kazumi 官网与 Kazumi 项目图标来源、授权说明和原作者信息。",
 			path: "/about/icon",
 			keywords: "Kazumi 图标, Kazumi 官网, Kazumi 授权, Kazumi 项目",
+			structuredData: {
+				"@context": "https://schema.org",
+				"@type": "WebPage",
+				name: "图标来源 - Kazumi 官网",
+				url: `${SEO_CONFIG.siteUrl}/about/icon`,
+				description:
+					"了解 Kazumi 官网与 Kazumi 项目图标来源、授权说明和原作者信息。",
+				isPartOf: {
+					"@type": "WebSite",
+					name: SEO_CONFIG.siteName,
+					url: SEO_CONFIG.siteUrl,
+				},
+			},
 		});
 	}
 
@@ -79,6 +114,32 @@ export class SeoService {
 			path: route,
 			type: "article",
 			keywords: `Kazumi 文档, ${title}, Kazumi 官网, Kazumi 下载, Kazumi 使用教程`,
+			structuredData: {
+				"@context": "https://schema.org",
+				"@type": "TechArticle",
+				headline: title,
+				description: `阅读 Kazumi 官网文档：${title}。了解 Kazumi 下载、安装、规则开发、功能模块和跨平台使用方法。`,
+				url: `${SEO_CONFIG.siteUrl}${route}`,
+				author: {
+					"@type": "Person",
+					name: "Predidit",
+					url: "https://github.com/Predidit",
+				},
+				publisher: {
+					"@type": "Organization",
+					name: SEO_CONFIG.siteName,
+					url: SEO_CONFIG.siteUrl,
+				},
+				mainEntityOfPage: {
+					"@type": "WebPage",
+					"@id": `${SEO_CONFIG.siteUrl}${route}`,
+				},
+				isPartOf: {
+					"@type": "WebSite",
+					name: SEO_CONFIG.siteName,
+					url: SEO_CONFIG.siteUrl,
+				},
+			},
 		});
 	}
 

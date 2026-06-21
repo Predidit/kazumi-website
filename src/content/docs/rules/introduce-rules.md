@@ -1,3 +1,11 @@
+---
+title: "规则介绍"
+description: "了解 Kazumi 规则开发的基础知识，包括规则结构、开发流程和 Xpath 选择器的使用方法。"
+section: "规则指南"
+icon: "description"
+order: 1
+---
+
 # 介绍
 
 > [!TIP]

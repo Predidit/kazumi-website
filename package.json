@@ -9,7 +9,7 @@
 		"ng": "ng",
 		"dev": "vite",
 		"start": "bun run dev",
-		"prebuild": "bun scripts/generate-doc-updates.ts && bun scripts/generate-sitemap.ts",
+		"prebuild": "bun scripts/generate-doc-updates.ts",
 		"build": "vite build",
 		"watch": "vite build --watch",
 		"test": "vitest --passWithNoTests",
@@ -54,6 +54,7 @@
 		"sass": "^1.101.0",
 		"typescript": "~6.0.0",
 		"vite": "^8.0.0",
+		"vite-plugin-sitemap-ts": "^1.4.6",
 		"vite-tsconfig-paths": "^4.2.0",
 		"vitest": "^4.1.0"
 	},

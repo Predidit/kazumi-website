@@ -321,12 +321,12 @@ export default class DocsComponent {
 
 	openDocsNav() {
 		this.tocOpen.set(false);
-		this.docsNavOpen.set(true);
+		this.docsNavOpen.update((v) => !v);
 	}
 
 	openToc() {
 		this.docsNavOpen.set(false);
-		this.tocOpen.set(true);
+		this.tocOpen.update((v) => !v);
 	}
 
 	syncNavState(opened: boolean) {
