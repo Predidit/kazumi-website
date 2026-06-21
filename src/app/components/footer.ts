@@ -6,11 +6,13 @@ interface FooterLink {
 	name: string;
 	url: string;
 	icon?: string;
+	mdiIcon?: string;
 	external?: boolean;
 }
 
 interface FooterGroup {
 	title: string;
+	icon: string;
 	links: FooterLink[];
 }
 
@@ -23,7 +25,7 @@ interface FooterGroup {
         <div class="footer-grid">
           @for (group of groups; track group.title) {
             <div class="footer-group">
-              <h4 class="group-title">{{ group.title }}</h4>
+              <h4 class="group-title"><mat-icon>{{ group.icon }}</mat-icon>{{ group.title }}</h4>
               <ul class="group-links">
                 @for (link of group.links; track link.name) {
                   <li>
@@ -33,14 +35,18 @@ interface FooterGroup {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        @if (link.icon) {
+                        @if (link.mdiIcon) {
+                          <span [class]="'link-icon mdi mdi-' + link.mdiIcon"></span>
+                        } @else if (link.icon) {
                           <mat-icon class="link-icon">{{ link.icon }}</mat-icon>
                         }
                         {{ link.name }}
                       </a>
                     } @else {
                       <a [routerLink]="link.url">
-                        @if (link.icon) {
+                        @if (link.mdiIcon) {
+                          <span [class]="'link-icon mdi mdi-' + link.mdiIcon"></span>
+                        } @else if (link.icon) {
                           <mat-icon class="link-icon">{{ link.icon }}</mat-icon>
                         }
                         {{ link.name }}
@@ -83,12 +89,21 @@ interface FooterGroup {
     }
 
     .group-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       font-size: 0.75rem;
       font-weight: 600;
       color: var(--mat-sys-on-surface-variant);
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: 20px;
+    }
+
+    .group-title mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
     }
 
     .group-links {
@@ -122,6 +137,11 @@ interface FooterGroup {
       font-size: 18px;
       width: 18px;
       height: 18px;
+    }
+
+    .link-icon.mdi {
+      font-size: 18px;
+      line-height: 1;
     }
 
     .footer-bottom {
@@ -174,11 +194,12 @@ export class FooterComponent {
 	groups: FooterGroup[] = [
 		{
 			title: "项目",
+			icon: "folder",
 			links: [
 				{
 					name: "GitHub",
 					url: "https://github.com/Predidit/Kazumi",
-					icon: "code",
+					mdiIcon: "github",
 					external: true,
 				},
 				{ name: "下载", url: "/download", icon: "download" },
@@ -186,6 +207,7 @@ export class FooterComponent {
 		},
 		{
 			title: "文档",
+			icon: "menu_book",
 			links: [
 				{
 					name: "快速开始",
@@ -197,6 +219,7 @@ export class FooterComponent {
 		},
 		{
 			title: "社区",
+			icon: "groups",
 			links: [
 				{
 					name: "Issues",
@@ -207,7 +230,7 @@ export class FooterComponent {
 				{
 					name: "Telegram",
 					url: "https://t.me/kazumi_app",
-					icon: "send",
+					mdiIcon: "telegram",
 					external: true,
 				},
 			],
