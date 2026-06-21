@@ -222,13 +222,13 @@ interface Feature {
     @media (max-width: 768px) {
       .hero {
         min-height: auto;
-        padding: 64px 24px;
+        padding: 48px 20px 64px;
       }
 
       .hero-container {
         flex-direction: column-reverse;
         align-items: center;
-        gap: 32px;
+        gap: 24px;
         text-align: center;
       }
 
@@ -237,17 +237,22 @@ interface Feature {
       }
 
       .hero-logo {
-        width: 160px;
-        height: 160px;
+        width: 140px;
+        height: 140px;
         border-radius: 28px;
       }
 
       .hero-title {
-        font-size: 2.5rem;
+        font-size: 2.25rem;
       }
 
       .hero-tagline {
-        font-size: 1.0625rem;
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+
+      .hero-subtitle {
+        margin-bottom: 28px;
       }
 
       .hero-actions {
@@ -256,20 +261,13 @@ interface Feature {
 
       .features-grid {
         grid-template-columns: 1fr;
-        gap: 16px;
-        margin-top: 48px;
+        gap: 12px;
+        margin-top: 40px;
       }
 
       .feature-card {
-        flex-direction: row;
-        text-align: left;
-        gap: 16px;
-        padding: 24px;
-      }
-
-      .icon-wrapper {
-        flex-shrink: 0;
-        margin-bottom: 0;
+        padding: 24px 20px;
+        border-radius: 14px;
       }
 
       .scroll-hint {
