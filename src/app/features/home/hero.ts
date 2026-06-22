@@ -44,7 +44,7 @@ interface Feature {
             <div class="icon-wrapper">
               <mat-icon>{{ feature.icon }}</mat-icon>
             </div>
-            <h3 class="feature-title">{{ feature.title }}</h3>
+            <h2 class="feature-title">{{ feature.title }}</h2>
             <p class="feature-desc">{{ feature.description }}</p>
           </div>
         }
@@ -99,7 +99,7 @@ interface Feature {
 
     .hero-subtitle {
       font-size: 1rem;
-      color: var(--mat-sys-outline);
+      color: var(--mat-sys-on-surface-variant);
       margin-bottom: 40px;
     }
 

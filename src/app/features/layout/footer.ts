@@ -25,7 +25,7 @@ interface FooterGroup {
         <div class="footer-grid">
           @for (group of groups; track group.title) {
             <div class="footer-group">
-              <h4 class="group-title"><mat-icon>{{ group.icon }}</mat-icon>{{ group.title }}</h4>
+              <h3 class="group-title"><mat-icon>{{ group.icon }}</mat-icon>{{ group.title }}</h3>
               <ul class="group-links">
                 @for (link of group.links; track link.name) {
                   <li>
@@ -163,8 +163,9 @@ interface FooterGroup {
     }
 
     .copyright a {
-      color: var(--mat-sys-primary);
-      text-decoration: none;
+      color: var(--mat-sys-on-surface);
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
 
     .copyright a:hover {
