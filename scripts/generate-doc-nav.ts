@@ -31,13 +31,13 @@ for (const file of files) {
 
 	const rel = relative(DOCS_DIR, file).replace(/\.md$/, "");
 	const dir = rel.includes("/") ? rel.substring(0, rel.lastIndexOf("/")) : "";
-	const base = a.slug || rel.split("/").pop()!;
+	const base = a.slug || rel.split("/").pop() || "";
 	const route = dir ? `/docs/${dir}/${base}` : `/docs/${base}`;
 
 	if (!sectionMap.has(a.section)) {
 		sectionMap.set(a.section, []);
 	}
-	sectionMap.get(a.section)!.push({
+	sectionMap.get(a.section)?.push({
 		route,
 		title: a.title,
 		icon: a.icon,

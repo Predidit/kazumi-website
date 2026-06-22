@@ -2,9 +2,9 @@
 
 import analog, { type PrerenderContentFile } from "@analogjs/platform";
 import { gfmAlert } from "marked-gfm-alert";
-import { sitemap } from "vite-plugin-sitemap-ts";
 import { defineConfig } from "vite";
-import { computeDocRoute, walkMd, DOCS_DIR } from "./scripts/doc-routes";
+import { sitemap } from "vite-plugin-sitemap-ts";
+import { computeDocRoute, DOCS_DIR, walkMd } from "./scripts/doc-routes";
 
 function getDocRoutes(): string[] {
 	return walkMd(DOCS_DIR).map(computeDocRoute);
@@ -12,6 +12,7 @@ function getDocRoutes(): string[] {
 
 function filterDocsContentRoutes() {
 	return {
+		ssr: false,
 		name: "filter-docs-content-routes",
 		enforce: "post" as const,
 		transform(code: string, id: string) {

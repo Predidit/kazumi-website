@@ -1,9 +1,9 @@
 {
 	"name": "kazumi-website",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"type": "module",
 	"engines": {
-		"node": ">=20.19.1"
+		"node": ">=22"
 	},
 	"scripts": {
 		"ng": "ng",
@@ -14,8 +14,8 @@
 		"watch": "vite build --watch",
 		"test": "vitest --passWithNoTests",
 		"preview": "node dist/analog/server/index.mjs",
-		"lint": "biome check src/",
-		"format": "biome check src/ --write"
+		"lint": "biome check .",
+		"format": "biome check . --write"
 	},
 	"private": true,
 	"dependencies": {

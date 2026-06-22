@@ -22,7 +22,12 @@ import {
 } from "marked-gfm-heading-id";
 import markedShiki from "marked-shiki";
 import { filter, map, startWith } from "rxjs/operators";
-import { createHighlighter } from "shiki";
+import { createHighlighterCore } from "shiki/core";
+import bash from "shiki/dist/langs/bash.mjs";
+import dart from "shiki/dist/langs/dart.mjs";
+import githubDark from "shiki/dist/themes/github-dark.mjs";
+import githubLight from "shiki/dist/themes/github-light.mjs";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
 import { DocFooterComponent } from "../../features/docs/doc-footer";
 import { routeToContentPath } from "../../features/docs/docs-nav";
 import { DocsStateService } from "../../features/docs/docs-state.service";
@@ -39,45 +44,10 @@ const HEADING_ID_OPTIONS = { globalSlugs: true } as { prefix?: string } & {
 	globalSlugs: boolean;
 };
 
-const SHIKI_LANGS = [
-	"bash",
-	"shell",
-	"javascript",
-	"typescript",
-	"json",
-	"html",
-	"css",
-	"yaml",
-	"markdown",
-	"dart",
-	"python",
-	"java",
-	"go",
-	"rust",
-	"ruby",
-	"php",
-	"sql",
-	"c",
-	"cpp",
-	"swift",
-	"kotlin",
-	"scala",
-	"powershell",
-	"xml",
-	"xsl",
-	"graphql",
-	"toml",
-	"ini",
-	"dockerfile",
-	"diff",
-	"latex",
-	"text",
-	"protobuf",
-] as const;
-
-const highlighterReady = createHighlighter({
-	themes: ["github-light", "github-dark"],
-	langs: [...SHIKI_LANGS],
+const highlighterReady = createHighlighterCore({
+	themes: [githubLight, githubDark],
+	langs: [bash, dart],
+	engine: createJavaScriptRegexEngine(),
 });
 
 type DocAttributes = {

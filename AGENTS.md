@@ -11,8 +11,8 @@ bun install          # install deps (bun.lock is the lockfile, not pnpm)
 bun run dev          # dev server (port 5173)
 bun run build        # production build (prebuild auto-generates public/doc-updates.json and public/doc-nav.json)
 bun run test         # vitest (no tests exist yet — passes vacuously)
-bun run lint         # biome check src/ (lint + format check)
-bun run format       # biome check src/ --write (auto-fix)
+bun run lint         # biome check . (lint + format check)
+bun run format       # biome check . --write (auto-fix)
 bun run preview      # serve production build locally (Node SSR server)
 ```
 
@@ -26,7 +26,7 @@ CI on PRs: `bun install` → `bun run lint` → `bun run build` (`.github/workfl
 - **Linter**: Biome recommended rules, `useImportType` is off
 - **No comments** in code unless explicitly requested
 - **TypeScript** ~6.0 — `tsconfig.json` sets `ignoreDeprecations: "6.0"`; do not remove it
-- **Node** >= 20.19.1 required (see `engines` in `package.json`)
+- **Node** >= 22 required
 
 ## Routing (AnalogJS file-based)
 

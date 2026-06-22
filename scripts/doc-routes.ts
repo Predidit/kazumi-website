@@ -24,6 +24,6 @@ export function computeDocRoute(file: string): string {
 	const slug = (attributes as Record<string, string>).slug;
 	const rel = relative(DOCS_DIR, file).replace(/\.md$/, "");
 	const dir = rel.includes("/") ? rel.substring(0, rel.lastIndexOf("/")) : "";
-	const base = slug || rel.split("/").pop()!;
+	const base = slug || rel.split("/").pop() || "";
 	return dir ? `/docs/${dir}/${base}` : `/docs/${base}`;
 }
