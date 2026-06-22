@@ -1,10 +1,13 @@
+import { isPlatformBrowser } from "@angular/common";
 import {
 	Component,
 	ElementRef,
 	effect,
+	inject,
 	input,
 	OnDestroy,
 	output,
+	PLATFORM_ID,
 	signal,
 	ViewChild,
 } from "@angular/core";
@@ -14,7 +17,6 @@ const TOC_TITLE = "页面导航";
 
 @Component({
 	selector: "app-toc",
-	standalone: true,
 	host: {
 		"[class.embedded]": "embedded()",
 	},
@@ -128,7 +130,11 @@ export class TocComponent implements OnDestroy {
 	private observer?: IntersectionObserver;
 	private visibleIds = new Set<string>();
 
+	private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
 	constructor() {
+		if (!this.isBrowser) return;
+
 		effect(() => {
 			this.items();
 			queueMicrotask(() => this.setupObserver());
@@ -147,7 +153,9 @@ export class TocComponent implements OnDestroy {
 	onLinkClick(id: string) {
 		this.activeId.set(id);
 		this.linkClick.emit(id);
-		document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+		if (this.isBrowser) {
+			document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+		}
 	}
 
 	private scrollToActive() {

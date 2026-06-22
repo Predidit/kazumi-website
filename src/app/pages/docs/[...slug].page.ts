@@ -8,7 +8,6 @@ import {
 	inject,
 	OnDestroy,
 	resource,
-	ViewChild,
 } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
@@ -106,7 +105,7 @@ interface RenderedDoc {
         <span>正在加载文档...</span>
       </div>
     } @else if (renderedDoc()) {
-      <article class="markdown-body" #article [innerHTML]="renderedDoc()!.html"></article>
+      <article class="markdown-body" [innerHTML]="renderedDoc()!.html"></article>
       <app-doc-footer />
     }
   `,
@@ -122,12 +121,13 @@ interface RenderedDoc {
   `,
 })
 export default class DocContentComponent implements OnDestroy {
-	@ViewChild("article") private articleRef?: ElementRef<HTMLElement>;
 	private readonly docsState = inject(DocsStateService);
 	private readonly router = inject(Router);
 	private readonly seo = inject(SeoService);
 	private readonly sanitizer = inject(DomSanitizer);
 	private markdown?: Marked;
+	private host?: HTMLElement;
+	private hostClickListener?: (e: Event) => void;
 	private readonly currentPath = toSignal(
 		this.router.events.pipe(
 			filter((event) => event instanceof NavigationEnd),
@@ -142,7 +142,7 @@ export default class DocContentComponent implements OnDestroy {
 			const doc = await this.loadDoc(params);
 			if (doc && typeof doc.content === "string") {
 				await this.ensureMarked();
-				doc.content = await this.render(doc.content);
+				return { ...doc, content: await this.render(doc.content) };
 			}
 			return doc;
 		},
@@ -161,43 +161,28 @@ export default class DocContentComponent implements OnDestroy {
 	});
 
 	constructor() {
-		const host = inject(ElementRef).nativeElement as HTMLElement;
+		this.host = inject(ElementRef).nativeElement as HTMLElement;
 
-		host.addEventListener("click", (e) => {
+		this.hostClickListener = (e: Event) => {
 			const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(
 				".copy-btn",
 			);
 			if (!btn) return;
 			const code = btn.parentElement?.querySelector("code")?.textContent ?? "";
 			navigator.clipboard.writeText(code);
-			btn.classList.add("copied");
-			btn.textContent = "已复制";
-			setTimeout(() => {
-				btn.classList.remove("copied");
-				btn.textContent = "复制";
-			}, 2000);
-		});
-
-		afterNextRender(() => {
-			const article = this.articleRef?.nativeElement;
-			if (!article) return;
-
-			effect(() => {
-				this.renderedDoc();
-				queueMicrotask(() => {
-					for (const pre of article.querySelectorAll<HTMLPreElement>(
-						"pre.shiki:not(:has(.copy-btn))",
-					)) {
-						const btn = document.createElement("button");
-						btn.className = "copy-btn";
-						btn.setAttribute("aria-label", "复制代码");
-						btn.textContent = "复制";
-						pre.style.position = "relative";
-						pre.prepend(btn);
-					}
-				});
-			});
-		});
+			const icon = btn.querySelector(".mdi");
+			if (icon) {
+				icon.classList.remove("mdi-content-copy");
+				icon.classList.add("mdi-check");
+				btn.classList.add("copied");
+				setTimeout(() => {
+					icon.classList.remove("mdi-check");
+					icon.classList.add("mdi-content-copy");
+					btn.classList.remove("copied");
+				}, 2000);
+			}
+		};
+		this.host.addEventListener("click", this.hostClickListener);
 
 		effect(() => {
 			const route = `/docs/${this.currentPath()}`;
@@ -219,32 +204,70 @@ export default class DocContentComponent implements OnDestroy {
 
 	ngOnDestroy() {
 		this.docsState.clearToc();
+		if (this.host && this.hostClickListener) {
+			this.host.removeEventListener("click", this.hostClickListener);
+		}
 	}
 
 	private async ensureMarked() {
 		if (this.markdown) return;
-		const highlighter = await highlighterReady;
-		this.markdown = new Marked(
-			gfmHeadingId(HEADING_ID_OPTIONS),
-			gfmAlert({ inlineStyles: true }),
-			markedShiki({
-				highlight(code, lang) {
-					if (highlighter.getLoadedLanguages().includes(lang)) {
-						return highlighter.codeToHtml(code, {
-							lang,
-							themes: {
-								light: "github-light",
-								dark: "github-dark",
-							},
-						});
-					}
-					return `<pre class="shiki"><code>${code
-						.replace(/&/g, "&amp;")
-						.replace(/</g, "&lt;")
-						.replace(/>/g, "&gt;")}</code></pre>`;
-				},
-			}),
-		);
+		try {
+			const highlighter = await highlighterReady;
+			this.markdown = new Marked(
+				gfmHeadingId(HEADING_ID_OPTIONS),
+				gfmAlert({ inlineStyles: true }),
+				markedShiki({
+					highlight(code, lang) {
+						if (highlighter.getLoadedLanguages().includes(lang)) {
+							return highlighter.codeToHtml(code, {
+								lang,
+								themes: {
+									light: "github-light",
+									dark: "github-dark",
+								},
+								transformers: [
+									{
+										pre(hast) {
+											hast.children.unshift({
+												type: "element",
+												tagName: "button",
+												properties: {
+													className: ["copy-btn"],
+													"aria-label": "复制代码",
+												},
+												children: [
+													{
+														type: "element",
+														tagName: "span",
+														properties: {
+															className: ["mdi", "mdi-content-copy"],
+														},
+														children: [],
+													},
+												],
+											});
+										},
+									},
+								],
+							});
+						}
+						return `<pre class="shiki"><button class="copy-btn" aria-label="复制代码"><span class="mdi mdi-content-copy"></span></button><code>${code
+							.replace(/&/g, "&amp;")
+							.replace(/</g, "&lt;")
+							.replace(/>/g, "&gt;")}</code></pre>`;
+					},
+				}),
+			);
+		} catch (err) {
+			console.warn(
+				"Shiki highlighter failed to initialize, falling back to plain marked",
+				err,
+			);
+			this.markdown = new Marked(
+				gfmHeadingId(HEADING_ID_OPTIONS),
+				gfmAlert({ inlineStyles: true }),
+			);
+		}
 	}
 
 	private async loadDoc(path: string): Promise<DocContentFile | null> {
