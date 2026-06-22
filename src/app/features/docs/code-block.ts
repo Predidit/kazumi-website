@@ -11,9 +11,12 @@ import { MatIconModule } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 import Prism from "prismjs";
 
-const LANG_MODULES = import.meta.glob<unknown>(
-	"/node_modules/prismjs/components/prism-*.js",
-);
+const LANG_MODULES: Record<string, () => Promise<unknown>> = {
+	"/node_modules/prismjs/components/prism-bash.js": () =>
+		import("prismjs/components/prism-bash.js"),
+	"/node_modules/prismjs/components/prism-dart.js": () =>
+		import("prismjs/components/prism-dart.js"),
+};
 const loadedLangs = new Set<string>();
 
 async function ensureLang(lang: string): Promise<boolean> {
