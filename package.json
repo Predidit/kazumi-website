@@ -38,6 +38,8 @@
 		"marked-highlight": "^2.2.1",
 		"marked-mangle": "^1.1.10",
 		"marked-shiki": "^1.2.1",
+		"prism-github": "^1.1.0",
+		"prism-themes": "^1.9.0",
 		"prismjs": "^1.29.0",
 		"rxjs": "~7.8.0",
 		"tslib": "^2.3.0"
@@ -50,6 +52,7 @@
 		"@angular/cli": "^22.0.0",
 		"@angular/compiler-cli": "^22.0.0",
 		"@biomejs/biome": "2.5.0",
+		"@types/prismjs": "^1.26.6",
 		"jsdom": "^22.0.0",
 		"sass": "^1.101.0",
 		"typescript": "~6.0.0",

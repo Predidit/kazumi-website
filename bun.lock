@@ -24,6 +24,8 @@
         "marked-highlight": "^2.2.1",
         "marked-mangle": "^1.1.10",
         "marked-shiki": "^1.2.1",
+        "prism-github": "^1.1.0",
+        "prism-themes": "^1.9.0",
         "prismjs": "^1.29.0",
         "rxjs": "~7.8.0",
         "tslib": "^2.3.0",
@@ -36,6 +38,7 @@
         "@angular/cli": "^22.0.0",
         "@angular/compiler-cli": "^22.0.0",
         "@biomejs/biome": "2.5.0",
+        "@types/prismjs": "^1.26.6",
         "jsdom": "^22.0.0",
         "sass": "^1.101.0",
         "typescript": "~6.0.0",
@@ -632,6 +635,8 @@
     "@types/hast": ["@types/hast@3.0.4", "", { "dependencies": { "@types/unist": "*" } }, "sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ=="],
 
     "@types/mdast": ["@types/mdast@4.0.4", "", { "dependencies": { "@types/unist": "*" } }, "sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA=="],
+
+    "@types/prismjs": ["@types/prismjs@1.26.6", "", {}, "sha512-vqlvI7qlMvcCBbVe0AKAb4f97//Hy0EBTaiW8AalRnG/xAN5zOiWWyrNqNXeq8+KAuvRewjCVY1+IPxk4RdNYw=="],
 
     "@types/resolve": ["@types/resolve@1.20.2", "", {}, "sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q=="],
 
@@ -1394,6 +1399,10 @@
     "powershell-utils": ["powershell-utils@0.1.0", "", {}, "sha512-dM0jVuXJPsDN6DvRpea484tCUaMiXWjuCn++HGTqUWzGDjv5tZkEZldAJ/UMlqRYGFrD/etByo4/xOuC/snX2A=="],
 
     "pretty-bytes": ["pretty-bytes@7.1.0", "", {}, "sha512-nODzvTiYVRGRqAOvE84Vk5JDPyyxsVk0/fbA/bq7RqlnhksGpset09XTxbpvLTIjoaF7K8Z8DG8yHtKGTPSYRw=="],
+
+    "prism-github": ["prism-github@1.1.0", "", {}, "sha512-Jbp0MXW5cVWuqTJ6KDB2POe2rx7dHx8V9bJ/7FsBqYTkdSKrs3+Ztccdh1kmXOQ71Ca8V9XcrFrePlj33JHjuQ=="],
+
+    "prism-themes": ["prism-themes@1.9.0", "", {}, "sha512-tX2AYsehKDw1EORwBps+WhBFKc2kxfoFpQAjxBndbZKr4fRmMkv47XN0BghC/K1qwodB1otbe4oF23vUTFDokw=="],
 
     "prismjs": ["prismjs@1.30.0", "", {}, "sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw=="],
 

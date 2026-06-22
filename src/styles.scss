@@ -1,5 +1,16 @@
 @use '@angular/material' as mat;
-@import 'prismjs/themes/prism-tomorrow.css';
+
+@import 'prism-themes/themes/prism-material-light.css';
+
+html[data-theme="dark"] {
+  @import 'prism-themes/themes/prism-material-dark.css';
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    @import 'prism-themes/themes/prism-material-dark.css';
+  }
+}
 
 html {
   @include mat.theme((
@@ -260,7 +271,6 @@ img {
       background: none;
       border-radius: 0;
       font-size: 0.875em;
-      color: var(--mat-sys-on-surface);
     }
   }
 
