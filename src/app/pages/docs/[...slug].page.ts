@@ -141,9 +141,7 @@ export default class DocContentComponent implements OnDestroy {
 			const fragment = this.router.parseUrl(this.router.url).fragment;
 			if (!fragment) return;
 			setTimeout(() => {
-				document
-					.getElementById(fragment)
-					?.scrollIntoView({ behavior: "smooth" });
+				document.getElementById(fragment)?.scrollIntoView();
 			});
 		});
 	}

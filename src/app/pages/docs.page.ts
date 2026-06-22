@@ -185,6 +185,7 @@ import { TocComponent } from "../features/docs/toc";
       padding: 0 24px 24px;
       background: var(--mat-sys-surface);
       overflow-y: auto;
+      scroll-behavior: smooth;
     }
 
     .content-layout {

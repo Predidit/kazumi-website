@@ -99,6 +99,6 @@ export class TocComponent {
 	onLinkClick(id: string) {
 		this.activeId.set(id);
 		this.linkClick.emit(id);
-		document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+		document.getElementById(id)?.scrollIntoView();
 	}
 }
