@@ -118,7 +118,7 @@ interface FooterGroup {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      color: var(--mat-sys-outline);
+      color: var(--mat-sys-on-surface-variant);
       text-decoration: none;
       font-size: 0.8125rem;
       padding: 6px 12px;
