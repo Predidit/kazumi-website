@@ -1,0 +1,24 @@
+# Kazumi - 跨平台番剧采集与在线观看应用
+
+Kazumi 是一款使用 Flutter 开发的基于自定义规则的番剧采集与在线观看程序，支持 Android、Windows、macOS、Linux、iOS 和鸿蒙 NEXT。
+
+## 主要页面
+
+- [首页](https://kazumi.app/)
+- [下载](https://kazumi.app/download)
+- [文档](https://kazumi.app/docs/intro/what-is-kazumi)
+- [图标来源](https://kazumi.app/about/icon)
+
+## 文档
+
+- [什么是 Kazumi](https://kazumi.app/docs/intro/what-is-kazumi)
+- [如何下载](https://kazumi.app/docs/intro/how-to-download)
+- [如何安装](https://kazumi.app/docs/intro/how-to-install)
+- [规则开发入门](https://kazumi.app/docs/rules/develop-rules)
+- [规则开发示例](https://kazumi.app/docs/rules/develop-rules-example)
+- [模块详情](https://kazumi.app/docs/rules/module-details)
+
+## 资源
+
+- [GitHub 仓库](https://github.com/Predidit/Kazumi)
+- [Telegram 群组](https://t.me/kazumi_app)
