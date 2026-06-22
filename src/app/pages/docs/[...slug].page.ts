@@ -169,18 +169,22 @@ export default class DocContentComponent implements OnDestroy {
 			);
 			if (!btn) return;
 			const code = btn.parentElement?.querySelector("code")?.textContent ?? "";
-			navigator.clipboard.writeText(code);
-			const icon = btn.querySelector(".mdi");
-			if (icon) {
-				icon.classList.remove("mdi-content-copy");
-				icon.classList.add("mdi-check");
-				btn.classList.add("copied");
-				setTimeout(() => {
-					icon.classList.remove("mdi-check");
-					icon.classList.add("mdi-content-copy");
-					btn.classList.remove("copied");
-				}, 2000);
-			}
+			navigator.clipboard
+				.writeText(code)
+				.then(() => {
+					const icon = btn.querySelector(".mdi");
+					if (icon) {
+						icon.classList.remove("mdi-content-copy");
+						icon.classList.add("mdi-check");
+						btn.classList.add("copied");
+						setTimeout(() => {
+							icon.classList.remove("mdi-check");
+							icon.classList.add("mdi-content-copy");
+							btn.classList.remove("copied");
+						}, 2000);
+					}
+				})
+				.catch(() => {});
 		};
 		this.host.addEventListener("click", this.hostClickListener);
 

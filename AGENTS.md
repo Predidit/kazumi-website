@@ -2,7 +2,7 @@
 
 ## Stack
 
-AnalogJS + Angular 22 + Vite. SSR with prerendered static routes. Angular Material for UI. Content is Markdown in `src/content/docs/` rendered by `@analogjs/content`. Docs pages use Shiki at runtime for syntax highlighting (not Prism — Prism is only configured for `@analogjs/content`'s built-in renderer).
+AnalogJS + Angular 22 + Vite. SSR with prerendered static routes. Angular Material 3 for UI. Content is Markdown in `src/content/docs/` rendered by `@analogjs/content`. Docs pages use Shiki at runtime for syntax highlighting (not Prism — Prism is only configured for `@analogjs/content`'s built-in renderer).
 
 ## Commands
 
@@ -13,12 +13,12 @@ bun run build        # production build (prebuild auto-generates public/doc-upda
 bun run test         # vitest (no tests exist yet — passes vacuously)
 bun run lint         # biome check src/ (lint + format check)
 bun run format       # biome check src/ --write (auto-fix)
-bun run preview      # serve production build locally
+bun run preview      # serve production build locally (Node SSR server)
 ```
 
-CI on PRs: `bun run lint` then `bun run build` (`.github/workflows/pr-test.yml`). Deploy to GitHub Pages on push to default branch (`.github/workflows/deploy.yaml`).
-
 Run `bun run lint && bun run build` before committing. There is no typecheck-only script — `bun run build` is the typecheck gate.
+
+CI on PRs: `bun install` → `bun run lint` → `bun run build` (`.github/workflows/pr-test.yml`). Deploy to GitHub Pages on push to default branch (`.github/workflows/deploy.yaml`).
 
 ## Code Style
 
@@ -38,6 +38,7 @@ Run `bun run lint && bun run build` before committing. There is no typecheck-onl
 - Adding a new doc requires: (1) the `.md` file with correct frontmatter, (2) prerender coverage in `vite.config.ts`
 - Prerender routes are in `vite.config.ts` under `analog({ prerender: { routes: [...] } })` — the `contentDir` transformer handles docs automatically, but top-level routes like `/download` must be listed explicitly
 - The `filterDocsContentRoutes()` plugin in `vite.config.ts` strips AnalogJS's auto-generated content routes to prevent conflicts with the catch-all `[...slug].page.ts`
+- `scripts/doc-routes.ts` is a shared utility used by both `vite.config.ts` and the sitemap plugin — do not duplicate its logic
 
 ## Key Conventions
 
@@ -69,6 +70,7 @@ src/
 scripts/
   generate-doc-updates.ts  # prebuild: git log → public/doc-updates.json
   generate-doc-nav.ts      # prebuild: frontmatter → public/doc-nav.json
+  doc-routes.ts            # shared: walkMd(), computeDocRoute() — used by vite.config.ts and sitemap
 ```
 
 ## Sitemap & SEO

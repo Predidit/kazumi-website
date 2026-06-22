@@ -401,7 +401,6 @@ img {
   border-radius: 0 12px 12px 0;
 }
 
-html[data-theme="dark"],
 html:not([data-theme]) {
   @media (prefers-color-scheme: dark) {
     --color-border-default: #30363d;
