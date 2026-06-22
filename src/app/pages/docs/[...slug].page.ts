@@ -42,15 +42,38 @@ const HEADING_ID_OPTIONS = { globalSlugs: true } as { prefix?: string } & {
 
 const SHIKI_LANGS = [
 	"bash",
-	"dart",
+	"shell",
 	"javascript",
 	"typescript",
 	"json",
 	"html",
 	"css",
-	"shell",
 	"yaml",
 	"markdown",
+	"dart",
+	"python",
+	"java",
+	"go",
+	"rust",
+	"ruby",
+	"php",
+	"sql",
+	"c",
+	"cpp",
+	"swift",
+	"kotlin",
+	"scala",
+	"powershell",
+	"xml",
+	"xsl",
+	"graphql",
+	"toml",
+	"ini",
+	"dockerfile",
+	"diff",
+	"latex",
+	"text",
+	"protobuf",
 ] as const;
 
 const highlighterReady = createHighlighter({
@@ -138,25 +161,26 @@ export default class DocContentComponent implements OnDestroy {
 	});
 
 	constructor() {
+		const host = inject(ElementRef).nativeElement as HTMLElement;
+
+		host.addEventListener("click", (e) => {
+			const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(
+				".copy-btn",
+			);
+			if (!btn) return;
+			const code = btn.parentElement?.querySelector("code")?.textContent ?? "";
+			navigator.clipboard.writeText(code);
+			btn.classList.add("copied");
+			btn.textContent = "已复制";
+			setTimeout(() => {
+				btn.classList.remove("copied");
+				btn.textContent = "复制";
+			}, 2000);
+		});
+
 		afterNextRender(() => {
 			const article = this.articleRef?.nativeElement;
 			if (!article) return;
-
-			article.addEventListener("click", (e) => {
-				const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(
-					".copy-btn",
-				);
-				if (!btn) return;
-				const code =
-					btn.parentElement?.querySelector("code")?.textContent ?? "";
-				navigator.clipboard.writeText(code);
-				btn.classList.add("copied");
-				btn.textContent = "已复制";
-				setTimeout(() => {
-					btn.classList.remove("copied");
-					btn.textContent = "复制";
-				}, 2000);
-			});
 
 			effect(() => {
 				this.renderedDoc();

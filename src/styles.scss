@@ -17,6 +17,20 @@ html[data-theme="dark"] pre.shiki code span {
   }
 }
 
+pre.shiki:not([style*="background-color"]) {
+  background-color: #fff;
+}
+
+html[data-theme="dark"] pre.shiki:not([style*="background-color"]) {
+  background-color: var(--shiki-dark-bg, #24292e) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) pre.shiki:not([style*="background-color"]) {
+    background-color: var(--shiki-dark-bg, #24292e) !important;
+  }
+}
+
 div[style*="border-left:0.25em"] > :last-child {
   margin-bottom: 0 !important;
 }

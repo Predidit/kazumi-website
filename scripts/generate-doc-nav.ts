@@ -1,6 +1,7 @@
-import { readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { join, relative } from "node:path";
+import { readFileSync, writeFileSync } from "node:fs";
+import { relative } from "node:path";
 import fm from "front-matter";
+import { DOCS_DIR, walkMd } from "./doc-routes";
 
 const SECTION_ORDER = ["简介", "规则指南", "架构", "其他"];
 
@@ -19,22 +20,7 @@ interface PageEntry {
 	order: number;
 }
 
-function walkMd(dir: string): string[] {
-	const entries = readdirSync(dir, { withFileTypes: true });
-	const files: string[] = [];
-	for (const entry of entries) {
-		const full = join(dir, entry.name);
-		if (entry.isDirectory()) {
-			files.push(...walkMd(full));
-		} else if (entry.name.endsWith(".md")) {
-			files.push(full);
-		}
-	}
-	return files;
-}
-
-const docsDir = join(import.meta.dirname, "../src/content/docs");
-const files = walkMd(docsDir);
+const files = walkMd(DOCS_DIR);
 const sectionMap = new Map<string, PageEntry[]>();
 
 for (const file of files) {
@@ -43,7 +29,7 @@ for (const file of files) {
 	const a = attributes as Frontmatter;
 	if (!a.title || !a.section) continue;
 
-	const rel = relative(docsDir, file).replace(/\.md$/, "");
+	const rel = relative(DOCS_DIR, file).replace(/\.md$/, "");
 	const dir = rel.includes("/") ? rel.substring(0, rel.lastIndexOf("/")) : "";
 	const base = a.slug || rel.split("/").pop()!;
 	const route = dir ? `/docs/${dir}/${base}` : `/docs/${base}`;
