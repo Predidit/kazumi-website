@@ -49,5 +49,5 @@ Thumbs.db
 # Generated
 public/doc-updates.json
 public/doc-nav.json
-src/assets/doc-nav.json
+
 public/sitemap.xml

@@ -2,7 +2,7 @@ import { Injectable, signal } from "@angular/core";
 import type { DocSection } from "./docs-nav";
 
 const docNavData = import.meta.glob<{ default: DocSection[] }>(
-	"/src/assets/doc-nav.json",
+	"/doc-nav.json",
 	{ eager: true },
 );
 
@@ -12,7 +12,7 @@ export class DocNavService {
 	readonly sections = this._sections.asReadonly();
 
 	constructor() {
-		const data = docNavData["/src/assets/doc-nav.json"]?.default;
+		const data = docNavData["/doc-nav.json"]?.default;
 		if (data) {
 			this._sections.set(data);
 		}
