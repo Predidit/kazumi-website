@@ -102,7 +102,7 @@ interface NavItem {
             <span class="mdi mdi-github"></span>
           </a>
           <a href="https://t.me/kazumi_app" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Telegram">
-            <span class="mdi mdi-telegram"></span>
+            <span class="mdi mdi-send"></span>
           </a>
         </div>
 
@@ -201,7 +201,7 @@ interface NavItem {
               GitHub
             </a>
             <a href="https://t.me/kazumi_app" target="_blank" rel="noopener noreferrer" class="sidebar-link">
-              <span class="mdi mdi-telegram"></span>
+              <span class="mdi mdi-send"></span>
               Telegram
             </a>
           </div>

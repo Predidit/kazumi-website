@@ -25,7 +25,7 @@ interface FooterGroup {
         <div class="footer-grid">
           @for (group of groups; track group.title) {
             <div class="footer-group">
-              <h4 class="group-title"><mat-icon>{{ group.icon }}</mat-icon>{{ group.title }}</h4>
+              <h3 class="group-title"><mat-icon>{{ group.icon }}</mat-icon>{{ group.title }}</h3>
               <ul class="group-links">
                 @for (link of group.links; track link.name) {
                   <li>
@@ -118,7 +118,7 @@ interface FooterGroup {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      color: var(--mat-sys-outline);
+      color: var(--mat-sys-on-surface-variant);
       text-decoration: none;
       font-size: 0.8125rem;
       padding: 6px 12px;
@@ -163,8 +163,9 @@ interface FooterGroup {
     }
 
     .copyright a {
-      color: var(--mat-sys-primary);
-      text-decoration: none;
+      color: var(--mat-sys-on-surface);
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
 
     .copyright a:hover {
@@ -244,7 +245,7 @@ export class FooterComponent {
 				{
 					name: "Telegram",
 					url: "https://t.me/kazumi_app",
-					mdiIcon: "telegram",
+					mdiIcon: "send",
 					external: true,
 				},
 			],

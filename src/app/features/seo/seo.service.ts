@@ -200,7 +200,10 @@ export class SeoService {
 			return;
 		}
 
-		this.structuredDataScript ??= this.document.createElement("script");
+		this.structuredDataScript ??=
+			this.document.head.querySelector<HTMLScriptElement>(
+				'script[type="application/ld+json"]',
+			) ?? this.document.createElement("script");
 		this.structuredDataScript.type = "application/ld+json";
 		this.structuredDataScript.textContent = JSON.stringify(data);
 		if (!this.structuredDataScript.parentNode) {
