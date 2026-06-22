@@ -1,14 +1,19 @@
 @use '@angular/material' as mat;
 
-@import 'prism-themes/themes/prism-material-light.css';
+html[data-theme="dark"] pre.shiki {
+  background-color: var(--shiki-dark-bg) !important;
+}
 
-html[data-theme="dark"] {
-  @import 'prism-themes/themes/prism-material-dark.css';
+html[data-theme="dark"] pre.shiki code span {
+  color: var(--shiki-dark) !important;
 }
 
 @media (prefers-color-scheme: dark) {
-  html:not([data-theme]) {
-    @import 'prism-themes/themes/prism-material-dark.css';
+  html:not([data-theme]) pre.shiki {
+    background-color: var(--shiki-dark-bg) !important;
+  }
+  html:not([data-theme]) pre.shiki code span {
+    color: var(--shiki-dark) !important;
   }
 }
 
