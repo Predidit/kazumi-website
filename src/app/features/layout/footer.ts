@@ -244,7 +244,7 @@ export class FooterComponent {
 				{
 					name: "Telegram",
 					url: "https://t.me/kazumi_app",
-					mdiIcon: "telegram",
+					mdiIcon: "send",
 					external: true,
 				},
 			],
