@@ -24,7 +24,6 @@
         "marked-highlight": "^2.2.1",
         "marked-mangle": "^1.1.10",
         "marked-shiki": "^1.2.1",
-        "prism-github": "^1.1.0",
         "prism-themes": "^1.9.0",
         "prismjs": "^1.29.0",
         "rxjs": "~7.8.0",
@@ -1399,8 +1398,6 @@
     "powershell-utils": ["powershell-utils@0.1.0", "", {}, "sha512-dM0jVuXJPsDN6DvRpea484tCUaMiXWjuCn++HGTqUWzGDjv5tZkEZldAJ/UMlqRYGFrD/etByo4/xOuC/snX2A=="],
 
     "pretty-bytes": ["pretty-bytes@7.1.0", "", {}, "sha512-nODzvTiYVRGRqAOvE84Vk5JDPyyxsVk0/fbA/bq7RqlnhksGpset09XTxbpvLTIjoaF7K8Z8DG8yHtKGTPSYRw=="],
-
-    "prism-github": ["prism-github@1.1.0", "", {}, "sha512-Jbp0MXW5cVWuqTJ6KDB2POe2rx7dHx8V9bJ/7FsBqYTkdSKrs3+Ztccdh1kmXOQ71Ca8V9XcrFrePlj33JHjuQ=="],
 
     "prism-themes": ["prism-themes@1.9.0", "", {}, "sha512-tX2AYsehKDw1EORwBps+WhBFKc2kxfoFpQAjxBndbZKr4fRmMkv47XN0BghC/K1qwodB1otbe4oF23vUTFDokw=="],
 

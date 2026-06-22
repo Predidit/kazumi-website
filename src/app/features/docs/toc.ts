@@ -1,5 +1,4 @@
-import { Component, inject, input, output, signal } from "@angular/core";
-import { Router } from "@angular/router";
+import { Component, input, output, signal } from "@angular/core";
 import { TocItem } from "./docs-state.service";
 
 const TOC_TITLE = "页面导航";
@@ -18,7 +17,6 @@ const TOC_TITLE = "页面导航";
           @for (item of items(); track item.id) {
             <li [style.padding-left.px]="(item.level - 1) * 16">
               <a
-                [href]="basePath + '#' + item.id"
                 class="toc-link"
                 [class.active]="activeId() === item.id"
                 (click)="onLinkClick(item.id)"
@@ -92,22 +90,15 @@ const TOC_TITLE = "页面导航";
 	],
 })
 export class TocComponent {
-	private readonly router = inject(Router);
 	readonly items = input<TocItem[]>([]);
 	readonly embedded = input(false);
 	readonly activeId = signal("");
 	readonly title = TOC_TITLE;
 	readonly linkClick = output<string>();
 
-	get basePath(): string {
-		const tree = this.router.parseUrl(this.router.url);
-		tree.fragment = null;
-		tree.queryParams = {};
-		return tree.toString();
-	}
-
 	onLinkClick(id: string) {
 		this.activeId.set(id);
 		this.linkClick.emit(id);
+		document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 	}
 }

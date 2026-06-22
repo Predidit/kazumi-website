@@ -1,6 +1,7 @@
 import {
 	Component,
 	computed,
+	DestroyRef,
 	effect,
 	inject,
 	input,
@@ -54,11 +55,15 @@ export class CodeBlockComponent {
 	});
 
 	constructor() {
+		let destroyed = false;
+		inject(DestroyRef).onDestroy(() => {
+			destroyed = true;
+		});
 		effect(async () => {
 			const lang = this.language().trim();
 			if (!lang) return;
 			await ensureLang(lang);
-			this.langLoaded.set(true);
+			if (!destroyed) this.langLoaded.set(true);
 		});
 	}
 

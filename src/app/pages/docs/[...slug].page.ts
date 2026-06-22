@@ -135,6 +135,17 @@ export default class DocContentComponent implements OnDestroy {
 		effect(() => {
 			this.docsState.setToc(this.renderedDoc().toc);
 		});
+
+		effect(() => {
+			if (this.isLoading()) return;
+			const fragment = this.router.parseUrl(this.router.url).fragment;
+			if (!fragment) return;
+			setTimeout(() => {
+				document
+					.getElementById(fragment)
+					?.scrollIntoView({ behavior: "smooth" });
+			});
+		});
 	}
 
 	ngOnDestroy() {
