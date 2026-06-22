@@ -1,6 +1,10 @@
-import { isPlatformBrowser } from "@angular/common";
-import { Injectable, inject, PLATFORM_ID, signal } from "@angular/core";
+import { Injectable, signal } from "@angular/core";
 import type { DocSection } from "./docs-nav";
+
+const docNavData = import.meta.glob<{ default: DocSection[] }>(
+	"/src/assets/doc-nav.json",
+	{ eager: true },
+);
 
 @Injectable({ providedIn: "root" })
 export class DocNavService {
@@ -8,12 +12,9 @@ export class DocNavService {
 	readonly sections = this._sections.asReadonly();
 
 	constructor() {
-		const platformId = inject(PLATFORM_ID);
-		if (isPlatformBrowser(platformId)) {
-			fetch("/doc-nav.json")
-				.then((r) => r.json())
-				.then((data: DocSection[]) => this._sections.set(data))
-				.catch(() => {});
+		const data = docNavData["/src/assets/doc-nav.json"]?.default;
+		if (data) {
+			this._sections.set(data);
 		}
 	}
 }

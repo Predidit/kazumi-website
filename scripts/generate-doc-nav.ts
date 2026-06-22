@@ -84,5 +84,5 @@ const sections = orderedNames.map((title) => ({
 	})),
 }));
 
-writeFileSync("public/doc-nav.json", JSON.stringify(sections, null, 2));
+writeFileSync("src/assets/doc-nav.json", JSON.stringify(sections, null, 2));
 console.log("doc-nav.json:", sections.length, "sections");

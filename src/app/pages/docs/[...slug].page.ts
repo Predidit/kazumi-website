@@ -1,5 +1,6 @@
 import { type ContentFile, parseRawContentFile } from "@analogjs/content";
 import {
+	afterNextRender,
 	Component,
 	computed,
 	effect,
@@ -149,8 +150,10 @@ export default class DocContentComponent implements OnDestroy {
 			if (this.isLoading()) return;
 			const fragment = this.router.parseUrl(this.router.url).fragment;
 			if (!fragment) return;
-			setTimeout(() => {
-				document.getElementById(fragment)?.scrollIntoView();
+			afterNextRender(() => {
+				document
+					.getElementById(fragment)
+					?.scrollIntoView({ behavior: "smooth" });
 			});
 		});
 	}

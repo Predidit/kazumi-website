@@ -181,7 +181,7 @@ import { TocComponent } from "../features/docs/toc";
       color: var(--mat-sys-on-primary-container);
     }
 
-		.docs-content {
+    .docs-content {
       padding: 0 24px 24px;
       background: var(--mat-sys-surface);
       overflow-y: auto;
