@@ -32,8 +32,9 @@ Run `bun run lint && bun run build` before committing. There is no typecheck-onl
 - Page components must be **default exported**
 - Nested dirs = nested routes (e.g., `pages/about/icon.page.ts` → `/about/icon`)
 - Docs content pages live in `src/content/docs/` as `.md` with frontmatter (required: `title`, `description`, `section`, `icon`; optional: `order`, `slug`)
-- Docs sidebar nav data is in `src/app/features/docs/docs-nav.ts` (`DOC_SECTIONS`), not in the page component
-- Adding a new doc requires: (1) the `.md` file, (2) an entry in `docs-nav.ts`, (3) prerender coverage in `vite.config.ts`
+- Docs sidebar nav is auto-generated: `scripts/generate-doc-nav.ts` reads frontmatter from all `.md` files and writes `public/doc-nav.json`, which is fetched at runtime by `DocNavService`
+- `docs-nav.ts` only exports interfaces and utility functions — do not add nav entries there
+- Adding a new doc requires: (1) the `.md` file with correct frontmatter, (2) prerender coverage in `vite.config.ts`
 - Prerender routes are in `vite.config.ts` under `analog({ prerender: { routes: [...] } })` — the `contentDir` transformer handles docs automatically, but top-level routes like `/download` must be listed explicitly
 
 ## Key Conventions
@@ -55,7 +56,7 @@ src/
     app.config.server.ts # server providers
     features/
       layout/           # header, footer, theme
-      docs/             # toc, doc-footer, code-copy, docs-nav.ts, docs-state.service.ts
+      docs/             # toc, doc-footer, code-copy, docs-nav.ts, docs-state.service.ts, doc-nav.service.ts
       home/             # hero, contributors
       seo/              # seo.service.ts, seo.config.ts
     pages/              # route pages (*.page.ts)
@@ -65,6 +66,7 @@ src/
   main.server.ts        # SSR entry
 scripts/
   generate-doc-updates.ts  # prebuild: git log → public/doc-updates.json
+  generate-doc-nav.ts      # prebuild: frontmatter → public/doc-nav.json
 ```
 
 ## Sitemap & SEO
