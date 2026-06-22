@@ -6,7 +6,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 import { map } from "rxjs/operators";
-import { DOC_SECTIONS } from "../features/docs/docs-nav";
+import { DocNavService } from "../features/docs/doc-nav.service";
 import { DocsStateService } from "../features/docs/docs-state.service";
 import { TocComponent } from "../features/docs/toc";
 
@@ -31,7 +31,7 @@ import { TocComponent } from "../features/docs/toc";
         class="docs-sidebar"
       >
         <nav class="sidebar-nav">
-          @for (section of sections; track section.title) {
+          @for (section of sections(); track section.title) {
             <div class="sidebar-section">
               <h4 class="section-title">{{ section.title }}</h4>
               @for (page of section.pages; track page.route) {
@@ -300,7 +300,7 @@ import { TocComponent } from "../features/docs/toc";
 	],
 })
 export default class DocsComponent {
-	readonly sections = DOC_SECTIONS;
+	readonly sections = inject(DocNavService).sections;
 	readonly docsNavOpen = signal(false);
 	readonly tocOpen = signal(false);
 	private readonly breakpointObserver = inject(BreakpointObserver);

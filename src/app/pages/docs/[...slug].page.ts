@@ -21,7 +21,7 @@ import {
 import { filter, map, startWith } from "rxjs/operators";
 import { CodeBlockComponent } from "../../features/docs/code-block";
 import { DocFooterComponent } from "../../features/docs/doc-footer";
-import { DOC_PAGES, routeToContentPath } from "../../features/docs/docs-nav";
+import { routeToContentPath } from "../../features/docs/docs-nav";
 import {
 	DocsStateService,
 	type TocItem,
@@ -39,7 +39,16 @@ const HEADING_ID_OPTIONS = { globalSlugs: true } as { prefix?: string } & {
 	globalSlugs: boolean;
 };
 
-type DocContentFile = ContentFile<Record<string, never>>;
+type DocAttributes = {
+	title?: string;
+	description?: string;
+	section?: string;
+	icon?: string;
+	order?: number;
+	slug?: string;
+};
+
+type DocContentFile = ContentFile<DocAttributes>;
 
 type RenderSegment =
 	| {
@@ -128,8 +137,8 @@ export default class DocContentComponent implements OnDestroy {
 	constructor() {
 		effect(() => {
 			const route = `/docs/${this.currentPath()}`;
-			const page = DOC_PAGES.find((docPage) => docPage.route === route);
-			this.seo.setDoc(route, page?.title ?? "Kazumi 文档");
+			const title = this.doc()?.attributes?.title;
+			this.seo.setDoc(route, title ?? "Kazumi 文档");
 		});
 
 		effect(() => {
@@ -158,7 +167,7 @@ export default class DocContentComponent implements OnDestroy {
 			return null;
 		}
 
-		const { content, attributes } = parseRawContentFile<Record<string, never>>(
+		const { content, attributes } = parseRawContentFile<DocAttributes>(
 			await loadContent(),
 		);
 

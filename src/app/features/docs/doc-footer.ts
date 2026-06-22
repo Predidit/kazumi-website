@@ -10,7 +10,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
 import { NavigationEnd, Router, RouterLink } from "@angular/router";
 import { filter } from "rxjs/operators";
-import { DOC_PAGES, normalizeDocRoute, routeToContentPath } from "./docs-nav";
+import { DocNavService } from "./doc-nav.service";
+import { normalizeDocRoute, routeToContentPath } from "./docs-nav";
 
 const FOOTER_LABELS = {
 	edit: "帮助我们改进本页面内容",
@@ -152,24 +153,27 @@ const FOOTER_LABELS = {
 export class DocFooterComponent {
 	private readonly router = inject(Router);
 	private readonly platformId = inject(PLATFORM_ID);
+	private readonly navService = inject(DocNavService);
 	private readonly updatesCache = signal<Record<string, string>>({});
 	private readonly currentRoute = signal(normalizeDocRoute(this.router.url));
+	private readonly allPages = computed(() =>
+		this.navService.sections().flatMap((s) => s.pages),
+	);
 	readonly labels = FOOTER_LABELS;
 
 	private readonly pageIndex = computed(() =>
-		DOC_PAGES.findIndex((page) => page.route === this.currentRoute()),
+		this.allPages().findIndex((page) => page.route === this.currentRoute()),
 	);
 
 	readonly prev = computed(() => {
 		const index = this.pageIndex();
-		return index > 0 ? DOC_PAGES[index - 1] : null;
+		return index > 0 ? this.allPages()[index - 1] : null;
 	});
 
 	readonly next = computed(() => {
+		const pages = this.allPages();
 		const index = this.pageIndex();
-		return index >= 0 && index < DOC_PAGES.length - 1
-			? DOC_PAGES[index + 1]
-			: null;
+		return index >= 0 && index < pages.length - 1 ? pages[index + 1] : null;
 	});
 
 	readonly editUrl = computed(() => {
