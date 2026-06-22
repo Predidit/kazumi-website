@@ -19,12 +19,9 @@
         "@angular/router": "^22.0.0",
         "front-matter": "^4.0.2",
         "marked": "^15.0.7",
-        "marked-alert": "^2.1.2",
+        "marked-gfm-alert": "^1.1.3",
         "marked-gfm-heading-id": "^4.1.1",
-        "marked-highlight": "^2.2.1",
-        "marked-mangle": "^1.1.10",
         "marked-shiki": "^1.2.1",
-        "prismjs": "^1.29.0",
         "rxjs": "~7.8.0",
         "tslib": "^2.3.0",
       },
@@ -40,6 +37,7 @@
         "sass": "^1.101.0",
         "typescript": "~6.0.0",
         "vite": "^8.0.0",
+        "vite-plugin-sitemap-ts": "^1.4.6",
         "vite-tsconfig-paths": "^4.2.0",
         "vitest": "^4.1.0",
       },
@@ -1202,7 +1200,7 @@
 
     "marked": ["marked@15.0.12", "", { "bin": { "marked": "bin/marked.js" } }, "sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA=="],
 
-    "marked-alert": ["marked-alert@2.1.2", "", { "peerDependencies": { "marked": ">=7.0.0" } }, "sha512-EFNRZ08d8L/iEIPLTlQMDjvwIsj03gxWCczYTht6DCiHJIZhMk4NK5gtPY9UqAYb09eV5VGT+jD4lp396E0I+w=="],
+    "marked-gfm-alert": ["marked-gfm-alert@1.1.3", "", { "peerDependencies": { "marked": ">=1.0.0" } }, "sha512-re1/vEJKpN7fqhe2rBp6K3u8QVssyh43EDN+jYQhZb/H7nDk2yA4oTu/wczr1GBNrKYXsvtxg1yErWnTxoKErg=="],
 
     "marked-gfm-heading-id": ["marked-gfm-heading-id@4.1.4", "", { "dependencies": { "github-slugger": "^2.0.0" }, "peerDependencies": { "marked": ">=13 <19" } }, "sha512-CspnvVfHSkb/znqdPS4jUR8HtCjq3M/DnrsJCrfLBLvdrgbemmoINKpeWKQYkBiXAoBGejw0cV7xzqrPdup3WA=="],
 
@@ -1683,6 +1681,8 @@
     "vfile-message": ["vfile-message@4.0.3", "", { "dependencies": { "@types/unist": "^3.0.0", "unist-util-stringify-position": "^4.0.0" } }, "sha512-QTHzsGd1EhbZs4AsQ20JX1rC3cOlt/IWJruk893DfLRr57lcnOeMaWG4K0JrRta4mIJZKth2Au3mM3u03/JWKw=="],
 
     "vite": ["vite@8.0.16", "", { "dependencies": { "lightningcss": "^1.32.0", "picomatch": "^4.0.4", "postcss": "^8.5.15", "rolldown": "1.0.3", "tinyglobby": "^0.2.17" }, "optionalDependencies": { "fsevents": "~2.3.3" }, "peerDependencies": { "@types/node": "^20.19.0 || >=22.12.0", "@vitejs/devtools": "^0.1.18", "esbuild": "^0.27.0 || ^0.28.0", "jiti": ">=1.21.0", "less": "^4.0.0", "sass": "^1.70.0", "sass-embedded": "^1.70.0", "stylus": ">=0.54.8", "sugarss": "^5.0.0", "terser": "^5.16.0", "tsx": "^4.8.1", "yaml": "^2.4.2" }, "optionalPeers": ["@types/node", "@vitejs/devtools", "esbuild", "jiti", "less", "sass", "sass-embedded", "stylus", "sugarss", "terser", "tsx", "yaml"], "bin": { "vite": "bin/vite.js" } }, "sha512-h9bXPmJichP5fLmVQo3PyaGSDE2n3aPuomeAlVRm0JLmt4rY6zmPKd59HYI4LNW8oTK7tlTsuC7l/m7awx9Jcw=="],
+
+    "vite-plugin-sitemap-ts": ["vite-plugin-sitemap-ts@1.4.6", "", { "peerDependencies": { "vite": ">=2" } }, "sha512-Xyge7rf5ClcOHKjYPTjHu0mdcr/mO35fji9DJcrPaCWIJN7aKbe1K0xpeyLUWpl+5M+jHqlM2Ol0urMJJ832tw=="],
 
     "vite-tsconfig-paths": ["vite-tsconfig-paths@4.3.2", "", { "dependencies": { "debug": "^4.1.1", "globrex": "^0.1.2", "tsconfck": "^3.0.3" }, "peerDependencies": { "vite": "*" }, "optionalPeers": ["vite"] }, "sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA=="],
 

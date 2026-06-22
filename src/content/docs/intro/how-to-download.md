@@ -1,3 +1,11 @@
+---
+title: "如何下载"
+description: "通过官方下载页、GitHub Release 或第三方渠道获取 Kazumi 安装包，支持 Android、Windows、macOS、Linux、iOS 和 HarmonyOS。"
+section: "简介"
+icon: "download"
+order: 2
+---
+
 # 如何下载
 
 ## 下载页（推荐）

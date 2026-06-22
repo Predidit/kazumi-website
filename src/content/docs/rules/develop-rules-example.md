@@ -1,3 +1,11 @@
+---
+title: "规则示例"
+description: "Kazumi 规则开发的实际代码示例，展示完整的规则配置和 Xpath 选择器写法。"
+section: "规则指南"
+icon: "snippet_folder"
+order: 3
+---
+
 # 规则示例
 
 上一篇文章的规则开发教程所用到的网站 https://www.dm539.com/  其规则如下：  

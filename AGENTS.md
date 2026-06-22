@@ -2,36 +2,45 @@
 
 ## Stack
 
-AnalogJS + Angular 22 + Vite. SSR with prerendered static routes. Angular Material for UI. Content is Markdown in `src/content/docs/` rendered by `@analogjs/content` with Prism syntax highlighting.
+AnalogJS + Angular 22 + Vite. SSR with prerendered static routes. Angular Material 3 for UI. Content is Markdown in `src/content/docs/` rendered by `@analogjs/content`. Docs pages use Shiki at runtime for syntax highlighting (not Prism — Prism is only configured for `@analogjs/content`'s built-in renderer).
 
 ## Commands
 
 ```sh
 bun install          # install deps (bun.lock is the lockfile, not pnpm)
 bun run dev          # dev server (port 5173)
-bun run build        # production build (prebuild auto-generates public/doc-updates.json from git log)
-bun run test         # vitest
-bun run lint         # biome check (lint + format check)
-bun run format       # biome check --write (auto-fix)
-bun run preview      # serve production build locally
+bun run build        # production build (prebuild auto-generates public/doc-updates.json and public/doc-nav.json)
+bun run test         # vitest (no tests exist yet — passes vacuously)
+bun run lint         # biome check . (lint + format check)
+bun run format       # biome check . --write (auto-fix)
+bun run preview      # serve production build locally (Node SSR server)
 ```
 
-CI runs `lint` + `build` on PRs (`.github/workflows/pr-test.yml`). No tests exist yet — `bun run test` passes vacuously.
+Run `bun run format && bun run lint && bun run build` before committing. There is no typecheck-only script — `bun run build` is the typecheck gate. `build` triggers `prebuild` automatically (generates `public/doc-updates.json` and `public/doc-nav.json`); do not run `prebuild` separately.
+
+CI on PRs: `bun install` → `bun run lint` → `bun run build` (`.github/workflows/pr-test.yml`). Deploy to GitHub Pages on push to default branch (`.github/workflows/deploy.yaml`).
 
 ## Code Style
 
 - **Formatter**: Biome 2.5 — tabs, double quotes
 - **Linter**: Biome recommended rules, `useImportType` is off
 - **No comments** in code unless explicitly requested
+- **TypeScript** ~6.0 — `tsconfig.json` sets `ignoreDeprecations: "6.0"`; do not remove it
+- **Node** >= 22 required
 
 ## Routing (AnalogJS file-based)
 
 - Files named `*.page.ts` in `src/app/pages/` define routes
 - Page components must be **default exported**
 - Nested dirs = nested routes (e.g., `pages/about/icon.page.ts` → `/about/icon`)
-- Docs content pages live in `src/content/docs/` as `.md` with frontmatter
-- New docs pages must be added to the prerender list in `vite.config.ts`
-- Sidebar nav is hardcoded in `src/app/pages/docs.page.ts` (not a separate config file)
+- Docs use a catch-all route: `pages/docs/[...slug].page.ts` loads `.md` files from `src/content/docs/` at runtime via `import.meta.glob`
+- Docs content pages live in `src/content/docs/` as `.md` with frontmatter (required: `title`, `description`, `section`, `icon`; optional: `order`, `slug`)
+- Docs sidebar nav is auto-generated: `scripts/generate-doc-nav.ts` reads frontmatter from all `.md` files and writes `public/doc-nav.json`, which is fetched at runtime by `DocNavService`
+- `docs-nav.ts` only exports interfaces and utility functions — do not add nav entries there
+- Adding a new doc requires: (1) the `.md` file with correct frontmatter, (2) prerender coverage in `vite.config.ts`
+- Prerender routes are in `vite.config.ts` under `analog({ prerender: { routes: [...] } })` — the `contentDir` transformer handles docs automatically, but top-level routes like `/download` must be listed explicitly
+- The `filterDocsContentRoutes()` plugin in `vite.config.ts` strips AnalogJS's auto-generated content routes to prevent conflicts with the catch-all `[...slug].page.ts`
+- `scripts/doc-routes.ts` is a shared utility used by both `vite.config.ts` and the sitemap plugin — do not duplicate its logic
 
 ## Key Conventions
 
@@ -40,6 +49,7 @@ CI runs `lint` + `build` on PRs (`.github/workflows/pr-test.yml`). No tests exis
 - Signals for state (`signal()`, not BehaviorSubject)
 - SCSS for styles, using `var(--mat-sys-*)` CSS custom properties from Material 3
 - Components use inline `template` + `styles` (not separate files)
+- Component files: kebab-case (e.g. `my-component.ts`), classes: PascalCase
 
 ## Project Structure
 
@@ -51,15 +61,35 @@ src/
     app.config.server.ts # server providers
     features/
       layout/           # header, footer, theme
-      docs/             # toc, doc-footer, code-copy
+      docs/             # toc, doc-footer, code-copy, docs-nav.ts, docs-state.service.ts, doc-nav.service.ts
       home/             # hero, contributors
+      seo/              # seo.service.ts, seo.config.ts
     pages/              # route pages (*.page.ts)
   content/
-    docs/               # markdown content
+    docs/               # markdown content (intro/, rules/, architecture/, misc/)
   main.ts               # client bootstrap
   main.server.ts        # SSR entry
+scripts/
+  generate-doc-updates.ts  # prebuild: git log → public/doc-updates.json
+  generate-doc-nav.ts      # prebuild: frontmatter → public/doc-nav.json
+  doc-routes.ts            # shared: walkMd(), computeDocRoute() — used by vite.config.ts and sitemap
 ```
 
-## Prerender
+## Sitemap & SEO
 
-Static routes are explicitly listed in `vite.config.ts` under `analog({ prerender: { routes: [...] } })`. Add new content pages there or they won't be built.
+Sitemap is auto-generated by `vite-plugin-sitemap-ts` during build (configured in `vite.config.ts`). Doc routes are resolved dynamically via `getDocRoutes()` which walks `src/content/docs/` and reads frontmatter `slug`. SEO meta is managed by `src/app/features/seo/`.
+
+## Upstream Data
+
+`public/contributors.json` and `public/releases.json` are fetched by `.github/workflows/fetch-upstream-data.yaml` (runs on schedule), not by the build script.
+
+## Generated Files (do not edit)
+
+- `public/doc-nav.json` — generated by `generate-doc-nav.ts`, in `.gitignore`
+- `public/doc-updates.json` — generated by `generate-doc-updates.ts`, in `.gitignore`
+- `src/app/features/docs/doc-nav-data.ts` — generated by `generate-doc-nav.ts`, in `.gitignore`
+- `public/sitemap.xml` — generated at build time, in `.gitignore`
+
+## Full Contributor Guide
+
+See `CONTRIBUTING.md` for detailed doc contribution workflow, frontmatter reference, component development examples, and CI/PR expectations.

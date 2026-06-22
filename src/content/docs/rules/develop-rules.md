@@ -1,3 +1,11 @@
+---
+title: "规则开发"
+description: "Kazumi 规则开发详细教程，从准备工作到规则编辑器界面、Xpath 选择器配置和高级选项的完整指南。"
+section: "规则指南"
+icon: "code"
+order: 2
+---
+
 # 规则开发
 ## 准备工作
 第一步，您需要使用Windows操作系统，并且已经安装了Edge或者Google Chrome浏览器，亦或是其余您个人喜好的PC浏览器。

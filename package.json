@@ -1,21 +1,21 @@
 {
 	"name": "kazumi-website",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"type": "module",
 	"engines": {
-		"node": ">=20.19.1"
+		"node": ">=22"
 	},
 	"scripts": {
 		"ng": "ng",
 		"dev": "vite",
 		"start": "bun run dev",
-		"prebuild": "bun scripts/generate-doc-updates.ts && bun scripts/generate-sitemap.ts",
+		"prebuild": "bun scripts/generate-doc-updates.ts && bun scripts/generate-doc-nav.ts",
 		"build": "vite build",
 		"watch": "vite build --watch",
 		"test": "vitest --passWithNoTests",
 		"preview": "node dist/analog/server/index.mjs",
-		"lint": "biome check src/",
-		"format": "biome check src/ --write"
+		"lint": "biome check .",
+		"format": "biome check . --write"
 	},
 	"private": true,
 	"dependencies": {
@@ -33,12 +33,10 @@
 		"@angular/router": "^22.0.0",
 		"front-matter": "^4.0.2",
 		"marked": "^15.0.7",
-		"marked-alert": "^2.1.2",
+		"marked-gfm-alert": "^1.1.3",
 		"marked-gfm-heading-id": "^4.1.1",
-		"marked-highlight": "^2.2.1",
-		"marked-mangle": "^1.1.10",
 		"marked-shiki": "^1.2.1",
-		"prismjs": "^1.29.0",
+		"shiki": "^4.2.0",
 		"rxjs": "~7.8.0",
 		"tslib": "^2.3.0"
 	},
@@ -54,6 +52,7 @@
 		"sass": "^1.101.0",
 		"typescript": "~6.0.0",
 		"vite": "^8.0.0",
+		"vite-plugin-sitemap-ts": "^1.4.6",
 		"vite-tsconfig-paths": "^4.2.0",
 		"vitest": "^4.1.0"
 	},

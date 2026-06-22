@@ -1,3 +1,11 @@
+---
+title: "软件界面"
+description: "浏览 Kazumi 的软件界面截图，包括推荐页、追番、收藏、规则管理、播放器和外观设置等功能界面。"
+section: "简介"
+icon: "photo_library"
+order: 3
+---
+
 # 软件界面
 
 ## 系统窗口控制按钮

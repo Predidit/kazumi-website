@@ -1,3 +1,11 @@
+---
+title: "功能模块"
+description: "了解 Kazumi 的各个功能模块：推荐、追番、收藏、历史记录、规则管理、播放器设置、超分辨率和外观自定义等。"
+section: "简介"
+icon: "widgets"
+order: 4
+---
+
 # 功能模块
 
 ## 推荐

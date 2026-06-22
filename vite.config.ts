@@ -1,11 +1,18 @@
 /// <reference types="vitest" />
 
 import analog, { type PrerenderContentFile } from "@analogjs/platform";
-import markedAlert from "marked-alert";
+import { gfmAlert } from "marked-gfm-alert";
 import { defineConfig } from "vite";
+import { sitemap } from "vite-plugin-sitemap-ts";
+import { computeDocRoute, DOCS_DIR, walkMd } from "./scripts/doc-routes";
+
+function getDocRoutes(): string[] {
+	return walkMd(DOCS_DIR).map(computeDocRoute);
+}
 
 function filterDocsContentRoutes() {
 	return {
+		ssr: false,
 		name: "filter-docs-content-routes",
 		enforce: "post" as const,
 		transform(code: string, id: string) {
@@ -40,7 +47,7 @@ export default defineConfig(() => ({
 					additionalLangs: ["dart"],
 				},
 				markedOptions: {
-					extensions: [markedAlert()],
+					extensions: [gfmAlert({ inlineStyles: true })],
 				},
 			},
 			prerender: {
@@ -65,6 +72,11 @@ export default defineConfig(() => ({
 			},
 		}),
 		filterDocsContentRoutes(),
+		sitemap({
+			hostname: "https://kazumi.app",
+			outDir: "dist/client",
+			routes: ["/", "/download", "/about/icon", ...getDocRoutes()],
+		}),
 	],
 	test: {
 		globals: true,
