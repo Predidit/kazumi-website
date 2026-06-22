@@ -12,7 +12,9 @@ html[data-theme="dark"] {
   }
 }
 
-@import 'remark-github-blockquote-alert/alert.css';
+div[style*="border-left:0.25em"] > :last-child {
+  margin-bottom: 0 !important;
+}
 
 html {
   @include mat.theme((

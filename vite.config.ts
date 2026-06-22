@@ -4,7 +4,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import analog, { type PrerenderContentFile } from "@analogjs/platform";
 import fm from "front-matter";
-import markedAlert from "marked-alert";
+import { gfmAlert } from "marked-gfm-alert";
 import { sitemap } from "vite-plugin-sitemap-ts";
 import { defineConfig } from "vite";
 
@@ -72,7 +72,7 @@ export default defineConfig(() => ({
 					additionalLangs: ["dart"],
 				},
 				markedOptions: {
-					extensions: [markedAlert()],
+					extensions: [gfmAlert({ inlineStyles: true })],
 				},
 			},
 			prerender: {

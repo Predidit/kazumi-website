@@ -13,7 +13,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, type SafeHtml } from "@angular/platform-browser";
 import { NavigationEnd, Router } from "@angular/router";
 import { Marked, type Token } from "marked";
-import markedAlert from "marked-alert";
+import { gfmAlert } from "marked-gfm-alert";
 import {
 	getHeadingList,
 	gfmHeadingId,
@@ -107,7 +107,7 @@ export default class DocContentComponent implements OnDestroy {
 	private readonly sanitizer = inject(DomSanitizer);
 	private readonly markdown = new Marked(
 		gfmHeadingId(HEADING_ID_OPTIONS),
-		markedAlert(),
+		gfmAlert({ inlineStyles: true }),
 	);
 	private readonly currentPath = toSignal(
 		this.router.events.pipe(
