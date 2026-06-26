@@ -414,13 +414,14 @@ export default class DownloadComponent {
 
 		const tag = platform.useOhosTag ? this.currentOhosTag() : this.currentTag();
 		const repo = platform.repo || "Predidit/Kazumi";
+		const baseUrl = `https://github.com/${repo}/releases/download`;
 
-		const baseUrl =
-			this.useMirror() && !platform.useOhosTag && repo === "Predidit/Kazumi"
-				? "https://atomgit.com/gh_mirrors/ka/Kazumi/releases/download"
-				: `https://github.com/${repo}/releases/download`;
-
-		return `${baseUrl}/${tag}/${link.url.replace("{tag}", tag)}`;
+		const downloadUrl = `${baseUrl}/${tag}/${link.url.replace("{tag}", tag)}`;
+		return this.useMirror() &&
+			!platform.useOhosTag &&
+			repo === "Predidit/Kazumi"
+			? `https://ghfast.top/${downloadUrl}`
+			: downloadUrl;
 	}
 
 	async loadReleases(): Promise<void> {
