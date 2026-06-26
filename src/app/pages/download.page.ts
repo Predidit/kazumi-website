@@ -420,7 +420,7 @@ export default class DownloadComponent {
 		return this.useMirror() &&
 			!platform.useOhosTag &&
 			repo === "Predidit/Kazumi"
-			? `https://ghfast.top/${downloadUrl}`
+			? `https://ghproxy.net/${downloadUrl}`
 			: downloadUrl;
 	}
 
