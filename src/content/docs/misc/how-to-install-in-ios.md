@@ -4,6 +4,9 @@ description: "在 iOS 设备上安装 Kazumi 的详细教程，使用 Sideloadly
 section: "其他"
 icon: "phone_iphone"
 order: 2
+authors:
+  - ErBWs
+  - ChouChiu
 ---
 
 # iOS 安装教程

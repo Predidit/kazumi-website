@@ -57,6 +57,7 @@ type DocAttributes = {
 	icon?: string;
 	order?: number;
 	slug?: string;
+	authors?: string[];
 };
 
 type DocContentFile = ContentFile<DocAttributes>;
@@ -112,7 +113,10 @@ export default class DocContentComponent implements OnDestroy {
 			const doc = await this.loadDoc(params);
 			if (doc && typeof doc.content === "string") {
 				await this.ensureMarked();
-				return { ...doc, content: await this.render(doc.content) };
+				return {
+					...doc,
+					content: await this.render(doc.content, doc.attributes.authors),
+				};
 			}
 			return doc;
 		},
@@ -265,7 +269,10 @@ export default class DocContentComponent implements OnDestroy {
 		};
 	}
 
-	private async render(content: string): Promise<string> {
+	private async render(
+		content: string,
+		authors: DocAttributes["authors"],
+	): Promise<string> {
 		resetHeadings();
 		const html = (await this.markdown?.parse(content)) as string | undefined;
 		const toc = getHeadingList().map(({ id, level, raw }) => ({
@@ -274,6 +281,47 @@ export default class DocContentComponent implements OnDestroy {
 			text: raw,
 		}));
 		this.docsState.setToc(toc);
-		return html ?? "";
+		return this.insertAuthors(html ?? "", authors);
+	}
+
+	private insertAuthors(
+		html: string,
+		authors: DocAttributes["authors"],
+	): string {
+		const authorBlock = this.renderAuthors(authors);
+		if (!authorBlock) return html;
+
+		const titleEnd = html.indexOf("</h1>");
+		if (titleEnd === -1) return `${authorBlock}${html}`;
+
+		const insertAt = titleEnd + "</h1>".length;
+		return `${html.slice(0, insertAt)}${authorBlock}${html.slice(insertAt)}`;
+	}
+
+	private renderAuthors(authors: DocAttributes["authors"]): string {
+		const normalized = authors
+			?.map((author) => author.trim())
+			.filter((author) => author.length > 0);
+
+		if (!normalized?.length) return "";
+
+		const links = normalized
+			.map((author, index) => {
+				const safeAuthor = this.escapeHtml(author);
+				const encodedAuthor = encodeURIComponent(author);
+				return `<a class="doc-author" href="https://github.com/${encodedAuthor}" target="_blank" rel="noopener noreferrer" title="${safeAuthor}" style="--author-index: ${index}"><img src="https://github.com/${encodedAuthor}.png?size=40" alt="${safeAuthor}" loading="lazy" width="40" height="40" /></a>`;
+			})
+			.join("");
+
+		return `<div class="doc-authors" aria-label="文档作者"><span>作者</span><div class="doc-author-list" style="--author-count: ${normalized.length}">${links}</div></div>`;
+	}
+
+	private escapeHtml(value: string): string {
+		return value
+			.replace(/&/g, "&amp;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;")
+			.replace(/"/g, "&quot;")
+			.replace(/'/g, "&#39;");
 	}
 }

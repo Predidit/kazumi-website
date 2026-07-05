@@ -4,6 +4,10 @@ description: "通过官方下载页、GitHub Release 或第三方渠道获取 Ka
 section: "简介"
 icon: "download"
 order: 2
+authors:
+  - ErBWs
+  - Integral-Tech
+  - ChouChiu
 ---
 
 # 如何下载

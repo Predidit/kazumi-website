@@ -33,5 +33,5 @@ function walk(dir: string) {
 }
 
 walk(docsDir);
-writeFileSync("public/doc-updates.json", JSON.stringify(output, null, 2));
+writeFileSync("public/doc-updates.json", JSON.stringify(output, null, "\t"));
 console.log("doc-updates.json:", Object.keys(output).length, "entries");
