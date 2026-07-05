@@ -212,7 +212,7 @@ async function main(): Promise<void> {
 		if (contributorsChanged) {
 			writeFileSync(
 				contributorsPath,
-				`${JSON.stringify(newContributorsData, null, 2)}\n`,
+				`${JSON.stringify(newContributorsData, null, "\t")}\n`,
 				"utf8",
 			);
 			console.log(`贡献者数据已更新: ${contributorsPath}`);
@@ -223,7 +223,7 @@ async function main(): Promise<void> {
 		if (releasesChanged) {
 			writeFileSync(
 				releasesPath,
-				`${JSON.stringify(newReleasesData, null, 2)}\n`,
+				`${JSON.stringify(newReleasesData, null, "\t")}\n`,
 				"utf8",
 			);
 			console.log(`发布信息数据已更新: ${releasesPath}`);
