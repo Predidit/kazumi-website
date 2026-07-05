@@ -103,6 +103,8 @@ section: "所属分区"        # 必填，对应 doc-nav.json 中的分区标题
 icon: "material_icon"     # 必填，Material Icons 名称，用于导航图标
 order: 1                  # 可选，排序权重，数字越小越靠前
 slug: "custom-slug"       # 可选，自定义 URL 路径，默认使用文件名
+authors:                  # 可选，文档作者的 GitHub 用户名
+  - github-user
 ---
 ```
 

@@ -11,6 +11,7 @@ interface Frontmatter {
 	icon: string;
 	order?: number;
 	slug?: string;
+	authors?: string[];
 }
 
 interface PageEntry {

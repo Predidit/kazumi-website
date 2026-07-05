@@ -34,7 +34,7 @@ CI on PRs: `bun install` → `bun run lint` → `bun run build` (`.github/workfl
 - Page components must be **default exported**
 - Nested dirs = nested routes (e.g., `pages/about/icon.page.ts` → `/about/icon`)
 - Docs use a catch-all route: `pages/docs/[...slug].page.ts` loads `.md` files from `src/content/docs/` at runtime via `import.meta.glob`
-- Docs content pages live in `src/content/docs/` as `.md` with frontmatter (required: `title`, `description`, `section`, `icon`; optional: `order`, `slug`)
+- Docs content pages live in `src/content/docs/` as `.md` with frontmatter (required: `title`, `description`, `section`, `icon`; optional: `order`, `slug`, `authors`)
 - Docs sidebar nav is auto-generated: `scripts/generate-doc-nav.ts` reads frontmatter from all `.md` files and writes `public/doc-nav.json`, which is fetched at runtime by `DocNavService`
 - `docs-nav.ts` only exports interfaces and utility functions — do not add nav entries there
 - Adding a new doc requires: (1) the `.md` file with correct frontmatter, (2) prerender coverage in `vite.config.ts`

@@ -4,6 +4,9 @@ description: "了解 Kazumi 的各个功能模块：推荐、追番、收藏、�
 section: "简介"
 icon: "widgets"
 order: 4
+authors:
+  - Predidit
+  - UzawaReisaQwQ
 ---
 
 # 功能模块
