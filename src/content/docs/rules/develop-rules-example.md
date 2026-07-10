@@ -1,6 +1,6 @@
 ---
-title: "规则示例"
-description: "Kazumi 规则开发的实际代码示例，展示完整的规则配置和 Xpath 选择器写法。"
+title: "XPath 规则示例"
+description: "Kazumi XPath 规则开发的实际示例，展示完整的规则配置和选择器写法。"
 section: "规则指南"
 icon: "snippet_folder"
 order: 3
@@ -9,11 +9,11 @@ authors:
   - azxcvn
 ---
 
-# 规则示例
+# XPath 规则示例
 
-上一篇文章的规则开发教程所用到的网站 https://www.dm539.com/  其规则如下：  
-由上至下分别对应软件规则编辑界面中的9行
-```
+上一篇教程使用 `https://www.dm539.com/` 分析 XPath，其完整规则如下。各行依次对应规则名称、版本、基础地址、搜索地址以及五个 XPath 字段：
+
+```text
 樱花动漫
 1.0
 https://www.dm539.com/
@@ -25,27 +25,34 @@ https://www.dm539.com/search/-------------.html?wd=@keyword&submit=
 //ul/li/a
 ```
 
-现在，让我们来看一个比较特殊的网站：https://www.akianime.cc/    
-在这个网站中，搜索界面是没有详情按钮的，但是名称可以点击。若是你按照上篇文章中的教程，将出现点击搜索结果后无反应的情况。  
-有感兴趣的，可以自行探索，我将可用的正确规则贴在下面：
-```
+## 搜索结果没有独立详情按钮
+
+`https://www.akianime.cc/` 的搜索结果没有独立详情按钮，但作品名称可以点击。此时 `SearchResult` 必须选择能够进入下一页面的实际链接，不能机械套用上一示例中的元素位置。
+
+可用规则如下：
+
+```text
 akianime
 1.3
 https://www.akianime.cc/
 https://www.akianime.cc/bgmsearch/-------------.html?wd=@keyword
 //div[@class='vod-detail style-detail cor4 search-list']
 //div/div[2]/a/h3
-//div/div[2]/div[5]/div[1]/a   
+//div/div[2]/div[5]/div[1]/a
 //ul[@class='anthology-list-play size']
 //li/a
 ```
 
-其特殊之处就在于，第5行的语法只能像这样写，否则就读取不到搜索结果。  
-另外第7行语法对应的是播放界面，因为如果按照常规的写法，会出现上述提到的情况，即点击搜索结果后无反应  
-为了研究学习，我将其“错误”写法也放在下面，此写法则是完全按照上篇教程中所说的进行编写，所以特殊情况还需要特殊对待：
-```
-错误
-1
+该规则有两处需要特别注意：
+
+- `SearchList` 必须准确选择每个搜索结果的外层容器，否则无法稳定提取名称和链接。
+- `SearchResult` 指向可进入播放页面的实际入口，后续 `ChapterRoads` 和 `ChapterResult` 均按照该播放页面的结构编写。
+
+下面的配置展示了直接套用常规路径时可能出现的问题。它可以定位页面元素，但 `SearchResult` 指向的页面与选集 XPath 所依据的页面不一致，因此点击搜索结果后无法得到有效选集：
+
+```text
+错误示例
+1.0
 https://www.akianime.cc/
 https://www.akianime.cc/bgmsearch/-------------.html?wd=@keyword
 //div[5]/div//div
@@ -55,11 +62,4 @@ https://www.akianime.cc/bgmsearch/-------------.html?wd=@keyword
 //div/ul/li/a
 ```
 
-当然，不是所有的网站的结构都很清晰完整，可以让你轻松找到对应Xpath，  
-比如网站：https://anime1.me/ 其HTML结构非常特殊，有想挑战的可以试试
-
-
-
-
-
-
+编写规则时，应以实际页面跳转和 HTML 层级为准。部分网站的结构可能缺少稳定的 `id` 或 `class`，例如 `https://anime1.me/`；对于此类站点，需要优先寻找具有稳定语义的父容器，并通过规则测试确认结果数量和顺序。
