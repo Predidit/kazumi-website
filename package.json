@@ -7,7 +7,7 @@
 	},
 	"scripts": {
 		"ng": "ng",
-		"dev": "vite",
+		"dev": "bun run prebuild && vite",
 		"start": "bun run dev",
 		"prebuild": "bun scripts/generate-doc-updates.ts && bun scripts/generate-doc-nav.ts",
 		"build": "vite build",

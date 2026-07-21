@@ -53,7 +53,7 @@ interface ContributorsData {
                   rel="noopener noreferrer"
                   class="contributor-item"
                 >
-                  <img [src]="c.avatar + '?size=80'" [alt]="c.name" class="contributor-avatar" />
+                  <img [src]="c.avatar + '&size=40'" [alt]="c.name" class="contributor-avatar" />
                   <span class="contributor-name">{{ c.name }}</span>
                 </a>
               }
