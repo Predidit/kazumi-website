@@ -309,7 +309,7 @@ export default class DocContentComponent implements OnDestroy {
 			.map((author, index) => {
 				const safeAuthor = this.escapeHtml(author);
 				const encodedAuthor = encodeURIComponent(author);
-				return `<a class="doc-author" href="https://github.com/${encodedAuthor}" target="_blank" rel="noopener noreferrer" title="${safeAuthor}" style="--author-index: ${index}"><img src="https://github.com/${encodedAuthor}.png&size=40" alt="${safeAuthor}" loading="lazy" width="40" height="40" /></a>`;
+				return `<a class="doc-author" href="https://github.com/${encodedAuthor}" target="_blank" rel="noopener noreferrer" title="${safeAuthor}" style="--author-index: ${index}"><img src="https://github.com/${encodedAuthor}.png?size=40" alt="${safeAuthor}" loading="lazy" width="40" height="40" /></a>`;
 			})
 			.join("");
 
