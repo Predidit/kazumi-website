@@ -1,12 +1,12 @@
 {
 	"kazumi": {
-		"tag": "2.2.4",
+		"tag": "2.2.5",
 		"repo": "Predidit/Kazumi",
-		"timestamp": "2026-07-30T06:54:36.178Z"
+		"timestamp": "2026-07-30T17:10:18.352Z"
 	},
 	"ohos": {
 		"tag": "2.2.3",
 		"repo": "ErBWs/Kazumi",
-		"timestamp": "2026-07-30T06:54:36.178Z"
+		"timestamp": "2026-07-30T17:10:18.352Z"
 	}
 }
