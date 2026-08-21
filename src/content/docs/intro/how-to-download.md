@@ -40,7 +40,7 @@ Android 还可以通过 [F-Droid](https://f-droid.org/packages/com.predidit.kazu
 
 ### Arch Linux
 
-可以从 [AUR](http://aur.archlinux.org) 或 [archlinuxcn](https://github.com/archlinuxcn/repo) 安装。
+可以从 [AUR](http://aur.archlinux.org) 安装。
 
 #### AUR
 
@@ -49,8 +49,3 @@ Android 还可以通过 [F-Droid](https://f-droid.org/packages/com.predidit.kazu
 [yay/paru] -S kazumi-bin # 二进制包
 ```
 
-#### archlinuxcn
-
-```bash
-sudo pacman -S kazumi
-```
