@@ -1,9 +1,9 @@
 ---
 title: "常见问题"
 description: "Kazumi 常见问题解答，包括广告来源、超分辨率卡顿、内存占用、外部播放器兼容性和自定义规则等。"
-section: "其他"
+section: "安装与排错"
 icon: "help"
-order: 1
+order: 4
 authors:
   - ErBWs
 ---

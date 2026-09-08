@@ -1,37 +1,30 @@
-import { isPlatformBrowser } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import {
+	afterNextRender,
 	Component,
 	computed,
 	inject,
-	PLATFORM_ID,
 	signal,
 } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
 import { NavigationEnd, Router, RouterLink } from "@angular/router";
-import { filter } from "rxjs/operators";
+import { filter, map } from "rxjs/operators";
 import { DocNavService } from "./doc-nav.service";
 import { normalizeDocRoute, routeToContentPath } from "./docs-nav";
 
-const FOOTER_LABELS = {
-	edit: "帮助我们改进本页面内容",
-	lastUpdated: "上次更新",
-	prev: "上一页",
-	next: "下一页",
-};
-
 @Component({
 	selector: "app-doc-footer",
-	imports: [RouterLink, MatIconModule],
+	imports: [RouterLink, MatIconModule, DatePipe],
 	template: `
     <div class="doc-footer">
       <div class="edit-bar">
         <a [href]="editUrl()" target="_blank" rel="noopener noreferrer" class="edit-link">
           <mat-icon>edit</mat-icon>
-          {{ labels.edit }}
+          帮助我们改进本页面内容
         </a>
         @if (lastUpdated()) {
-          <span class="last-updated">{{ labels.lastUpdated }}: {{ lastUpdated() }}</span>
+          <span class="last-updated">上次更新: {{ lastUpdated() | date: "yyyy-MM-dd HH:mm:ss" }}</span>
         }
       </div>
 
@@ -40,7 +33,7 @@ const FOOTER_LABELS = {
       <div class="nav-links">
         @if (prev()) {
           <a [routerLink]="prev()!.route" class="nav-link prev">
-            <span class="nav-label">{{ labels.prev }}</span>
+            <span class="nav-label">上一页</span>
             <span class="nav-title">{{ prev()!.title }}</span>
           </a>
         } @else {
@@ -48,7 +41,7 @@ const FOOTER_LABELS = {
         }
         @if (next()) {
           <a [routerLink]="next()!.route" class="nav-link next">
-            <span class="nav-label">{{ labels.next }}</span>
+            <span class="nav-label">下一页</span>
             <span class="nav-title">{{ next()!.title }}</span>
           </a>
         } @else {
@@ -67,6 +60,8 @@ const FOOTER_LABELS = {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
     .edit-link {
@@ -92,7 +87,7 @@ const FOOTER_LABELS = {
 
     .last-updated {
       font-size: 0.8125rem;
-      color: var(--mat-sys-outline);
+      color: var(--mat-sys-on-surface-variant);
     }
 
     .divider {
@@ -111,17 +106,19 @@ const FOOTER_LABELS = {
       display: flex;
       flex-direction: column;
       gap: 4px;
-      padding: 16px 20px;
-      border-radius: 12px;
+      padding: 24px;
+      border-radius: 24px;
+      background: var(--mat-sys-surface-container);
       text-decoration: none;
-      border: 1px solid var(--mat-sys-outline-variant);
-      transition: border-color 0.2s, background-color 0.2s;
+      border: 1px solid transparent;
+      transition: border-radius var(--app-motion-spring), background-color var(--app-motion-fast);
       min-width: 0;
     }
 
     .nav-link:hover {
       border-color: var(--mat-sys-primary);
-      background-color: color-mix(in srgb, var(--mat-sys-primary) 4%, transparent);
+      background-color: var(--mat-sys-primary-container);
+      border-radius: 32px 16px 32px 16px;
     }
 
     .nav-label {
@@ -134,9 +131,7 @@ const FOOTER_LABELS = {
       font-size: 0.875rem;
       color: var(--mat-sys-primary);
       font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      overflow-wrap: anywhere;
     }
 
     .next {
@@ -152,14 +147,18 @@ const FOOTER_LABELS = {
 })
 export class DocFooterComponent {
 	private readonly router = inject(Router);
-	private readonly platformId = inject(PLATFORM_ID);
 	private readonly navService = inject(DocNavService);
 	private readonly updatesCache = signal<Record<string, string>>({});
-	private readonly currentRoute = signal(normalizeDocRoute(this.router.url));
+	private readonly currentRoute = toSignal(
+		this.router.events.pipe(
+			filter((event) => event instanceof NavigationEnd),
+			map(() => normalizeDocRoute(this.router.url)),
+		),
+		{ initialValue: normalizeDocRoute(this.router.url) },
+	);
 	private readonly allPages = computed(() =>
 		this.navService.sections().flatMap((s) => s.pages),
 	);
-	readonly labels = FOOTER_LABELS;
 
 	private readonly pageIndex = computed(() =>
 		this.allPages().findIndex((page) => page.route === this.currentRoute()),
@@ -186,18 +185,11 @@ export class DocFooterComponent {
 	);
 
 	constructor() {
-		this.router.events
-			.pipe(filter((event) => event instanceof NavigationEnd))
-			.pipe(takeUntilDestroyed())
-			.subscribe(() =>
-				this.currentRoute.set(normalizeDocRoute(this.router.url)),
-			);
-
-		if (isPlatformBrowser(this.platformId)) {
+		afterNextRender(() => {
 			fetch("/doc-updates.json")
 				.then((response) => response.json())
 				.then((data: Record<string, string>) => this.updatesCache.set(data))
 				.catch(() => {});
-		}
+		});
 	}
 }

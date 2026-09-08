@@ -1,7 +1,7 @@
 ---
 title: "XPath 规则示例"
 description: "Kazumi XPath 规则开发的实际示例，展示完整的规则配置和选择器写法。"
-section: "规则指南"
+section: "规则开发"
 icon: "snippet_folder"
 order: 3
 authors:

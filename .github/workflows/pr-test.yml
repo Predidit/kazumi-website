@@ -19,5 +19,8 @@ jobs:
       - name: Run linting
         run: bun run lint
 
+      - name: Run tests
+        run: bun run test --run
+
       - name: Build project
         run: bun run build

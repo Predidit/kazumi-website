@@ -1,7 +1,7 @@
 ---
 title: "XPath 规则开发"
 description: "Kazumi XPath 规则开发详细教程，从准备工作到选择器配置和高级选项的完整指南。"
-section: "规则指南"
+section: "规则开发"
 icon: "code"
 order: 2
 authors:

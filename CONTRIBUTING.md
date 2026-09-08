@@ -78,14 +78,15 @@ kazumi-website/
 - 嵌套目录对应嵌套路由，例如 `src/app/pages/about/icon.page.ts` 对应 `/about/icon`。
 - 文档使用 catch-all 路由：`pages/docs/[...slug].page.ts` 在运行时通过 `import.meta.glob` 加载 `src/content/docs/` 下的 `.md` 文件。
 - 文档内容位于 `src/content/docs/`，由 `@analogjs/content` 读取 Markdown 并渲染。
-- 文档页面在运行时使用 Shiki 进行语法高亮（Prism 仅用于 `@analogjs/content` 的内置渲染器）。
-- 文档侧边栏导航由 `scripts/generate-doc-nav.ts` 在构建时从 frontmatter 自动生成，输出到 `public/doc-nav.json`，运行时由 `DocNavService` 拉取。不要手动编辑 `docs-nav.ts` 添加导航项。
+- 文档由 `features/docs/doc-renderer.ts` 使用 front-matter、Marked 和 Shiki 解析并渲染；不使用 AnalogJS 内置的 Markdown 路由和渲染器。
+- 文档侧边栏导航由 `scripts/generate-doc-nav.ts` 在构建时从 frontmatter 自动生成，输出到 `public/doc-nav.json` 和 `src/app/features/docs/doc-nav-data.ts`；`DocNavService` 导入生成的 TypeScript 数据，供 SSR 和客户端使用。不要手动编辑 `docs-nav.ts` 添加导航项。
 - `scripts/doc-routes.ts` 是共享工具，提供 `walkMd()` 和 `computeDocRoute()` 函数，供 `vite.config.ts` 和 sitemap 插件使用——不要重复其逻辑。
 - `vite.config.ts` 中的 `filterDocsContentRoutes()` 插件会剥离 AnalogJS 自动生成的 content routes，防止与 catch-all `[...slug].page.ts` 冲突。
-- Sitemap 由 `vite-plugin-sitemap-ts` 在构建时自动生成，文档路由通过 `getDocRoutes()` 动态解析。
+- Sitemap 由 `vite-plugin-sitemap-ts` 在构建时自动生成，`scripts/sitemap-routes.ts` 通过共享文档路由工具动态解析地址，并按各页面相关内容及 SEO 文件的最后一次 Git 提交填写 `lastmod`。没有可靠历史时省略日期，不使用构建时间。新增顶级页面时，在该文件补充路由和源文件依赖；预渲染直接使用同一份路由清单。`scripts/git-history.ts` 统一提供 sitemap 和文档页脚使用的更新时间。
+- 文档的 `description` 用于搜索摘要和分享描述，`authors` 用于文章结构化数据。不存在的页面返回 404 并禁止索引；文档临时加载失败返回 503。
 - 新增文档时需要确认：
   - Markdown 文件放在正确的 `src/content/docs/` 子目录，frontmatter 完整（`title`、`description`、`section`、`icon` 必填）。
-  - `vite.config.ts` 的 prerender 配置能够覆盖该文档路径（`contentDir` transformer 会自动处理，无需手动添加）。
+  - `vite.config.ts` 的 prerender 配置能够覆盖该文档路径（共享路由清单会自动发现 Markdown 文档，无需手动添加）。
   - 顶层路由如 `/download` 需要显式列在 `vite.config.ts` 的 `prerender.routes` 中。
   - 文档图片放在 `public/docs/assets/` 下，并使用 `/docs/assets/...` 引用。
 
@@ -135,7 +136,7 @@ authors:                  # 可选，文档作者的 GitHub 用户名
 
 3. **确认导航自动生效**
 
-   文档导航由 `scripts/generate-doc-nav.ts` 在构建时从 frontmatter 自动生成，无需手动编辑 `docs-nav.ts`。确保 frontmatter 中的 `section` 值与现有分区一致（`简介`、`规则指南`、`架构`、`其他`），新分区会被自动追加到末尾。
+   文档导航由 `scripts/generate-doc-nav.ts` 在构建时从 frontmatter 自动生成，无需手动编辑 `docs-nav.ts`。确保 frontmatter 中的 `section` 值与现有分区一致（`开始使用`、`安装与排错`、`规则开发`、`原理与实现`），新分区会被自动追加到末尾。
 
 4. **验证构建**
 
@@ -252,6 +253,7 @@ PR 会通过 `.github/workflows/pr-test.yml` 运行 CI，当前检查包括：
 
 - `bun install`
 - `bun run lint`
+- `bun run test --run`
 - `bun run build`
 
 推送到默认分支时，`.github/workflows/deploy.yaml` 会自动部署到 GitHub Pages。

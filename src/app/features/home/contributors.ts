@@ -1,12 +1,5 @@
-import { isPlatformBrowser } from "@angular/common";
-import {
-	afterNextRender,
-	Component,
-	inject,
-	PLATFORM_ID,
-	signal,
-} from "@angular/core";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { afterNextRender, Component, signal } from "@angular/core";
+import { MatIconModule } from "@angular/material/icon";
 
 interface Contributor {
 	avatar: string;
@@ -14,246 +7,86 @@ interface Contributor {
 	link: string;
 }
 
-interface CoreMember {
-	avatar: string;
-	name: string;
-	title: string;
-	github: string;
-}
-
-interface ContributorsData {
-	contributors: Contributor[];
-}
-
 @Component({
 	selector: "app-contributors",
-	imports: [MatProgressSpinnerModule],
+	imports: [MatIconModule],
 	template: `
-    <section class="contributors">
-      <div class="contributors-container">
-        <h2 class="section-title">Kazumi 开发自 ❤</h2>
-        <div class="core-team">
-          @for (member of coreMembers; track member.name) {
-            <a [href]="member.github" target="_blank" rel="noopener noreferrer" class="core-card">
-              <img [src]="member.avatar" [alt]="member.name" class="core-avatar" />
-              <span class="core-name">{{ member.name }}</span>
-              <span class="core-title">{{ member.title }}</span>
-            </a>
-          }
-        </div>
-
-        @if (contributors().length > 0) {
-          <h2 class="section-title">感谢以下贡献者</h2>
-          <div class="contributors-card">
-            <div class="contributors-grid">
-              @for (c of contributors(); track c.name) {
-                <a
-                  [href]="c.link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="contributor-item"
-                >
-                  <img [src]="c.avatar + '&size=40'" [alt]="c.name" class="contributor-avatar" />
-                  <span class="contributor-name">{{ c.name }}</span>
-                </a>
-              }
-            </div>
-          </div>
-        }
-
-        @if (loading()) {
-          <div class="loading">
-            <mat-spinner diameter="32"></mat-spinner>
-          </div>
+    <section class="contributors" aria-labelledby="contributors-title">
+      <div class="section-heading"><div><span class="eyebrow">BUILT BY PEOPLE WHO CARE</span><h2 id="contributors-title">是大家，让故事继续。</h2></div><p>从第一行代码，到每一次改进。<br />谢谢每一个让 Kazumi 更好的人。</p></div>
+      <div class="core-team">
+        @for (member of coreMembers; track member.name) {
+          <a [href]="member.github" target="_blank" rel="noopener noreferrer" class="core-card"><img [src]="member.avatar" [alt]="member.name" width="72" height="72" loading="lazy" /><div><h3>{{ member.name }}</h3><p>{{ member.title }}</p></div><mat-icon>north_east</mat-icon></a>
         }
       </div>
+      @if (contributors().length) {
+        <div class="contributor-heading"><h3>每一份贡献，都算数。</h3><span>{{ contributors().length }} 位贡献者</span></div>
+        <div class="contributors-grid">
+          @for (contributor of contributors(); track contributor.name) {
+            <a [href]="contributor.link" target="_blank" rel="noopener noreferrer" class="contributor"><img [src]="contributor.avatar" [alt]="contributor.name" width="48" height="48" loading="lazy" /><span>{{ contributor.name }}</span></a>
+          }
+        </div>
+      }
+      @if (loading()) { <p class="load-state" role="status">正在认识社区贡献者…</p> }
+      @if (failed()) { <p class="load-state" role="status">贡献者列表暂时无法加载。<a href="https://github.com/Predidit/Kazumi/graphs/contributors" target="_blank" rel="noopener noreferrer">在 GitHub 查看所有贡献者</a></p> }
     </section>
   `,
 	styles: `
-    .contributors {
-      padding: 80px 24px;
-      background-color: var(--mat-sys-surface);
-    }
-
-    .contributors-container {
-      max-width: 960px;
-      margin: 0 auto;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin: 0 0 40px;
-      color: var(--mat-sys-on-surface);
-    }
-
-    .section-title:not(:first-child) {
-      margin-top: 64px;
-    }
-
-    .core-team {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .core-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 32px 24px;
-      border-radius: 16px;
-      background-color: var(--mat-sys-surface-container-low);
-      text-decoration: none;
-      color: inherit;
-      transition: background-color 0.2s;
-    }
-
-    .core-card:hover {
-      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
-    }
-
-    .core-avatar {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      margin-bottom: 16px;
-    }
-
-    .core-name {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--mat-sys-on-surface);
-    }
-
-    .core-title {
-      font-size: 0.8125rem;
-      color: var(--mat-sys-on-surface-variant);
-      margin-top: 4px;
-    }
-
-    .contributors-card {
-      background-color: var(--mat-sys-surface-container-low);
-      border-radius: 28px;
-      padding: 32px;
-    }
-
-    .contributors-grid {
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      gap: 12px;
-    }
-
-    .contributor-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 12px 4px;
-      border-radius: 12px;
-      text-decoration: none;
-      color: inherit;
-      transition: background-color 0.2s;
-    }
-
-    .contributor-item:hover {
-      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
-    }
-
-    .contributor-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      margin-bottom: 8px;
-    }
-
-    .contributor-name {
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--mat-sys-on-surface-variant);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-      text-align: center;
-    }
-
-    .loading {
-      display: flex;
-      justify-content: center;
-      padding: 32px;
-    }
-
-    @media (max-width: 768px) {
-      .contributors {
-        padding: 56px 16px;
-      }
-
-      .core-team {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-
-      .contributors-card {
-        padding: 24px 16px;
-        border-radius: 24px;
-      }
-
-      .contributors-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
-      }
-
-      .section-title:not(:first-child) {
-        margin-top: 48px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .contributors-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
+    .section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 32px; }
+    h2 { font-size: clamp(28px, 3vw, 40px); letter-spacing: -.04em; margin-top: 14px; }
+    .section-heading > p { font-size: 14px; line-height: 1.9; color: var(--mat-sys-on-surface-variant); }
+    .core-team { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .core-card { display: flex; align-items: center; gap: 24px; padding: 32px; border-radius: 28px; background: var(--mat-sys-primary-container); color: var(--mat-sys-on-primary-container); transition: border-radius var(--app-motion-spring); }
+    .core-card:nth-child(2) { background: var(--app-yellow-container); color: var(--app-on-yellow-container); }
+    .core-card:hover { border-radius: 44px 20px 44px 20px; }
+    .core-card img { border-radius: 50%; width: 72px; height: 72px; flex-shrink: 0; object-fit: cover; }
+    .core-card h3 { font-size: 22px; color: inherit; }
+    .core-card p { font-size: 12px; margin-top: 8px; }
+    .core-card mat-icon { margin-left: auto; width: 20px; height: 20px; font-size: 20px; }
+    .contributor-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 40px 0 20px; }
+    .contributor-heading h3 { font-size: 17px; font-weight: 600; }
+    .contributor-heading > span { font-size: 12px; color: var(--mat-sys-on-surface-variant); }
+    .contributors-grid { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; padding: 20px; border-radius: 28px; background: var(--mat-sys-surface-container-low); }
+    .contributor { display: flex; align-items: center; flex-direction: column; min-width: 0; gap: 12px; padding: 16px 4px; border-radius: 20px; color: var(--mat-sys-on-surface-variant); }
+    .contributor:hover { background: var(--mat-sys-surface-container-high); }
+    .contributor img { width: 48px; height: 48px; border-radius: 50%; }
+    .contributor span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+    .load-state { padding: 24px; color: var(--mat-sys-on-surface-variant); font-size: 13px; }
+    @media (max-width: 900px) { .contributors-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+    @media (max-width: 700px) { .section-heading { flex-direction: column; align-items: flex-start; gap: 16px; } .core-team { grid-template-columns: 1fr; gap: 8px; } .core-card { padding: 24px; } .contributors-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 12px; } }
   `,
 })
 export class ContributorsComponent {
-	private platformId = inject(PLATFORM_ID);
-
-	coreMembers: CoreMember[] = [
+	readonly coreMembers = [
 		{
-			avatar: "https://github.com/Predidit.png?size=80",
+			avatar: "https://github.com/Predidit.png?size=144",
 			name: "Predidit",
-			title: "作者",
+			title: "Kazumi 作者与维护者",
 			github: "https://github.com/Predidit",
 		},
 		{
-			avatar: "https://github.com/ErBWs.png?size=80",
+			avatar: "https://github.com/ErBWs.png?size=144",
 			name: "ErBW_s",
-			title: "鸿蒙版作者",
+			title: "鸿蒙版作者与维护者",
 			github: "https://github.com/ErBWs",
 		},
 	];
-
-	contributors = signal<Contributor[]>([]);
-	loading = signal(true);
-
+	readonly contributors = signal<Contributor[]>([]);
+	readonly loading = signal(true);
+	readonly failed = signal(false);
 	constructor() {
 		afterNextRender(() => {
-			if (!isPlatformBrowser(this.platformId)) {
-				this.loading.set(false);
-				return;
-			}
-			fetch("/contributors.json")
-				.then((res) => res.json())
-				.then((data: ContributorsData) => {
-					this.contributors.set(data.contributors);
-					this.loading.set(false);
+			fetch("/contributors.json", { signal: AbortSignal.timeout(10000) })
+				.then((response) => {
+					if (!response.ok) throw new Error("Contributors unavailable");
+					return response.json();
 				})
-				.catch(() => {
-					this.loading.set(false);
-				});
+				.then((data: { contributors: Contributor[] }) => {
+					if (!Array.isArray(data.contributors))
+						throw new Error("Invalid contributors");
+					this.contributors.set(data.contributors);
+				})
+				.catch(() => this.failed.set(true))
+				.finally(() => this.loading.set(false));
 		});
 	}
 }

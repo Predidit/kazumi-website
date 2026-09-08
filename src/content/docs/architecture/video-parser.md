@@ -1,7 +1,7 @@
 ---
 title: "视频嗅探"
 description: "了解 Kazumi 的视频嗅探架构，基于 WebView 在各平台（Windows、iOS、macOS、Linux、Android、HarmonyOS）上的实现原理。"
-section: "架构"
+section: "原理与实现"
 icon: "video_library"
 order: 1
 authors:

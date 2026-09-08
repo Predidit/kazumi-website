@@ -1,7 +1,7 @@
 ---
 title: "规则介绍"
 description: "了解 Kazumi 的 XPath 与 API 规则、适用场景以及对应的开发教程。"
-section: "规则指南"
+section: "规则开发"
 icon: "description"
 order: 1
 authors:

@@ -1,86 +1,59 @@
-import { type ContentFile, parseRawContentFile } from "@analogjs/content";
 import {
-	afterNextRender,
+	afterRenderEffect,
 	Component,
 	computed,
-	ElementRef,
 	effect,
 	inject,
 	OnDestroy,
 	resource,
 } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
+import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { DomSanitizer, type SafeHtml } from "@angular/platform-browser";
-import { NavigationEnd, Router } from "@angular/router";
-import { Marked } from "marked";
-import { gfmAlert } from "marked-gfm-alert";
-import {
-	getHeadingList,
-	gfmHeadingId,
-	resetHeadings,
-} from "marked-gfm-heading-id";
-import markedShiki from "marked-shiki";
-import { filter, map, startWith } from "rxjs/operators";
-import { createHighlighterCore } from "shiki/core";
-import bash from "shiki/dist/langs/bash.mjs";
-import dart from "shiki/dist/langs/dart.mjs";
-import githubDark from "shiki/dist/themes/github-dark.mjs";
-import githubLight from "shiki/dist/themes/github-light.mjs";
-import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
+import { DomSanitizer } from "@angular/platform-browser";
+import { NavigationEnd, Router, RouterLink } from "@angular/router";
+import { filter, map } from "rxjs/operators";
 import { DocFooterComponent } from "../../features/docs/doc-footer";
+import { renderDoc } from "../../features/docs/doc-renderer";
 import { routeToContentPath } from "../../features/docs/docs-nav";
 import { DocsStateService } from "../../features/docs/docs-state.service";
 import { SeoService } from "../../features/seo/seo.service";
 
 const DOC_CONTENT_FILES = import.meta.glob<string>(
 	"/src/content/docs/**/*.md",
-	{
-		query: "?raw",
-		import: "default",
-	},
+	{ query: "?raw", import: "default" },
 );
-const HEADING_ID_OPTIONS = { globalSlugs: true } as { prefix?: string } & {
-	globalSlugs: boolean;
-};
-
-const highlighterReady = createHighlighterCore({
-	themes: [githubLight, githubDark],
-	langs: [bash, dart],
-	engine: createJavaScriptRegexEngine(),
-});
-
-type DocAttributes = {
-	title?: string;
-	description?: string;
-	section?: string;
-	icon?: string;
-	order?: number;
-	slug?: string;
-	authors?: string[];
-};
-
-type DocContentFile = ContentFile<DocAttributes>;
-
-interface RenderedDoc {
-	html: SafeHtml;
-}
 
 @Component({
 	selector: "app-doc-content",
-	imports: [DocFooterComponent, MatProgressBarModule],
+	host: { "(click)": "copyCode($event)" },
+	imports: [
+		DocFooterComponent,
+		MatProgressBarModule,
+		MatIconModule,
+		RouterLink,
+	],
 	template: `
     @if (isLoading()) {
       <div class="doc-loading" aria-live="polite">
         <mat-progress-bar mode="indeterminate" />
         <span>正在加载文档...</span>
       </div>
-    } @else if (renderedDoc()) {
-      <article class="markdown-body" [innerHTML]="renderedDoc()!.html"></article>
+    } @else if (html()) {
+      <nav class="doc-breadcrumb" aria-label="阅读位置"><a routerLink="/docs">指南</a><mat-icon>chevron_right</mat-icon><span>{{ metadata()?.section }}</span></nav>
+      <article class="markdown-body" [innerHTML]="html()"></article>
       <app-doc-footer />
+    } @else {
+      <section class="doc-empty"><mat-icon>auto_stories</mat-icon><h1>{{ loadError() ? '这篇指南暂时没有加载成功' : '这篇指南还没有找到' }}</h1><p>可以回到指南首页，换一个主题继续探索。</p><a routerLink="/docs" class="text-action">回到指南首页 <mat-icon>arrow_forward</mat-icon></a></section>
     }
   `,
 	styles: `
+    .doc-breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; color: var(--mat-sys-on-surface-variant); font-size: 11px; }
+    .doc-breadcrumb mat-icon { font-size: 16px; width: 16px; height: 16px; }
+    .doc-empty { padding: 56px 24px; border-radius: 28px; background: var(--mat-sys-surface-container); }
+    .doc-empty > mat-icon { font-size: 48px; width: 48px; height: 48px; color: var(--mat-sys-primary); }
+    .doc-empty h1 { font-size: 28px; margin: 24px 0 16px; }
+    .doc-empty p { font-size: 14px; color: var(--mat-sys-on-surface-variant); }
     .doc-loading {
       display: flex;
       flex-direction: column;
@@ -96,232 +69,84 @@ export default class DocContentComponent implements OnDestroy {
 	private readonly router = inject(Router);
 	private readonly seo = inject(SeoService);
 	private readonly sanitizer = inject(DomSanitizer);
-	private markdown?: Marked;
-	private host?: HTMLElement;
-	private hostClickListener?: (e: Event) => void;
+	private readonly copyTimers = new Map<
+		HTMLButtonElement,
+		ReturnType<typeof setTimeout>
+	>();
 	private readonly currentPath = toSignal(
 		this.router.events.pipe(
 			filter((event) => event instanceof NavigationEnd),
-			startWith(null),
 			map(() => routeToContentPath(this.router.url)),
 		),
 		{ initialValue: routeToContentPath(this.router.url) },
 	);
-	private readonly docResource = resource<DocContentFile | null, string>({
+	private readonly docResource = resource({
 		params: () => this.currentPath(),
 		loader: async ({ params }) => {
-			const doc = await this.loadDoc(params);
-			if (doc && typeof doc.content === "string") {
-				await this.ensureMarked();
-				return {
-					...doc,
-					content: await this.render(doc.content, doc.attributes.authors),
-				};
-			}
-			return doc;
+			const load = DOC_CONTENT_FILES[`/src/content/docs/${params}.md`];
+			return load ? renderDoc(await load()) : null;
 		},
 	});
-
-	private readonly doc = computed(() => this.docResource.value());
+	private readonly doc = computed(() =>
+		this.docResource.hasValue() ? this.docResource.value() : null,
+	);
+	readonly metadata = computed(() => this.doc()?.attributes);
+	readonly loadError = this.docResource.error;
 	readonly isLoading = this.docResource.isLoading;
-
-	readonly renderedDoc = computed<RenderedDoc | null>(() => {
-		if (this.isLoading()) return null;
-		const d = this.doc();
-		if (!d || typeof d.content !== "string") return null;
-		return {
-			html: this.sanitizer.bypassSecurityTrustHtml(d.content),
-		};
+	readonly html = computed(() => {
+		const doc = this.doc();
+		// HTML comes only from repository Markdown and the local renderer.
+		return doc ? this.sanitizer.bypassSecurityTrustHtml(doc.html) : null;
 	});
 
 	constructor() {
-		this.host = inject(ElementRef).nativeElement as HTMLElement;
-
-		this.hostClickListener = (e: Event) => {
-			const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(
-				".copy-btn",
-			);
-			if (!btn) return;
-			const code = btn.parentElement?.querySelector("code")?.textContent ?? "";
-			navigator.clipboard
-				.writeText(code)
-				.then(() => {
-					const icon = btn.querySelector(".mdi");
-					if (icon) {
-						icon.classList.remove("mdi-content-copy");
-						icon.classList.add("mdi-check");
-						btn.classList.add("copied");
-						setTimeout(() => {
-							icon.classList.remove("mdi-check");
-							icon.classList.add("mdi-content-copy");
-							btn.classList.remove("copied");
-						}, 2000);
-					}
-				})
-				.catch(() => {});
-		};
-		this.host.addEventListener("click", this.hostClickListener);
-
 		effect(() => {
-			const route = `/docs/${this.currentPath()}`;
-			const title = this.doc()?.attributes?.title;
-			this.seo.setDoc(route, title ?? "Kazumi 文档");
+			const doc = this.doc();
+			this.docsState.setToc(doc?.toc ?? []);
+			if (this.isLoading()) return;
+			if (this.loadError()) this.seo.setUnavailable();
+			else if (doc)
+				this.seo.setDoc(`/docs/${this.currentPath()}`, doc.attributes);
+			else this.seo.setNotFound();
 		});
-
-		effect(() => {
+		afterRenderEffect(() => {
 			if (this.isLoading()) return;
 			const fragment = this.router.parseUrl(this.router.url).fragment;
 			if (!fragment) return;
-			afterNextRender(() => {
-				document
-					.getElementById(fragment)
-					?.scrollIntoView({ behavior: "smooth" });
+			document.getElementById(fragment)?.scrollIntoView({
+				behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+					? "instant"
+					: "smooth",
 			});
 		});
 	}
 
+	async copyCode(event: Event): Promise<void> {
+		const button = (event.target as HTMLElement).closest<HTMLButtonElement>(
+			".copy-btn",
+		);
+		if (!button) return;
+		const code = button.parentElement?.querySelector("code")?.textContent ?? "";
+		try {
+			await navigator.clipboard.writeText(code);
+			if (!button.isConnected) return;
+			clearTimeout(this.copyTimers.get(button));
+			button.classList.add("copied");
+			const icon = button.querySelector(".mdi");
+			icon?.classList.replace("mdi-content-copy", "mdi-check");
+			this.copyTimers.set(
+				button,
+				setTimeout(() => {
+					icon?.classList.replace("mdi-check", "mdi-content-copy");
+					button.classList.remove("copied");
+					this.copyTimers.delete(button);
+				}, 2000),
+			);
+		} catch {}
+	}
+
 	ngOnDestroy() {
 		this.docsState.clearToc();
-		if (this.host && this.hostClickListener) {
-			this.host.removeEventListener("click", this.hostClickListener);
-		}
-	}
-
-	private async ensureMarked() {
-		if (this.markdown) return;
-		try {
-			const highlighter = await highlighterReady;
-			this.markdown = new Marked(
-				gfmHeadingId(HEADING_ID_OPTIONS),
-				gfmAlert({ inlineStyles: true }),
-				markedShiki({
-					highlight(code, lang) {
-						if (highlighter.getLoadedLanguages().includes(lang)) {
-							return highlighter.codeToHtml(code, {
-								lang,
-								themes: {
-									light: "github-light",
-									dark: "github-dark",
-								},
-								transformers: [
-									{
-										pre(hast) {
-											hast.children.unshift({
-												type: "element",
-												tagName: "button",
-												properties: {
-													className: ["copy-btn"],
-													"aria-label": "复制代码",
-												},
-												children: [
-													{
-														type: "element",
-														tagName: "span",
-														properties: {
-															className: ["mdi", "mdi-content-copy"],
-														},
-														children: [],
-													},
-												],
-											});
-										},
-									},
-								],
-							});
-						}
-						return `<pre class="shiki"><button class="copy-btn" aria-label="复制代码"><span class="mdi mdi-content-copy"></span></button><code>${code
-							.replace(/&/g, "&amp;")
-							.replace(/</g, "&lt;")
-							.replace(/>/g, "&gt;")}</code></pre>`;
-					},
-				}),
-			);
-		} catch (err) {
-			console.warn(
-				"Shiki highlighter failed to initialize, falling back to plain marked",
-				err,
-			);
-			this.markdown = new Marked(
-				gfmHeadingId(HEADING_ID_OPTIONS),
-				gfmAlert({ inlineStyles: true }),
-			);
-		}
-	}
-
-	private async loadDoc(path: string): Promise<DocContentFile | null> {
-		const filename = `/src/content/docs/${path}.md`;
-		const loadContent = DOC_CONTENT_FILES[filename];
-
-		if (!loadContent) {
-			return null;
-		}
-
-		const { content, attributes } = parseRawContentFile<DocAttributes>(
-			await loadContent(),
-		);
-
-		return {
-			filename: filename.replace(/\.md$/, ""),
-			slug: path,
-			attributes,
-			content,
-			toc: [],
-		};
-	}
-
-	private async render(
-		content: string,
-		authors: DocAttributes["authors"],
-	): Promise<string> {
-		resetHeadings();
-		const html = (await this.markdown?.parse(content)) as string | undefined;
-		const toc = getHeadingList().map(({ id, level, raw }) => ({
-			id,
-			level,
-			text: raw,
-		}));
-		this.docsState.setToc(toc);
-		return this.insertAuthors(html ?? "", authors);
-	}
-
-	private insertAuthors(
-		html: string,
-		authors: DocAttributes["authors"],
-	): string {
-		const authorBlock = this.renderAuthors(authors);
-		if (!authorBlock) return html;
-
-		const titleEnd = html.indexOf("</h1>");
-		if (titleEnd === -1) return `${authorBlock}${html}`;
-
-		const insertAt = titleEnd + "</h1>".length;
-		return `${html.slice(0, insertAt)}${authorBlock}${html.slice(insertAt)}`;
-	}
-
-	private renderAuthors(authors: DocAttributes["authors"]): string {
-		const normalized = authors
-			?.map((author) => author.trim())
-			.filter((author) => author.length > 0);
-
-		if (!normalized?.length) return "";
-
-		const links = normalized
-			.map((author, index) => {
-				const safeAuthor = this.escapeHtml(author);
-				const encodedAuthor = encodeURIComponent(author);
-				return `<a class="doc-author" href="https://github.com/${encodedAuthor}" target="_blank" rel="noopener noreferrer" title="${safeAuthor}" style="--author-index: ${index}"><img src="https://github.com/${encodedAuthor}.png?size=40" alt="${safeAuthor}" loading="lazy" width="40" height="40" /></a>`;
-			})
-			.join("");
-
-		return `<div class="doc-authors" aria-label="文档作者"><span>作者</span><div class="doc-author-list" style="--author-count: ${normalized.length}">${links}</div></div>`;
-	}
-
-	private escapeHtml(value: string): string {
-		return value
-			.replace(/&/g, "&amp;")
-			.replace(/</g, "&lt;")
-			.replace(/>/g, "&gt;")
-			.replace(/"/g, "&quot;")
-			.replace(/'/g, "&#39;");
+		for (const timer of this.copyTimers.values()) clearTimeout(timer);
 	}
 }

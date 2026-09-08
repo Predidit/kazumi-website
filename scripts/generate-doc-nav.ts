@@ -1,9 +1,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
-import { relative } from "node:path";
 import fm from "front-matter";
-import { DOCS_DIR, walkMd } from "./doc-routes";
+import { computeDocRoute, DOCS_DIR, walkMd } from "./doc-routes";
 
-const SECTION_ORDER = ["简介", "规则指南", "架构", "其他"];
+const SECTION_ORDER = ["开始使用", "安装与排错", "规则开发", "原理与实现"];
 
 interface Frontmatter {
 	title: string;
@@ -30,10 +29,7 @@ for (const file of files) {
 	const a = attributes as Frontmatter;
 	if (!a.title || !a.section || !a.icon) continue;
 
-	const rel = relative(DOCS_DIR, file).replace(/\.md$/, "");
-	const dir = rel.includes("/") ? rel.substring(0, rel.lastIndexOf("/")) : "";
-	const base = a.slug || rel.split("/").pop() || "";
-	const route = dir ? `/docs/${dir}/${base}` : `/docs/${base}`;
+	const route = computeDocRoute(file);
 
 	if (!sectionMap.has(a.section)) {
 		sectionMap.set(a.section, []);

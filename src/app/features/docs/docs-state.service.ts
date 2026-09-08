@@ -8,13 +8,14 @@ export interface TocItem {
 
 @Injectable({ providedIn: "root" })
 export class DocsStateService {
-	readonly toc = signal<TocItem[]>([]);
+	private readonly tocState = signal<TocItem[]>([]);
+	readonly toc = this.tocState.asReadonly();
 
 	setToc(items: TocItem[]) {
-		this.toc.set(items.filter((item) => item.level <= 3));
+		this.tocState.set(items.filter((item) => item.level <= 3));
 	}
 
 	clearToc() {
-		this.toc.set([]);
+		this.tocState.set([]);
 	}
 }

@@ -1,7 +1,7 @@
 ---
 title: "API 规则开发"
 description: "以 TvTFun 为例学习 Kazumi API 规则，包括接口定位、JSONPath、请求模板和播放页构造。"
-section: "规则指南"
+section: "规则开发"
 icon: "api"
 order: 4
 ---

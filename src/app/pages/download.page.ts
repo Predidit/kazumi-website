@@ -1,439 +1,201 @@
-import { isPlatformBrowser } from "@angular/common";
 import {
 	afterNextRender,
 	Component,
+	computed,
 	inject,
-	PLATFORM_ID,
 	signal,
 } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
-import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { ActivatedRoute, RouterLink } from "@angular/router";
+import {
+	detectPlatform,
+	getDownloadUrl,
+	getReleaseUrl,
+	PLATFORMS,
+} from "../features/download/platforms";
 import { SeoService } from "../features/seo/seo.service";
-
-interface PlatformLink {
-	label: string;
-	url: string;
-	external?: boolean;
-	primary?: boolean;
-}
-
-interface Platform {
-	id: string;
-	name: string;
-	description: string;
-	repo?: string;
-	useOhosTag?: boolean;
-	links: PlatformLink[];
-}
 
 @Component({
 	selector: "app-download",
 	imports: [
-		MatCardModule,
-		MatSlideToggleModule,
+		MatButtonModule,
 		MatIconModule,
 		MatProgressBarModule,
-		MatButtonModule,
+		MatSlideToggleModule,
+		RouterLink,
 	],
 	template: `
-    <div class="download-page">
-      <h1>下载 Kazumi</h1>
-      <p class="subtitle">选择适合您操作系统的版本下载</p>
-
-      @if (loading()) {
-        <mat-card appearance="outlined">
-          <mat-card-content class="loading-content">
-            <mat-progress-bar mode="indeterminate" />
-            <p>正在获取版本信息...</p>
-          </mat-card-content>
-        </mat-card>
-      } @else {
-        <mat-card appearance="outlined">
-          <mat-card-content>
-            <div class="mirror-switch">
-              <mat-slide-toggle [checked]="useMirror()" (change)="useMirror.set($event.checked)">
-                使用镜像下载（OHOS 不可用，镜像可能不是最新版本）
-              </mat-slide-toggle>
-            </div>
-
-            <div class="platforms">
-              @for (platform of platforms; track platform.id) {
-                <div class="platform-item">
-                  <div class="platform-info">
-                    <mat-icon class="platform-icon">{{ getIcon(platform.id) }}</mat-icon>
-                    <div>
-                      <h3>{{ platform.name }}</h3>
-                      <p>{{ platform.description }}</p>
-                      @if (platform.id === 'ohos' && currentOhosTag()) {
-                        <p class="tag">鸿蒙版本: {{ currentOhosTag() }}</p>
-                      }
-                    </div>
-                  </div>
-                  <div class="links">
-                    @for (link of platform.links; track link.label) {
-                      @if (link.primary) {
-                        <a
-                          mat-flat-button
-                          [href]="getDownloadUrl(platform, link)"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {{ link.label }}
-                        </a>
-                      } @else {
-                        <a
-                          mat-stroked-button
-                          [href]="getDownloadUrl(platform, link)"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {{ link.label }}
-                        </a>
-                      }
-                    }
-                  </div>
-                </div>
+    <div class="page-shell download-page">
+      <header class="download-intro"><h1>下载与安装</h1><p>选择平台，获取安装包与安装指南。</p></header>
+      <section aria-labelledby="platform-title" class="download-workspace">
+        <div class="platform-picker">
+          <h2 id="platform-title">选择操作系统</h2>
+          <div class="platform-options" role="group" aria-label="操作系统">
+            @for (platform of platforms; track platform.id) {
+              <button type="button" (click)="selectedId.set(platform.id)" [class.selected]="selectedId() === platform.id" [attr.aria-pressed]="selectedId() === platform.id">
+                <mat-icon>{{ platform.icon }}</mat-icon><span>{{ platform.name }}</span>
+                @if (selectedId() === platform.id) { <mat-icon class="selection-check">check_circle</mat-icon> }
+              </button>
+            }
+          </div>
+        </div>
+        <div class="download-detail" aria-live="polite">
+          <div class="detail-top"><span class="platform-emblem"><mat-icon>{{ selected().icon }}</mat-icon></span>
+            @if (selected().id === detectedId()) { <span class="version-chip">适合当前设备</span> }
+          </div>
+          <h2>Kazumi <span>for {{ selected().name }}</span></h2>
+          <p class="system-requirement">{{ selected().description }}</p>
+          <div class="release-meta">
+            @if (loading()) { <span>正在获取发布版本…</span> }
+            @else if (selectedTag()) { <span class="status-dot"></span><strong>v{{ selectedTag() }}</strong><span>当前发布版本</span> }
+            @else { <mat-icon>info_outline</mat-icon><span>版本信息暂不可用，可前往发布页获取安装包</span> }
+          </div>
+          @if (loading()) { <mat-progress-bar mode="indeterminate" aria-label="加载版本信息" /> }
+          <div class="download-actions">
+            @for (link of downloadLinks(); track link.label) {
+              @if (link.kind === 'guide') {
+                <a mat-stroked-button class="action" [routerLink]="link.url" [fragment]="link.fragment">{{ link.label }}<mat-icon iconPositionEnd>arrow_forward</mat-icon></a>
+              } @else if (link.kind === 'asset' && link.primary) {
+                <a mat-flat-button class="action action-large" [href]="link.href" target="_blank" rel="noopener noreferrer"><mat-icon>download</mat-icon>{{ selectedTag() ? '下载 ' + link.label : '前往发布页' }}</a>
+              } @else {
+                <a mat-stroked-button class="action" [href]="link.href" target="_blank" rel="noopener noreferrer">{{ link.label }}<mat-icon iconPositionEnd>north_east</mat-icon></a>
               }
-            </div>
-
-            <div class="version-info">
-              <div>
-                <strong>主仓库版本:</strong> {{ currentTag() }}
-                @if (currentOhosTag()) {
-                  <span class="ohos-tag">
-                    <strong>鸿蒙分支版本:</strong> {{ currentOhosTag() }}
-                  </span>
-                }
-              </div>
-              <a
-                mat-button
-                color="primary"
-                [href]="githubUrl"
-                target="_blank"
-              >
-                查看所有版本 →
-              </a>
-            </div>
-          </mat-card-content>
-        </mat-card>
-      }
+            }
+          </div>
+          <p class="install-note">{{ selected().installNote }}</p>
+          <div class="mirror-setting">
+            <div><strong>下载速度较慢？</strong><p>{{ selected().releaseSource === 'ohos' ? '鸿蒙版本使用独立发布源，暂不支持镜像。' : '可以切换镜像。镜像同步可能晚于 GitHub。' }}</p></div>
+            <mat-slide-toggle [checked]="useMirror()" [disabled]="selected().releaseSource === 'ohos'" (change)="useMirror.set($event.checked)" aria-label="使用镜像下载"></mat-slide-toggle>
+          </div>
+          <a class="text-action release-link" [href]="releaseUrl()" target="_blank" rel="noopener noreferrer">更新日志与历史版本 <mat-icon>north_east</mat-icon></a>
+          @if (loadError()) { <button mat-button (click)="loadReleases()" [disabled]="loading()">重新获取版本</button> }
+        </div>
+      </section>
+      <section class="install-help" aria-labelledby="install-help-title">
+        <div><span class="eyebrow">GET STARTED</span><h2 id="install-help-title">开始使用 Kazumi</h2></div>
+        <div class="help-grid">
+          <a routerLink="/docs/rules/introduce-rules"><span class="step-number">01</span><div><h3>认识规则</h3><p>了解内容来源，导入你的第一条规则。</p></div><mat-icon>arrow_forward</mat-icon></a>
+          <a routerLink="/docs/intro/module-details"><span class="step-number">02</span><div><h3>了解功能</h3><p>认识播放器、弹幕与更多实用功能。</p></div><mat-icon>arrow_forward</mat-icon></a>
+          <a routerLink="/docs/misc/qa"><span class="step-number">03</span><div><h3>常见问题</h3><p>查看安装和使用中常见问题的解决方法。</p></div><mat-icon>arrow_forward</mat-icon></a>
+        </div>
+      </section>
     </div>
   `,
 	styles: `
-    .download-page {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 48px 24px;
-    }
-
-    h1 {
-      font-size: 2rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: var(--mat-sys-on-surface);
-    }
-
-    .subtitle {
-      font-size: 1rem;
-      color: var(--mat-sys-on-surface-variant);
-      margin-bottom: 32px;
-    }
-
-    mat-card {
-      border-radius: 28px;
-      background: var(--mat-sys-surface-container-low);
-      border: none;
-    }
-
-    .loading-content {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      padding: 32px;
-      text-align: center;
-    }
-
-    .loading-content p {
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .mirror-switch {
-      margin-bottom: 24px;
-      padding: 16px 20px;
-      background: var(--mat-sys-surface-container);
-      border-radius: 16px;
-    }
-
-    .platforms {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .platform-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 24px;
-      background: var(--mat-sys-surface-container);
-      border-radius: 16px;
-      transition: background-color 0.2s;
-    }
-
-    .platform-item:hover {
-      background: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
-    }
-
-    .platform-info {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex: 1;
-    }
-
-    .platform-icon {
-      font-size: 24px;
-      width: 48px;
-      height: 48px;
-      min-width: 48px;
-      color: var(--mat-sys-primary);
-      background: var(--mat-sys-primary-container);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .platform-info h3 {
-      margin: 0 0 4px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--mat-sys-on-surface);
-    }
-
-    .platform-info p {
-      margin: 0;
-      font-size: 0.875rem;
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .tag {
-      margin-top: 4px !important;
-      font-size: 0.75rem !important;
-      color: var(--mat-sys-on-surface-variant) !important;
-      font-style: italic;
-    }
-
-    .links {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .version-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 16px;
-      border-top: 1px solid var(--mat-sys-outline-variant);
-      font-size: 0.875rem;
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .ohos-tag {
-      margin-left: 16px;
-    }
-
-    @media (max-width: 768px) {
-      .platform-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-      }
-
-      .links {
-        width: 100%;
-        justify-content: flex-start;
-      }
-
-      .version-info {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .download-page {
-        padding: 24px 16px;
-      }
-
-      .platform-item {
-        padding: 16px;
-      }
-
-      .links {
-        flex-direction: column;
-        width: 100%;
-      }
-
-      .links a {
-        width: 100%;
-        text-align: center;
-      }
-    }
+    .download-page { max-width: 1240px; }
+    .download-intro { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px 24px; padding: 8px 4px 24px; }
+    .download-intro h1 { font-size: 28px; font-weight: 650; letter-spacing: -.03em; line-height: 1.4; }
+    .download-intro p { font-size: 14px; color: var(--mat-sys-on-surface-variant); line-height: 1.8; }
+    @media (max-width: 700px) { .download-intro { flex-direction: column; align-items: flex-start; padding: 8px 8px 20px; } .download-intro h1 { font-size: 24px; } .download-intro p { font-size: 13px; } }
+    .download-workspace { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 12px; }
+    .platform-picker { min-width: 0; padding: 28px 20px; border-radius: 32px; background: var(--mat-sys-surface-container); }
+    .platform-picker h2 { font-size: 14px; font-weight: 600; margin: 0 12px 20px; }
+    .platform-options { display: flex; flex-direction: column; gap: 5px; }
+    .platform-options button { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 60px; padding: 14px 20px; border: 0; border-radius: 12px; background: transparent; color: var(--mat-sys-on-surface-variant); font-size: 15px; font-weight: 600; text-align: left; transition: border-radius var(--app-motion-spring), background var(--app-motion-fast); }
+    .platform-options button:hover { background: var(--mat-sys-surface-container-highest); }
+    .platform-options button.selected { border-radius: 32px; background: var(--mat-sys-primary); color: var(--mat-sys-on-primary); }
+    .platform-options .selection-check { margin-left: auto; width: 18px; height: 18px; font-size: 18px; }
+    .download-detail { padding: 40px 44px 24px; background: var(--mat-sys-primary-container); border-radius: 32px; min-width: 0; }
+    .detail-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .platform-emblem { display: grid; place-items: center; width: 76px; height: 76px; border-radius: 26px; background: var(--mat-sys-primary); color: var(--mat-sys-on-primary); }
+    .platform-emblem mat-icon { width: 36px; height: 36px; font-size: 36px; }
+    .version-chip { padding: 7px 12px; border-radius: 20px; font-size: 11px; color: var(--mat-sys-on-primary-container); background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent); }
+    .download-detail h2 { margin: 28px 0 12px; font-size: clamp(28px, 3vw, 40px); font-weight: 800; letter-spacing: -.04em; color: var(--mat-sys-on-primary-container); }
+    .download-detail h2 span { font-weight: 450; }
+    .system-requirement { font-size: 14px; color: var(--mat-sys-on-primary-container); }
+    .release-meta { display: flex; align-items: center; gap: 10px; margin-top: 22px; min-height: 24px; font-size: 12px; color: var(--mat-sys-on-primary-container); }
+    .release-meta mat-icon { width: 20px; height: 20px; font-size: 20px; }
+    mat-progress-bar { margin-top: 12px; }
+    .download-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 26px 0 18px; }
+    .install-note { font-size: 12px; line-height: 1.85; color: var(--mat-sys-on-primary-container); min-height: 44px; }
+    .mirror-setting { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 0; margin-top: 22px; border-top: 1px solid color-mix(in srgb, var(--mat-sys-primary) 20%, transparent); color: var(--mat-sys-on-primary-container); }
+    .mirror-setting strong { font-size: 13px; font-weight: 600; }
+    .mirror-setting p { font-size: 11px; margin-top: 4px; }
+    .release-link { font-size: 12px; }
+    .install-help { margin-top: 64px; }
+    .install-help h2 { font-size: 30px; letter-spacing: -.04em; margin: 12px 0 24px; }
+    .help-grid { display: grid; gap: 4px; }
+    .help-grid a { display: flex; align-items: center; gap: 24px; padding: 24px 28px; background: var(--mat-sys-surface-container-low); border-radius: 8px; color: var(--mat-sys-on-surface); transition: background var(--app-motion-fast); }
+    .help-grid a:first-child { border-radius: 28px 28px 8px 8px; }
+    .help-grid a:last-child { border-radius: 8px 8px 28px 28px; }
+    .help-grid a:hover { background: var(--mat-sys-surface-container-high); }
+    .step-number { font-size: 24px; color: var(--mat-sys-primary); font-weight: 500; }
+    .help-grid h3 { font-size: 15px; font-weight: 600; }
+    .help-grid p { font-size: 13px; color: var(--mat-sys-on-surface-variant); margin-top: 6px; }
+    .help-grid mat-icon { margin-left: auto; color: var(--mat-sys-primary); }
+    @media (max-width: 850px) { .download-workspace { grid-template-columns: 1fr; } .platform-picker { padding: 20px; } .platform-options { flex-direction: row; flex-wrap: wrap; } .platform-options button { width: auto; min-height: 48px; padding: 12px 16px; font-size: 13px; gap: 8px; } .platform-options .selection-check { display: none; } .platform-picker h2 { margin-left: 4px; margin-bottom: 12px; } }
+    @media (max-width: 700px) { .download-detail { padding: 28px 24px 20px; } .platform-picker { padding: 16px; border-radius: 24px; } .platform-options { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--mat-sys-outline-variant) transparent; padding: 4px; } .platform-options button { flex: 0 0 auto; } .platform-emblem { width: 56px; height: 56px; border-radius: 20px; } .download-detail h2 { margin-top: 20px; } .mirror-setting { gap: 12px; } .download-actions { gap: 8px; } .help-grid a { padding: 22px 20px; gap: 16px; } .help-grid p { font-size: 12px; } .install-help { margin-top: 48px; } .install-help h2 { font-size: 26px; } }
   `,
 })
 export default class DownloadComponent {
-	loading = signal(true);
-	currentTag = signal("tag");
-	currentOhosTag = signal("");
-	useMirror = signal(false);
+	readonly loading = signal(true);
+	readonly loadError = signal(false);
+	private readonly currentTag = signal("");
+	private readonly currentOhosTag = signal("");
+	readonly useMirror = signal(false);
+	private readonly route = inject(ActivatedRoute);
+	private readonly requestedPlatform = PLATFORMS.find(
+		(platform) =>
+			platform.id === this.route.snapshot.queryParamMap.get("platform"),
+	);
+	readonly selectedId = signal(this.requestedPlatform?.id ?? "android");
+	readonly detectedId = signal("");
+	readonly platforms = PLATFORMS;
 
-	githubUrl = "https://github.com/Predidit/Kazumi/releases";
+	readonly selected = computed(
+		() =>
+			this.platforms.find((p) => p.id === this.selectedId()) ??
+			this.platforms[0],
+	);
+	readonly selectedTag = computed(() =>
+		this.selected().releaseSource === "ohos"
+			? this.currentOhosTag()
+			: this.currentTag(),
+	);
 
-	platforms: Platform[] = [
-		{
-			id: "android",
-			name: "Android",
-			description: "适用于 Android 10 及以上",
-			links: [
-				{ label: "APK", url: "Kazumi_android_{tag}.apk", primary: true },
-				{
-					label: "F-Droid",
-					url: "https://f-droid.org/packages/com.predidit.kazumi",
-					external: true,
-				},
-			],
-		},
-		{
-			id: "ios",
-			name: "iOS",
-			description: "适用于 iOS/iPadOS 13 及以上",
-			links: [
-				{ label: "IPA", url: "Kazumi_ios_{tag}_no_sign.ipa", primary: true },
-				{
-					label: "安装文档",
-					url: "/docs/misc/how-to-install-in-ios",
-					external: true,
-				},
-			],
-		},
-		{
-			id: "windows",
-			name: "Windows",
-			description: "适用于 Windows 10 及以上",
-			links: [
-				{ label: "MSIX", url: "Kazumi_windows_{tag}.msix", primary: true },
-				{ label: "便携版", url: "Kazumi_windows_{tag}.zip" },
-			],
-		},
-		{
-			id: "mac",
-			name: "macOS",
-			description: "适用于 MacOS 10.15 及以上",
-			links: [{ label: "DMG", url: "Kazumi_macos_{tag}.dmg", primary: true }],
-		},
-		{
-			id: "linux",
-			name: "Linux",
-			description: "实验性支持",
-			links: [
-				{ label: "DEB", url: "Kazumi_linux_{tag}_amd64.deb", primary: true },
-				{ label: "便携版", url: "Kazumi_linux_{tag}_amd64.tar.gz" },
-				{
-					label: "Flathub",
-					url: "https://flathub.org/en/apps/io.github.Predidit.Kazumi",
-					external: true,
-				},
-			],
-		},
-		{
-			id: "ohos",
-			name: "OHOS",
-			description: "适用于 HarmonyOS NEXT",
-			repo: "ErBWs/Kazumi",
-			useOhosTag: true,
-			links: [
-				{ label: "HAP", url: "Kazumi_ohos_{tag}_unsigned.hap", primary: true },
-				{
-					label: "安装文档",
-					url: "/docs/misc/how-to-install-in-ohos",
-					external: true,
-				},
-			],
-		},
-		{
-			id: "arch",
-			name: "Arch Linux",
-			description: "实验性支持",
-			links: [
-				{
-					label: "下载文档",
-					url: "/docs/intro/how-to-download#arch-linux",
-					external: true,
-				},
-			],
-		},
-	];
-
-	private platformId = inject(PLATFORM_ID);
-	private seo = inject(SeoService);
+	readonly releaseUrl = computed(() => getReleaseUrl(this.selected()));
+	readonly downloadLinks = computed(() =>
+		this.selected().links.map((link) => ({
+			...link,
+			href: getDownloadUrl(
+				this.selected(),
+				link,
+				this.selectedTag(),
+				this.useMirror(),
+			),
+		})),
+	);
 
 	constructor() {
-		this.seo.setDownload();
+		inject(SeoService).setDownload();
 		afterNextRender(() => {
-			if (isPlatformBrowser(this.platformId)) {
-				this.loadReleases();
-			} else {
-				this.loading.set(false);
-			}
+			const id = detectPlatform(navigator.userAgent, navigator.maxTouchPoints);
+			this.detectedId.set(id);
+			if (!this.requestedPlatform) this.selectedId.set(id || "android");
+			void this.loadReleases();
 		});
 	}
 
-	getIcon(id: string): string {
-		const icons: Record<string, string> = {
-			android: "android",
-			ios: "phone_iphone",
-			windows: "desktop_windows",
-			mac: "laptop_mac",
-			linux: "computer",
-			ohos: "phone_android",
-			arch: "terminal",
-		};
-		return icons[id] || "download";
-	}
-
-	getDownloadUrl(platform: Platform, link: PlatformLink): string {
-		if (link.external) return link.url;
-
-		const tag = platform.useOhosTag ? this.currentOhosTag() : this.currentTag();
-		const repo = platform.repo || "Predidit/Kazumi";
-		const baseUrl = `https://github.com/${repo}/releases/download`;
-
-		const downloadUrl = `${baseUrl}/${tag}/${link.url.replace("{tag}", tag)}`;
-		return this.useMirror() &&
-			!platform.useOhosTag &&
-			repo === "Predidit/Kazumi"
-			? `https://cdn.gh-proxy.org/${downloadUrl}`
-			: downloadUrl;
-	}
-
 	async loadReleases(): Promise<void> {
+		this.loading.set(true);
+		this.loadError.set(false);
 		try {
-			const response = await fetch("/releases.json");
-			if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
+			const response = await fetch("/releases.json", {
+				signal: AbortSignal.timeout(10000),
+			});
+			if (!response.ok) throw new Error("Version request failed");
 			const data = await response.json();
-			if (data.kazumi?.tag) this.currentTag.set(data.kazumi.tag);
-			if (data.ohos?.tag) this.currentOhosTag.set(data.ohos.tag);
-		} catch (err) {
-			console.error("Failed to load releases:", err);
+			const validTag = (tag: unknown): tag is string =>
+				typeof tag === "string" && /^[a-zA-Z0-9][a-zA-Z0-9._-]*$/.test(tag);
+			if (validTag(data.kazumi?.tag)) this.currentTag.set(data.kazumi.tag);
+			if (validTag(data.ohos?.tag)) this.currentOhosTag.set(data.ohos.tag);
+			if (!validTag(data.kazumi?.tag) || !validTag(data.ohos?.tag))
+				this.loadError.set(true);
+		} catch {
+			this.loadError.set(true);
 		} finally {
 			this.loading.set(false);
 		}

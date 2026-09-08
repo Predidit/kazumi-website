@@ -1,7 +1,7 @@
 ---
-title: "iOS 自签"
+title: "在 iOS 上安装"
 description: "在 iOS 设备上安装 Kazumi 的详细教程，使用 Sideloadly 或 LiveContainer + SideStore 进行侧载安装。"
-section: "其他"
+section: "安装与排错"
 icon: "phone_iphone"
 order: 2
 authors:
@@ -9,7 +9,7 @@ authors:
   - ChouChiu
 ---
 
-# iOS 安装教程
+# 在 iOS 上安装
 
 在 iOS 设备上安装未上架应用需要使用“侧载”（Sideload）工具。本教程将详细介绍两种安装方案：**Sideloadly** 和 **LiveContainer + SideStore**。
 

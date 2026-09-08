@@ -1,19 +1,17 @@
 import { isPlatformBrowser } from "@angular/common";
 import {
+	afterRenderEffect,
 	Component,
 	ElementRef,
-	effect,
 	inject,
 	input,
-	OnDestroy,
 	output,
 	PLATFORM_ID,
 	signal,
 	ViewChild,
 } from "@angular/core";
+import { Router } from "@angular/router";
 import { TocItem } from "./docs-state.service";
-
-const TOC_TITLE = "页面导航";
 
 @Component({
 	selector: "app-toc",
@@ -21,16 +19,18 @@ const TOC_TITLE = "页面导航";
 		"[class.embedded]": "embedded()",
 	},
 	template: `
-    <nav class="toc" #tocContainer>
+    <nav class="toc" #tocContainer aria-label="本页内容">
       @if (items().length > 0) {
-        <h4 class="toc-title">{{ title }}</h4>
+        <h4 class="toc-title">页面导航</h4>
         <ul class="toc-list">
           @for (item of items(); track item.id) {
             <li [style.padding-left.px]="(item.level - 1) * 16">
               <a
                 class="toc-link"
+                [href]="anchorUrl(item.id)"
                 [class.active]="activeId() === item.id"
-                (click)="onLinkClick(item.id)"
+                [attr.aria-current]="activeId() === item.id ? 'location' : null"
+                (click)="$event.preventDefault(); onLinkClick(item.id)"
               >
                 {{ item.text }}
               </a>
@@ -44,11 +44,11 @@ const TOC_TITLE = "页面导航";
 		`
     .toc {
       position: sticky;
-      top: 96px;
+      top: 0;
       max-height: calc(100vh - 128px);
       overflow-y: auto;
       scroll-behavior: smooth;
-      padding-left: 24px;
+      padding-left: 12px;
       border-left: 1px solid var(--mat-sys-outline-variant);
       scrollbar-width: thin;
       scrollbar-color: var(--mat-sys-outline-variant) var(--mat-sys-surface-container);
@@ -98,11 +98,11 @@ const TOC_TITLE = "页面导航";
 
     .toc-link {
       display: block;
-      padding: 4px 8px;
+      padding: 10px 12px;
       font-size: 0.8125rem;
       color: var(--mat-sys-on-surface-variant);
       text-decoration: none;
-      border-radius: 4px;
+      border-radius: 16px;
       line-height: 1.5;
       transition: color 0.15s, background-color 0.15s;
     }
@@ -120,41 +120,45 @@ const TOC_TITLE = "页面导航";
   `,
 	],
 })
-export class TocComponent implements OnDestroy {
+export class TocComponent {
 	readonly items = input<TocItem[]>([]);
 	readonly embedded = input(false);
 	readonly activeId = signal("");
-	readonly title = TOC_TITLE;
 	readonly linkClick = output<string>();
 	@ViewChild("tocContainer") private tocContainer?: ElementRef<HTMLElement>;
 	private observer?: IntersectionObserver;
-	private visibleIds = new Set<string>();
+	private readonly visibleIds = new Set<string>();
 
 	private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+	private readonly router = inject(Router);
 
 	constructor() {
-		if (!this.isBrowser) return;
-
-		effect(() => {
+		afterRenderEffect((onCleanup) => {
 			this.items();
-			queueMicrotask(() => this.setupObserver());
+			this.setupObserver();
+			onCleanup(() => this.observer?.disconnect());
 		});
 
-		effect(() => {
+		afterRenderEffect(() => {
 			this.activeId();
-			queueMicrotask(() => this.scrollToActive());
+			this.scrollToActive();
 		});
 	}
 
-	ngOnDestroy() {
-		this.observer?.disconnect();
+	anchorUrl(id: string) {
+		return `${this.router.url.split("#")[0]}#${encodeURIComponent(id)}`;
 	}
 
 	onLinkClick(id: string) {
 		this.activeId.set(id);
 		this.linkClick.emit(id);
 		if (this.isBrowser) {
-			document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+			document.getElementById(id)?.scrollIntoView({
+				behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+					? "instant"
+					: "smooth",
+			});
+			history.replaceState(history.state, "", this.anchorUrl(id));
 		}
 	}
 

@@ -4,5 +4,5 @@ import type { DocSection } from "./docs-nav";
 
 @Injectable({ providedIn: "root" })
 export class DocNavService {
-	readonly sections = signal<DocSection[]>(DOC_NAV_DATA);
+	readonly sections = signal<DocSection[]>(DOC_NAV_DATA).asReadonly();
 }

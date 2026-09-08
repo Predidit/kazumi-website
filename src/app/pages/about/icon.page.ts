@@ -1,79 +1,39 @@
 import { Component, inject } from "@angular/core";
-import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
 import { SeoService } from "../../features/seo/seo.service";
 
 @Component({
 	selector: "app-icon-page",
-	imports: [MatCardModule],
+	imports: [MatIconModule, RouterLink],
 	template: `
-    <div class="icon-page">
-      <h1>图标</h1>
-      <mat-card appearance="outlined">
-        <mat-card-content>
-          <p>
-            本项目图标来自
-            <a href="https://www.pixiv.net/users/66219277" target="_blank" rel="noopener"
-              >Yuquanaaa</a
-            >
-            发表在
-            <a href="https://www.pixiv.net/artworks/116666979" target="_blank" rel="noopener"
-              >Pixiv</a
-            >
-            上的作品。
-          </p>
-          <p>
-            此图标由其原作者
-            <a href="https://www.pixiv.net/users/66219277" target="_blank" rel="noopener"
-              >Yuquanaaa</a
-            >
-            拥有版权。我们已获得原作者的授权和许可, 可以在本项目中使用这一图标。这一图标不是自由使用的,
-            未经原作者明确授权, 任何人不得擅自使用、复制、修改或分发这一图标。
-          </p>
-        </mat-card-content>
-      </mat-card>
+    <div class="page-shell icon-page">
+      <a routerLink="/about" class="text-action"><mat-icon>arrow_back</mat-icon>回到共创社区</a>
+      <header class="page-intro"><span class="eyebrow">THE FACE OF KAZUMI</span><h1>一眼相识，<br />也记得创作它的人。</h1><p>关于 Kazumi 图标的故事与授权。</p></header>
+      <div class="icon-story">
+        <figure><img src="/kazumi-expressive.png" alt="基于原项目形象生成的 Kazumi 风格化插画" width="1254" height="1254" /><figcaption>网站风格化插画 · 基于原项目形象重新演绎</figcaption></figure>
+        <div class="story-copy"><span class="eyebrow">MEET THE ARTIST</span><h2>感谢 Yuquanaaa。</h2><p>Kazumi 原项目图标来自 Yuquanaaa 发表在 Pixiv 上的作品。本站展示的是基于原形象、使用 AI 生成的风格化插画；原始作品可通过下方链接查看。</p>
+          <div class="artist-links"><a href="https://www.pixiv.net/users/66219277" target="_blank" rel="noopener noreferrer" class="text-action">认识创作者<mat-icon>north_east</mat-icon></a><a href="https://www.pixiv.net/artworks/116666979" target="_blank" rel="noopener noreferrer" class="text-action">查看原作<mat-icon>north_east</mat-icon></a></div>
+          <div class="permission-note"><mat-icon>verified_user</mat-icon><div><h3>尊重创作，也尊重授权。</h3><p>图标版权归原作者所有。Kazumi 已获得原作者授权，允许在本项目中使用。</p><p>这一授权不代表图标可自由使用。未经原作者明确许可，请勿使用、复制、修改或分发。</p></div></div>
+        </div>
+      </div>
     </div>
   `,
 	styles: `
-    .icon-page {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 48px 24px;
-    }
-
-    h1 {
-      font-size: 2rem;
-      font-weight: 600;
-      margin-bottom: 32px;
-      color: var(--mat-sys-on-surface);
-    }
-
-    mat-card {
-      border-radius: 16px;
-    }
-
-    mat-card-content {
-      padding: 8px;
-    }
-
-    p {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: var(--mat-sys-on-surface-variant);
-      margin-bottom: 16px;
-    }
-
-    p:last-child {
-      margin-bottom: 0;
-    }
-
-    a {
-      color: var(--mat-sys-primary);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
+    .icon-page { max-width: 1200px; }
+    .icon-story { display: grid; grid-template-columns: .85fr 1.15fr; gap: 48px; align-items: center; }
+    figure { background: var(--app-yellow-container); border-radius: 40px; padding: 40px; }
+    figure img { width: 100%; max-width: 340px; margin: auto; }
+    figcaption { margin-top: 28px; color: var(--app-on-yellow-container); font-size: 11px; text-align: center; }
+    .story-copy h2 { font-size: 32px; margin: 20px 0; letter-spacing: -.04em; }
+    .story-copy > p { font-size: 15px; line-height: 1.95; color: var(--mat-sys-on-surface-variant); }
+    .artist-links { display: flex; gap: 24px; margin: 16px 0 28px; }
+    .permission-note { display: flex; gap: 16px; background: var(--mat-sys-surface-container); border-radius: 24px; padding: 24px; }
+    .permission-note > mat-icon { color: var(--mat-sys-primary); }
+    .permission-note h3 { font-size: 15px; font-weight: 650; margin-bottom: 12px; }
+    .permission-note p { font-size: 12px; line-height: 1.9; color: var(--mat-sys-on-surface-variant); }
+    .permission-note p + p { margin-top: 10px; }
+    @media (max-width: 700px) { .icon-story { grid-template-columns: 1fr; gap: 32px; } figure { padding: 28px; border-radius: 32px; } figure img { max-width: 230px; } .story-copy { padding: 0 8px; } }
   `,
 })
 export default class IconPageComponent {

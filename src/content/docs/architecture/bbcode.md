@@ -1,7 +1,7 @@
 ---
 title: "BBCode 解析"
 description: "了解 Kazumi 评论区的 BBCode 解析实现，使用 ANTLR v4 解析 Bangumi API 返回的 BBCode 格式字符串。"
-section: "架构"
+section: "原理与实现"
 icon: "text_fields"
 order: 2
 authors:

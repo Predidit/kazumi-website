@@ -1,6 +1,4 @@
-import { provideContent, withMarkdownRenderer } from "@analogjs/content";
-import { provideFileRouter, requestContextInterceptor } from "@analogjs/router";
-import { provideHttpClient, withInterceptors } from "@angular/common/http";
+import { provideFileRouter } from "@analogjs/router";
 import {
 	ApplicationConfig,
 	provideBrowserGlobalErrorListeners,
@@ -10,14 +8,18 @@ import {
 	withNoIncrementalHydration,
 } from "@angular/platform-browser";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
+import { withInMemoryScrolling } from "@angular/router";
 
 export const appConfig: ApplicationConfig = {
 	providers: [
 		provideBrowserGlobalErrorListeners(),
-		provideFileRouter(),
-		provideHttpClient(withInterceptors([requestContextInterceptor])),
+		provideFileRouter(
+			withInMemoryScrolling({
+				scrollPositionRestoration: "enabled",
+				anchorScrolling: "enabled",
+			}),
+		),
 		provideClientHydration(withNoIncrementalHydration()),
 		provideAnimationsAsync(),
-		provideContent(withMarkdownRenderer()),
 	],
 };

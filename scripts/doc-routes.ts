@@ -22,7 +22,7 @@ export function computeDocRoute(file: string): string {
 	const raw = readFileSync(file, "utf-8");
 	const { attributes } = fm(raw);
 	const slug = (attributes as Record<string, string>).slug;
-	const rel = relative(DOCS_DIR, file).replace(/\.md$/, "");
+	const rel = relative(DOCS_DIR, file).replace(/\\/g, "/").replace(/\.md$/, "");
 	const dir = rel.includes("/") ? rel.substring(0, rel.lastIndexOf("/")) : "";
 	const base = slug || rel.split("/").pop() || "";
 	return dir ? `/docs/${dir}/${base}` : `/docs/${base}`;

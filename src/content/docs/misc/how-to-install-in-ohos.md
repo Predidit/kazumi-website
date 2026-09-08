@@ -1,7 +1,7 @@
 ---
-title: "OHOS 侧载"
+title: "在 HarmonyOS 上安装"
 description: "在 HarmonyOS 设备上侧载安装 Kazumi 的详细教程，使用小白调试助手完成 hap 安装包的部署。"
-section: "其他"
+section: "安装与排错"
 icon: "phone_android"
 order: 3
 authors:
@@ -9,7 +9,7 @@ authors:
   - ChouChiu
 ---
 
-# OHOS 侧载
+# 在 HarmonyOS 上安装
 
 ## 准备工作
 

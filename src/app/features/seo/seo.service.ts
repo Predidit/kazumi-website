@@ -1,3 +1,4 @@
+import { injectResponse } from "@analogjs/router/tokens";
 import { DOCUMENT } from "@angular/common";
 import { Injectable, inject } from "@angular/core";
 import { Meta, Title } from "@angular/platform-browser";
@@ -6,11 +7,18 @@ import { SEO_CONFIG } from "./seo.config";
 interface SeoMeta {
 	title: string;
 	description: string;
-	path: string;
+	path?: string;
 	type?: "website" | "article";
 	image?: string;
 	keywords?: string;
 	structuredData?: Record<string, unknown>;
+	status?: 200 | 404 | 503;
+}
+
+export interface DocSeoMeta {
+	title?: string;
+	description?: string;
+	authors?: string[];
 }
 
 @Injectable({ providedIn: "root" })
@@ -18,6 +26,7 @@ export class SeoService {
 	private readonly title = inject(Title);
 	private readonly meta = inject(Meta);
 	private readonly document = inject(DOCUMENT);
+	private readonly response = injectResponse();
 	private canonicalLink?: HTMLLinkElement;
 	private structuredDataScript?: HTMLScriptElement;
 
@@ -48,6 +57,23 @@ export class SeoService {
 					priceCurrency: "CNY",
 				},
 			},
+		});
+	}
+
+	setGuide() {
+		this.setMeta({
+			title: "使用与开发指南 - Kazumi",
+			description:
+				"从安装和使用，到自定义规则开发。按主题查找 Kazumi 指南，找到适合你的下一步。",
+			path: "/docs",
+		});
+	}
+
+	setCommunity() {
+		this.setMeta({
+			title: "一起共创 - Kazumi",
+			description: "认识 Kazumi 的维护者与贡献者，一起完善应用、规则和文档。",
+			path: "/about",
 		});
 	}
 
@@ -107,10 +133,16 @@ export class SeoService {
 		});
 	}
 
-	setDoc(route: string, title: string) {
+	setDoc(route: string, metadata: DocSeoMeta) {
+		const title = metadata.title?.trim() || "使用指南";
+		const description =
+			metadata.description?.trim() || `阅读 Kazumi 使用指南：${title}。`;
+		const authors = [
+			...new Set(metadata.authors?.map((name) => name.trim()).filter(Boolean)),
+		];
 		this.setMeta({
 			title: `${title} - Kazumi 文档 - Kazumi 官网`,
-			description: `阅读 Kazumi 官网文档：${title}。了解 Kazumi 下载、安装、规则开发、功能模块和跨平台使用方法。`,
+			description,
 			path: route,
 			type: "article",
 			keywords: `Kazumi 文档, ${title}, Kazumi 官网, Kazumi 下载, Kazumi 使用教程`,
@@ -118,13 +150,19 @@ export class SeoService {
 				"@context": "https://schema.org",
 				"@type": "TechArticle",
 				headline: title,
-				description: `阅读 Kazumi 官网文档：${title}。了解 Kazumi 下载、安装、规则开发、功能模块和跨平台使用方法。`,
-				url: `${SEO_CONFIG.siteUrl}${route}`,
-				author: {
-					"@type": "Person",
-					name: "Predidit",
-					url: "https://github.com/Predidit",
-				},
+				description,
+				url: this.absoluteUrl(route),
+				...(authors.length
+					? {
+							author: authors.map((name) => ({
+								"@type": "Person",
+								name,
+								url: `https://github.com/${encodeURIComponent(name)}`,
+							})),
+						}
+					: {}),
+				image: this.absoluteUrl(SEO_CONFIG.defaultImage),
+				inLanguage: "zh-CN",
 				publisher: {
 					"@type": "Organization",
 					name: SEO_CONFIG.siteName,
@@ -132,7 +170,7 @@ export class SeoService {
 				},
 				mainEntityOfPage: {
 					"@type": "WebPage",
-					"@id": `${SEO_CONFIG.siteUrl}${route}`,
+					"@id": this.absoluteUrl(route),
 				},
 				isPartOf: {
 					"@type": "WebSite",
@@ -140,6 +178,23 @@ export class SeoService {
 					url: SEO_CONFIG.siteUrl,
 				},
 			},
+		});
+	}
+
+	setNotFound() {
+		this.setMeta({
+			title: "页面未找到 - Kazumi",
+			description:
+				"这个页面可能已移动或不存在。请返回 Kazumi 首页或使用指南继续浏览。",
+			status: 404,
+		});
+	}
+
+	setUnavailable() {
+		this.setMeta({
+			title: "指南暂时无法加载 - Kazumi",
+			description: "这篇指南暂时无法加载，请稍后重试。",
+			status: 503,
 		});
 	}
 
@@ -151,14 +206,21 @@ export class SeoService {
 		image = SEO_CONFIG.defaultImage,
 		keywords = SEO_CONFIG.keywords,
 		structuredData,
+		status = 200,
 	}: SeoMeta) {
-		const url = this.absoluteUrl(path);
+		const url = path ? this.absoluteUrl(path) : undefined;
 		const imageUrl = this.absoluteUrl(image);
+		const robots = status === 200 ? "index, follow" : "noindex, follow";
+		if (this.response && !this.response.headersSent) {
+			this.response.statusCode = status;
+			if (status === 200) this.response.removeHeader("X-Robots-Tag");
+			else this.response.setHeader("X-Robots-Tag", robots);
+		}
 
 		this.title.setTitle(title);
 		this.meta.updateTag({ name: "description", content: description });
 		this.meta.updateTag({ name: "keywords", content: keywords });
-		this.meta.updateTag({ name: "robots", content: "index, follow" });
+		this.meta.updateTag({ name: "robots", content: robots });
 		this.meta.updateTag({
 			name: "application-name",
 			content: SEO_CONFIG.siteName,
@@ -171,7 +233,8 @@ export class SeoService {
 		});
 		this.meta.updateTag({ property: "og:title", content: title });
 		this.meta.updateTag({ property: "og:description", content: description });
-		this.meta.updateTag({ property: "og:url", content: url });
+		if (url) this.meta.updateTag({ property: "og:url", content: url });
+		else this.meta.removeTag('property="og:url"');
 		this.meta.updateTag({ property: "og:image", content: imageUrl });
 		this.meta.updateTag({ name: "twitter:card", content: "summary" });
 		this.meta.updateTag({ name: "twitter:title", content: title });
@@ -181,11 +244,15 @@ export class SeoService {
 		this.updateStructuredData(structuredData);
 	}
 
-	private updateCanonical(url: string) {
+	private updateCanonical(url?: string) {
 		this.canonicalLink ??=
 			this.document.head.querySelector<HTMLLinkElement>(
 				'link[rel="canonical"]',
 			) ?? this.document.createElement("link");
+		if (!url) {
+			this.canonicalLink.remove();
+			return;
+		}
 		this.canonicalLink.setAttribute("rel", "canonical");
 		this.canonicalLink.setAttribute("href", url);
 		if (!this.canonicalLink.parentNode) {
@@ -194,16 +261,17 @@ export class SeoService {
 	}
 
 	private updateStructuredData(data?: Record<string, unknown>) {
+		this.structuredDataScript ??=
+			this.document.head.querySelector<HTMLScriptElement>(
+				'script[type="application/ld+json"]',
+			) ?? undefined;
 		if (!data) {
 			this.structuredDataScript?.remove();
 			this.structuredDataScript = undefined;
 			return;
 		}
 
-		this.structuredDataScript ??=
-			this.document.head.querySelector<HTMLScriptElement>(
-				'script[type="application/ld+json"]',
-			) ?? this.document.createElement("script");
+		this.structuredDataScript ??= this.document.createElement("script");
 		this.structuredDataScript.type = "application/ld+json";
 		this.structuredDataScript.textContent = JSON.stringify(data);
 		if (!this.structuredDataScript.parentNode) {
