@@ -18,7 +18,7 @@ bun run preview      # serve production build locally (Node SSR server)
 
 Run `bun run format && bun run lint && bun run build` before committing. There is no typecheck-only script — `bun run build` is the typecheck gate. `build` triggers `prebuild` automatically (generates `public/doc-updates.json` and `public/doc-nav.json`); do not run `prebuild` separately.
 
-CI on PRs: `bun install` → `bun run lint` → `bun run test --run` → `bun run build` (`.github/workflows/pr-test.yml`). Deploy to GitHub Pages on push to default branch (`.github/workflows/deploy.yaml`).
+CI on PRs: `bun install` → asset preparation → `bun run lint` → `bun run test --run` → `bun run build` (`.github/workflows/pr-test.yml`). Deploy to GitHub Pages on push to default branch (`.github/workflows/deploy.yaml`). Both workflows use `.github/actions/prepare-assets/action.yml` to install Python dependencies, run `bun run assets:generate`, and run `bun run assets:test` before building. Local asset generation requires `python -m pip install -r scripts/home-assets-requirements.txt`; ordinary local builds use the committed assets. See `public/fonts/README.md` for font fallback and regeneration details.
 
 ## Code Style
 

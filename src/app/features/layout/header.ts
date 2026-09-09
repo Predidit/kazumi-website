@@ -31,7 +31,7 @@ import { ThemeMode, ThemeService } from "./theme.service";
         <button mat-icon-button [matMenuTriggerFor]="themeMenu" aria-label="切换外观主题" class="theme-button">
           <mat-icon>{{ theme.mode() === 'system' ? 'contrast' : theme.mode() === 'dark' ? 'dark_mode' : 'light_mode' }}</mat-icon>
         </button>
-        <mat-menu #themeMenu="matMenu">
+        <mat-menu #themeMenu="matMenu" class="theme-menu">
           @for (option of themeOptions; track option.value) {
             <button mat-menu-item (click)="theme.setMode(option.value)" [attr.aria-label]="option.label + (theme.mode() === option.value ? '，已选择' : '')">
               <mat-icon>{{ theme.mode() === option.value ? 'check' : option.icon }}</mat-icon>

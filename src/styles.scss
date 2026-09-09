@@ -1,11 +1,12 @@
 @use '@angular/material' as mat;
+@use './fonts';
 
 html {
   @include mat.theme((
     color: (primary: mat.$green-palette, tertiary: mat.$orange-palette),
     typography: (
-      brand-family: '"Manrope", "Noto Sans SC", sans-serif',
-      plain-family: '"Manrope", "Noto Sans SC", sans-serif',
+      brand-family: '"Manrope", "Noto Sans SC Home", "Noto Sans SC", sans-serif',
+      plain-family: '"Manrope", "Noto Sans SC Home", "Noto Sans SC", sans-serif',
       bold-weight: 700,
       medium-weight: 600,
       regular-weight: 400,
@@ -14,7 +15,7 @@ html {
   ));
   color-scheme: light dark;
   --app-header-height: 88px;
-  --app-display-font: "Manrope", "Noto Sans SC", sans-serif;
+  --app-display-font: "Manrope", "Noto Sans SC Home", "Noto Sans SC", sans-serif;
   --app-motion-fast: 180ms ease;
   --app-motion-spring: 450ms cubic-bezier(.2, .8, .2, 1.15);
   --mat-sys-primary: light-dark(#285c43, #a5d6b5);

@@ -1,0 +1,23 @@
+name: Prepare optimized assets
+description: Generate and validate images and font subsets from current sources
+runs:
+  using: composite
+  steps:
+    - name: Setup Python
+      uses: actions/setup-python@v7
+      with:
+        python-version: '3.13'
+        cache: pip
+        cache-dependency-path: scripts/home-assets-requirements.txt
+
+    - name: Install asset dependencies
+      shell: bash
+      run: python -m pip install -r scripts/home-assets-requirements.txt
+
+    - name: Generate optimized assets
+      shell: bash
+      run: bun run assets:generate
+
+    - name: Test asset generation
+      shell: bash
+      run: bun run assets:test

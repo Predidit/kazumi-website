@@ -16,6 +16,9 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Prepare optimized assets
+        uses: ./.github/actions/prepare-assets
+
       - name: Run linting
         run: bun run lint
 

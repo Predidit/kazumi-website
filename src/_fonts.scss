@@ -1,0 +1,113 @@
+@each $weight in 400, 500, 600, 700, 800 {
+  @font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: $weight;
+    font-display: swap;
+    src: url(/fonts/manrope-cyrillic-ext.woff2) format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+  }
+}
+
+@each $weight in 400, 500, 600, 700, 800 {
+  @font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: $weight;
+    font-display: swap;
+    src: url(/fonts/manrope-cyrillic.woff2) format('woff2');
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  }
+}
+
+@each $weight in 400, 500, 600, 700, 800 {
+  @font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: $weight;
+    font-display: swap;
+    src: url(/fonts/manrope-greek.woff2) format('woff2');
+    unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+  }
+}
+
+@each $weight in 400, 500, 600, 700, 800 {
+  @font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: $weight;
+    font-display: swap;
+    src: url(/fonts/manrope-vietnamese.woff2) format('woff2');
+    unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+  }
+}
+
+@each $weight in 400, 500, 600, 700, 800 {
+  @font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: $weight;
+    font-display: swap;
+    src: url(/fonts/manrope-latin-ext.woff2) format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+}
+
+@each $weight in 400, 500, 600, 700, 800 {
+  @font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: $weight;
+    font-display: swap;
+    src: url(/fonts/manrope-latin.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+}
+
+@each $weight in 400, 500, 600, 700, 800 {
+  @font-face {
+    font-family: 'Noto Sans SC Home';
+    font-style: normal;
+    font-weight: $weight;
+    font-display: swap;
+    src: url(/fonts/noto-sans-sc-home.woff2) format('woff2');
+    unicode-range: U+20-7e, U+a9, U+b7, U+3001-3002, U+4e00, U+4e0a-4e0b, U+4e0e, U+4e2a, U+4e3a-4e3b, U+4e49, U+4e5f-4e60, U+4e8b, U+4e8e, U+4ea4, U+4eab, U+4eba, U+4ece, U+4ee3, U+4ee5, U+4ef6, U+4efd, U+4f53, U+4f60, U+4f7f, U+503c, U+505a, U+505c, U+514d, U+5165, U+5171, U+5177, U+5185, U+5199, U+5206-5207, U+5219, U+521b, U+5230, U+5269, U+52a0, U+533a, U+534f, U+5357, U+53c2, U+53d1, U+53d6, U+53d8, U+53e3, U+53ef-53f0, U+5408, U+544a, U+548c, U+559c, U+56e0, U+56fe, U+5728, U+5730, U+57fa, U+5851, U+5907, U+5916, U+591a, U+5927, U+5934, U+597d, U+59cb, U+5b83, U+5b89, U+5b9a, U+5b9e, U+5bb9, U+5bfc, U+5c0f, U+5c4f, U+5de5, U+5df1-5df2, U+5e55, U+5e73, U+5e7f, U+5e94, U+5efa, U+5f00, U+5f0f, U+5f15, U+5f39, U+5f69, U+5f97, U+5fc3, U+603b, U+60ef, U+60f3, U+610f, U+6216, U+6240, U+6253, U+628a, U+62e9, U+6301, U+6307, U+6362, U+6388, U+652f, U+653e, U+6545, U+65b0, U+65b9, U+65e0, U+65f6, U+66f4, U+6709, U+672c, U+6743, U+6765, U+6784, U+67d4, U+67e5, U+6807, U+683c, U+684c, U+6b22, U+6bb5, U+6bcf, U+6c89, U+6d45, U+6d78, U+6df1, U+6e05, U+6e90, U+6f14, U+70b9, U+70ed, U+7231, U+7248, U+732e, U+7387, U+73b0, U+7528, U+7531, U+7559, U+756a, U+7684, U+76f8, U+770b, U+7740, U+7801, U+793e, U+7a97, U+7ad9, U+7b49, U+7cbe, U+7cfb, U+7ece, U+7ed9, U+7edf, U+7eff, U+7f16, U+7f51, U+811a, U+81ea, U+822a, U+8272, U+83b7, U+888b, U+88c5, U+8981, U+89c2, U+89c4, U+89d2, U+8ba4, U+8ba9, U+8bae, U+8bbe, U+8bc6, U+8d21, U+8d39, U+8d77, U+8d85, U+8ddf, U+8df3, U+8f7d, U+8fa8, U+8fd9, U+8ffd, U+9002, U+9009, U+9047, U+90fd, U+91cc-91cd, U+968f, U+96d5, U+9700, U+9759, U+9762, U+9875, U+9898, U+98ce, U+9996, U+9a8c, U+9e23, U+ff08-ff09, U+ff0c, U+ff1f;
+  }
+}
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(/fonts/material-icons.woff2) format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+@font-face { font-family: "Material Icons Home"; src: url("/fonts/material-icons-home.woff2") format("woff2"); font-weight: normal; font-style: normal; font-display: block; }
+app-header .mat-icon, app-hero .mat-icon, app-footer .mat-icon, .theme-menu .mat-icon { font-family: "Material Icons Home"; }
+
+@font-face { font-family: "Material Design Icons"; src: url("/fonts/mdi-subset.woff2") format("woff2"); font-weight: normal; font-style: normal; font-display: block; }
+.mdi:before,.mdi-set{display:inline-block;font:normal normal normal 24px/1 "Material Design Icons";font-size:inherit;text-rendering:auto;line-height:inherit;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.mdi-android::before{content:"\F0032"}
+.mdi-apple::before{content:"\F0035"}
+.mdi-cellphone::before{content:"\F011C"}
+.mdi-check::before{content:"\F012C"}
+.mdi-content-copy::before{content:"\F018F"}
+.mdi-github::before{content:"\F02A4"}
+.mdi-laptop::before{content:"\F0322"}
+.mdi-linux::before{content:"\F033D"}
+.mdi-microsoft-windows::before{content:"\F05B3"}

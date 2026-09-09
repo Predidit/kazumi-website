@@ -20,14 +20,17 @@ import { RouterLink } from "@angular/router";
         </div>
         <div class="hero-art">
           <div class="art-top"><span>HELLO, KAZUMI</span><mat-icon aria-hidden="true">filter_vintage</mat-icon></div>
-          <img class="mascot" src="/kazumi-expressive.png" width="1254" height="1254" alt="以柔和雕塑风格重新演绎的 Kazumi 绿发角色" fetchpriority="high" />
+          <picture class="mascot">
+            <source type="image/webp" srcset="/kazumi-expressive-480.webp 480w, /kazumi-expressive-768.webp 768w, /kazumi-expressive-1024.webp 1024w, /kazumi-expressive-1254.webp 1254w" sizes="(max-width: 700px) calc(100vw - 80px), (max-width: 1000px) calc((100vw - 60px) / 2.3 - 48px), (max-width: 1360px) calc((100vw - 92px) / 2.3 - 64px), 488px" />
+            <img src="/kazumi-expressive.png" width="1254" height="1254" alt="以柔和雕塑风格重新演绎的 Kazumi 绿发角色" fetchpriority="high" />
+          </picture>
           <div class="art-bottom"><span>总有好故事，<br /><strong>等着与你相遇。</strong></span><a routerLink="/about/icon" class="art-link" aria-label="认识 Kazumi 的图标"><mat-icon>north_east</mat-icon></a></div>
         </div>
       </section>
       <div class="platform-strip" aria-label="支持的平台">
         <span class="platform-label">在你喜欢的设备上</span>
         @for (platform of platforms; track platform.name) {
-          <a routerLink="/download" [queryParams]="{ platform: platform.id }"><span [class]="'mdi mdi-' + platform.icon" aria-hidden="true"></span>{{ platform.name }}</a>
+          <a routerLink="/download" [queryParams]="{ platform: platform.id }"><span [class]="'mdi ' + platform.icon" aria-hidden="true"></span>{{ platform.name }}</a>
         }
       </div>
       <section class="experience-section" aria-labelledby="experience-title">
@@ -69,7 +72,8 @@ import { RouterLink } from "@angular/router";
     .art-top, .art-bottom { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     .art-top { font: 600 11px var(--app-display-font); letter-spacing: 2px; }
     .art-top mat-icon { font-size: 38px; width: 38px; height: 38px; }
-    .mascot { width: 100%; height: auto; margin: 20px 0; border-radius: 28px; transition: transform var(--app-motion-spring); }
+    .mascot { display: block; width: 100%; margin: 20px 0; border-radius: 28px; transition: transform var(--app-motion-spring); }
+    .mascot img { width: 100%; border-radius: inherit; }
     .hero-art:hover .mascot { transform: scale(1.025); }
     .art-bottom { font-size: 14px; line-height: 1.7; }
     .art-bottom strong { font-weight: 600; }
@@ -113,7 +117,7 @@ import { RouterLink } from "@angular/router";
       .hero-description { font-size: 14px; }
       .actions { margin-top: 28px; }
       .hero-art { border-radius: 12px 12px 32px 32px; padding: 20px 24px; }
-      .mascot { width: 100%; margin: 16px 0; border-radius: 20px; }
+      .mascot { margin: 16px 0; border-radius: 20px; }
       .art-bottom { align-items: flex-end; }
       .art-bottom > span { position: relative; z-index: 1; width: 130px; margin-bottom: 16px; }
       .art-link { z-index: 1; width: 44px; height: 44px; }
@@ -134,11 +138,11 @@ import { RouterLink } from "@angular/router";
 })
 export class HeroComponent {
 	readonly platforms = [
-		{ id: "android", name: "Android", icon: "android" },
-		{ id: "ios", name: "iOS", icon: "apple" },
-		{ id: "windows", name: "Windows", icon: "microsoft-windows" },
-		{ id: "mac", name: "macOS", icon: "laptop" },
-		{ id: "linux", name: "Linux", icon: "linux" },
-		{ id: "ohos", name: "HarmonyOS", icon: "cellphone" },
+		{ id: "android", name: "Android", icon: "mdi-android" },
+		{ id: "ios", name: "iOS", icon: "mdi-apple" },
+		{ id: "windows", name: "Windows", icon: "mdi-microsoft-windows" },
+		{ id: "mac", name: "macOS", icon: "mdi-laptop" },
+		{ id: "linux", name: "Linux", icon: "mdi-linux" },
+		{ id: "ohos", name: "HarmonyOS", icon: "mdi-cellphone" },
 	];
 }

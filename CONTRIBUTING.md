@@ -30,6 +30,8 @@ bun run dev
 | `bun run dev` | 启动开发服务器 |
 | `bun run build` | 生产构建，prebuild 自动生成 `public/doc-updates.json` 和 `public/doc-nav.json` |
 | `bun run test` | 运行 Vitest |
+| `bun run assets:generate` | 重新生成首页压缩图片和字体资源，需要 Python 与资源依赖 |
+| `bun run assets:test` | 检查字符回退、图标子集和图片生成 |
 | `bun run lint` | 运行 Biome 检查 |
 | `bun run format` | 使用 Biome 自动修复可修复问题 |
 | `bun run preview` | 本地预览生产构建 |
@@ -63,7 +65,7 @@ kazumi-website/
 │   ├── main.ts                  # 客户端入口
 │   └── main.server.ts           # SSR 入口
 ├── .github/workflows/
-│   ├── pr-test.yml              # PR CI: install → lint → build
+│   ├── pr-test.yml              # PR CI: install → assets → lint → test → build
 │   ├── deploy.yaml              # 推送默认分支时部署到 GitHub Pages
 │   ├── fetch-upstream-data.yaml # 定时拉取贡献者和版本数据
 │   └── fetch-upstream-data.ts   # 拉取脚本
@@ -149,6 +151,8 @@ authors:                  # 可选，文档作者的 GitHub 用户名
 5. **添加文档图片（如有）**
 
    将图片放在 `public/docs/assets/` 下，在 Markdown 中使用 `/docs/assets/...` 引用。
+
+指南文字使用完整字符范围回退，frontmatter 图标使用完整 Material Icons 字库，新增内容无需手动更新首页字符清单。CI 会在检查和部署前重新生成首页图片、字体子集及回退样式，并扫描组件和指南 Markdown 中的 MDI 图标。该图片压缩步骤处理首页角色原图与 favicon，不处理指南图片。修改首页文案、图标或角色原图时，本地生成与验证方法见 [字体资源说明](public/fonts/README.md)。
 
 ## 代码规范
 
@@ -252,11 +256,14 @@ export class ExampleComponent {
 PR 会通过 `.github/workflows/pr-test.yml` 运行 CI，当前检查包括：
 
 - `bun install`
+- 配置 Python 并安装 `scripts/home-assets-requirements.txt`
+- `bun run assets:generate`
+- `bun run assets:test`
 - `bun run lint`
 - `bun run test --run`
 - `bun run build`
 
-推送到默认分支时，`.github/workflows/deploy.yaml` 会自动部署到 GitHub Pages。
+推送到默认分支时，`.github/workflows/deploy.yaml` 会重新生成并测试资源，再构建和部署到 GitHub Pages。两个流程共用 `.github/actions/prepare-assets/action.yml`，资源生成或测试失败会阻止后续步骤。
 
 贡献流程：
 

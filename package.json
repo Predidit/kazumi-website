@@ -12,6 +12,8 @@
 		"prebuild": "bun scripts/generate-doc-updates.ts && bun scripts/generate-doc-nav.ts",
 		"build": "vite build",
 		"watch": "vite build --watch",
+		"assets:generate": "python scripts/optimize_home_assets.py && biome format --write public/fonts/noto-sans-sc-fallback.css",
+		"assets:test": "python -m unittest discover -s scripts -p '*_test.py'",
 		"test": "vitest --passWithNoTests",
 		"preview": "node dist/analog/server/index.mjs",
 		"lint": "biome check .",
