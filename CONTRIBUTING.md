@@ -275,3 +275,5 @@ PR 会通过 `.github/workflows/pr-test.yml` 运行 CI，当前检查包括：
 ## 上游数据
 
 `public/contributors.json` 和 `public/releases.json` 由 `.github/workflows/fetch-upstream-data.yaml` 定时拉取更新，不在构建脚本中生成。如需修改数据拉取逻辑，编辑 `fetch-upstream-data.ts`。
+
+工作流通过 `GITHUB_TOKEN` 认证 GitHub API 请求，本地运行拉取脚本时也可设置该环境变量。只有全部贡献者分页和两个仓库的发布信息都获取成功后才更新文件；请求失败或发布标签无效时，脚本以非零状态退出并保留原有文件。数据未变化时保留原有时间戳，避免无意义的提交。相关回归测试包含在 `bun run test --run` 中。

@@ -2,9 +2,8 @@ name: Fetch Upstream Data
 
 on:
   schedule:
-    # 每天运行一次（UTC时间午夜）
     - cron: '0 0 * * *'
-  workflow_dispatch:  # 允许手动触发
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -22,22 +21,20 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Fetch all data
-        run: |
-          echo "开始获取所有仓库数据..."
-          bun run .github/workflows/fetch-upstream-data.ts
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bun run .github/workflows/fetch-upstream-data.ts
 
       - name: Commit and push changes
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          
-          # 检查是否有文件变化
           git add public/contributors.json public/releases.json
-          
+
           if git diff --cached --quiet; then
             echo "没有检测到文件变化"
-          else
-            echo "检测到文件变化，正在提交..."
-            git commit -m "chore: update repository data"
-            git push
+            exit 0
           fi
+
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git commit -m "chore: update repository data"
+          git push
