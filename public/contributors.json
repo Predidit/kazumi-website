@@ -1,6 +1,6 @@
 {
-	"generated_at": "2026-09-22T04:36:25.909Z",
-	"count": 59,
+	"generated_at": "2026-09-30T10:58:19.552Z",
+	"count": 60,
 	"contributors": [
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/57040023?v=4",
@@ -93,11 +93,6 @@
 			"link": "https://github.com/LeetaoGoooo"
 		},
 		{
-			"avatar": "https://avatars.githubusercontent.com/u/19299694?v=4",
-			"name": "walker1211",
-			"link": "https://github.com/walker1211"
-		},
-		{
 			"avatar": "https://avatars.githubusercontent.com/u/57313137?v=4",
 			"name": "bgzo",
 			"link": "https://github.com/bgzo"
@@ -108,6 +103,16 @@
 			"link": "https://github.com/quyaoning"
 		},
 		{
+			"avatar": "https://avatars.githubusercontent.com/u/6964737?v=4",
+			"name": "moonrailgun",
+			"link": "https://github.com/moonrailgun"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/19299694?v=4",
+			"name": "walker1211",
+			"link": "https://github.com/walker1211"
+		},
+		{
 			"avatar": "https://avatars.githubusercontent.com/u/82107297?v=4",
 			"name": "x1renn",
 			"link": "https://github.com/x1renn"
@@ -116,11 +121,6 @@
 			"avatar": "https://avatars.githubusercontent.com/u/89082076?v=4",
 			"name": "wanxinlei1",
 			"link": "https://github.com/wanxinlei1"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/6964737?v=4",
-			"name": "moonrailgun",
-			"link": "https://github.com/moonrailgun"
 		},
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/161008492?v=4",
@@ -153,14 +153,14 @@
 			"link": "https://github.com/stephen-zeng"
 		},
 		{
-			"avatar": "https://avatars.githubusercontent.com/u/15796135?v=4",
-			"name": "hl1282456555",
-			"link": "https://github.com/hl1282456555"
-		},
-		{
 			"avatar": "https://avatars.githubusercontent.com/u/96452465?v=4",
 			"name": "PaloMiku",
 			"link": "https://github.com/PaloMiku"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/52372061?v=4",
+			"name": "jzy834894319",
+			"link": "https://github.com/jzy834894319"
 		},
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/66504584?v=4",
@@ -226,6 +226,11 @@
 			"avatar": "https://avatars.githubusercontent.com/u/85367416?v=4",
 			"name": "melancholyFishAndWater",
 			"link": "https://github.com/melancholyFishAndWater"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/15796135?v=4",
+			"name": "hl1282456555",
+			"link": "https://github.com/hl1282456555"
 		},
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/49825792?v=4",
