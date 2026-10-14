@@ -1,6 +1,6 @@
 {
-	"generated_at": "2026-10-13T06:37:16.548Z",
-	"count": 57,
+	"generated_at": "2026-10-14T13:31:12.511Z",
+	"count": 59,
 	"contributors": [
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/57040023?v=4",
@@ -38,9 +38,9 @@
 			"link": "https://github.com/KotaHv"
 		},
 		{
-			"avatar": "https://avatars.githubusercontent.com/u/47559019?v=4",
-			"name": "st1020",
-			"link": "https://github.com/st1020"
+			"avatar": "https://avatars.githubusercontent.com/u/39788761?v=4",
+			"name": "liangyuR",
+			"link": "https://github.com/liangyuR"
 		},
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/114972867?v=4",
@@ -48,9 +48,9 @@
 			"link": "https://github.com/bggRGjQaUbCoE"
 		},
 		{
-			"avatar": "https://avatars.githubusercontent.com/u/39788761?v=4",
-			"name": "liangyuR",
-			"link": "https://github.com/liangyuR"
+			"avatar": "https://avatars.githubusercontent.com/u/47559019?v=4",
+			"name": "st1020",
+			"link": "https://github.com/st1020"
 		},
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/174489961?v=4",
@@ -58,9 +58,9 @@
 			"link": "https://github.com/floating142"
 		},
 		{
-			"avatar": "https://avatars.githubusercontent.com/u/66421433?v=4",
-			"name": "yaoyaozijing",
-			"link": "https://github.com/yaoyaozijing"
+			"avatar": "https://avatars.githubusercontent.com/u/108796769?v=4",
+			"name": "ChouChiu",
+			"link": "https://github.com/ChouChiu"
 		},
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/85693457?v=4",
@@ -68,9 +68,9 @@
 			"link": "https://github.com/pugaizai"
 		},
 		{
-			"avatar": "https://avatars.githubusercontent.com/u/108796769?v=4",
-			"name": "ChouChiu",
-			"link": "https://github.com/ChouChiu"
+			"avatar": "https://avatars.githubusercontent.com/u/66421433?v=4",
+			"name": "yaoyaozijing",
+			"link": "https://github.com/yaoyaozijing"
 		},
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/172346214?v=4",
@@ -93,11 +93,6 @@
 			"link": "https://github.com/LeetaoGoooo"
 		},
 		{
-			"avatar": "https://avatars.githubusercontent.com/u/57313137?v=4",
-			"name": "bgzo",
-			"link": "https://github.com/bgzo"
-		},
-		{
 			"avatar": "https://avatars.githubusercontent.com/u/6964737?v=4",
 			"name": "moonrailgun",
 			"link": "https://github.com/moonrailgun"
@@ -108,29 +103,14 @@
 			"link": "https://github.com/walker1211"
 		},
 		{
-			"avatar": "https://avatars.githubusercontent.com/u/161135837?v=4",
-			"name": "first-storm",
-			"link": "https://github.com/first-storm"
+			"avatar": "https://avatars.githubusercontent.com/u/57313137?v=4",
+			"name": "bgzo",
+			"link": "https://github.com/bgzo"
 		},
 		{
-			"avatar": "https://avatars.githubusercontent.com/u/37802688?v=4",
-			"name": "CAiNSEMBRACE",
-			"link": "https://github.com/CAiNSEMBRACE"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/57277469?v=4",
-			"name": "NanoShiki",
-			"link": "https://github.com/NanoShiki"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/25299157?v=4",
-			"name": "axel10",
-			"link": "https://github.com/axel10"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/161008492?v=4",
-			"name": "keyboard2005",
-			"link": "https://github.com/keyboard2005"
+			"avatar": "https://avatars.githubusercontent.com/u/82107297?v=4",
+			"name": "x1renn",
+			"link": "https://github.com/x1renn"
 		},
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/89082076?v=4",
@@ -138,9 +118,29 @@
 			"link": "https://github.com/wanxinlei1"
 		},
 		{
-			"avatar": "https://avatars.githubusercontent.com/u/82107297?v=4",
-			"name": "x1renn",
-			"link": "https://github.com/x1renn"
+			"avatar": "https://avatars.githubusercontent.com/u/161008492?v=4",
+			"name": "keyboard2005",
+			"link": "https://github.com/keyboard2005"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/25299157?v=4",
+			"name": "axel10",
+			"link": "https://github.com/axel10"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/57277469?v=4",
+			"name": "NanoShiki",
+			"link": "https://github.com/NanoShiki"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/37802688?v=4",
+			"name": "CAiNSEMBRACE",
+			"link": "https://github.com/CAiNSEMBRACE"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/161135837?v=4",
+			"name": "first-storm",
+			"link": "https://github.com/first-storm"
 		},
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/15796135?v=4",
@@ -188,6 +188,11 @@
 			"link": "https://github.com/chendianshuiyin"
 		},
 		{
+			"avatar": "https://avatars.githubusercontent.com/u/194081477?v=4",
+			"name": "rinnki-L",
+			"link": "https://github.com/rinnki-L"
+		},
+		{
 			"avatar": "https://avatars.githubusercontent.com/u/173012496?v=4",
 			"name": "wisnotuu",
 			"link": "https://github.com/wisnotuu"
@@ -221,6 +226,11 @@
 			"avatar": "https://avatars.githubusercontent.com/u/49825792?v=4",
 			"name": "NihilDigit",
 			"link": "https://github.com/NihilDigit"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/192194725?v=4",
+			"name": "JesseLee-CN",
+			"link": "https://github.com/JesseLee-CN"
 		},
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/71180087?v=4",
