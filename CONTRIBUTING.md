@@ -115,12 +115,12 @@ authors:                  # 可选，文档作者的 GitHub 用户名
 
 **分区（section）对应关系：**
 
-| section 值 | 对应导航分区 |
+| section 值 | 常用子目录 |
 | --- | --- |
-| `简介` | intro |
-| `规则指南` | rules |
-| `架构` | architecture |
-| `其他` | misc |
+| `开始使用` | `intro/` |
+| `安装与排错` | `intro/`、`misc/` |
+| `规则开发` | `rules/` |
+| `原理与实现` | `architecture/` |
 
 ### 文档内容贡献流程
 
