@@ -1,6 +1,6 @@
 {
-	"generated_at": "2026-10-22T10:10:13.944Z",
-	"count": 61,
+	"generated_at": "2026-10-22T15:09:58.021Z",
+	"count": 62,
 	"contributors": [
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/57040023?v=4",
@@ -148,6 +148,11 @@
 			"link": "https://github.com/JesseLee-CN"
 		},
 		{
+			"avatar": "https://avatars.githubusercontent.com/u/125183411?v=4",
+			"name": "Yi-Page",
+			"link": "https://github.com/Yi-Page"
+		},
+		{
 			"avatar": "https://avatars.githubusercontent.com/u/52372061?v=4",
 			"name": "jzy834894319",
 			"link": "https://github.com/jzy834894319"
@@ -228,69 +233,9 @@
 			"link": "https://github.com/melancholyFishAndWater"
 		},
 		{
-			"avatar": "https://avatars.githubusercontent.com/u/96452465?v=4",
-			"name": "PaloMiku",
-			"link": "https://github.com/PaloMiku"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/15796135?v=4",
-			"name": "hl1282456555",
-			"link": "https://github.com/hl1282456555"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/49825792?v=4",
-			"name": "NihilDigit",
-			"link": "https://github.com/NihilDigit"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/71180087?v=4",
-			"name": "Integral-Tech",
-			"link": "https://github.com/Integral-Tech"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/5729152?v=4",
-			"name": "abcghy",
-			"link": "https://github.com/abcghy"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/48537979?v=4",
-			"name": "Deuscx",
-			"link": "https://github.com/Deuscx"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/119268906?v=4",
-			"name": "INKCR0W",
-			"link": "https://github.com/INKCR0W"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/67730442?v=4",
-			"name": "ChEnylnti",
-			"link": "https://github.com/ChEnylnti"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/116439045?v=4",
-			"name": "Axiaobo7788",
-			"link": "https://github.com/Axiaobo7788"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/65128278?v=4",
-			"name": "EricwanAR",
-			"link": "https://github.com/EricwanAR"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/41771421?v=4",
-			"name": "axlmly",
-			"link": "https://github.com/axlmly"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/6133401?v=4",
-			"name": "aldev814",
-			"link": "https://github.com/aldev814"
-		},
-		{
-			"avatar": "https://avatars.githubusercontent.com/u/82710122?v=4",
-			"name": "B-2U",
-			"link": "https://github.com/B-2U"
+			"avatar": "https://avatars.githubusercontent.com/u/69046518?v=4",
+			"name": "2894638479",
+			"link": "https://github.com/2894638479"
 		},
 		{
 			"avatar": "https://avatars.githubusercontent.com/u/149042116?v=4",
@@ -298,14 +243,74 @@
 			"link": "https://github.com/Akw0od"
 		},
 		{
-			"avatar": "https://avatars.githubusercontent.com/u/69046518?v=4",
-			"name": "2894638479",
-			"link": "https://github.com/2894638479"
+			"avatar": "https://avatars.githubusercontent.com/u/82710122?v=4",
+			"name": "B-2U",
+			"link": "https://github.com/B-2U"
 		},
 		{
-			"avatar": "https://avatars.githubusercontent.com/u/125183411?v=4",
-			"name": "Yi-Page",
-			"link": "https://github.com/Yi-Page"
+			"avatar": "https://avatars.githubusercontent.com/u/6133401?v=4",
+			"name": "aldev814",
+			"link": "https://github.com/aldev814"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/41771421?v=4",
+			"name": "axlmly",
+			"link": "https://github.com/axlmly"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/65128278?v=4",
+			"name": "EricwanAR",
+			"link": "https://github.com/EricwanAR"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/116439045?v=4",
+			"name": "Axiaobo7788",
+			"link": "https://github.com/Axiaobo7788"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/67730442?v=4",
+			"name": "ChEnylnti",
+			"link": "https://github.com/ChEnylnti"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/119268906?v=4",
+			"name": "INKCR0W",
+			"link": "https://github.com/INKCR0W"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/48537979?v=4",
+			"name": "Deuscx",
+			"link": "https://github.com/Deuscx"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/5729152?v=4",
+			"name": "abcghy",
+			"link": "https://github.com/abcghy"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/71180087?v=4",
+			"name": "Integral-Tech",
+			"link": "https://github.com/Integral-Tech"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/49825792?v=4",
+			"name": "NihilDigit",
+			"link": "https://github.com/NihilDigit"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/187124746?v=4",
+			"name": "Tobiichi-Origuchi",
+			"link": "https://github.com/Tobiichi-Origuchi"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/15796135?v=4",
+			"name": "hl1282456555",
+			"link": "https://github.com/hl1282456555"
+		},
+		{
+			"avatar": "https://avatars.githubusercontent.com/u/96452465?v=4",
+			"name": "PaloMiku",
+			"link": "https://github.com/PaloMiku"
 		}
 	]
 }
