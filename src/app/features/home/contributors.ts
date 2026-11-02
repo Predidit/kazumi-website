@@ -12,22 +12,22 @@ interface Contributor {
 	imports: [MatIconModule],
 	template: `
     <section class="contributors" aria-labelledby="contributors-title">
-      <div class="section-heading"><div><span class="eyebrow">BUILT BY PEOPLE WHO CARE</span><h2 id="contributors-title">是大家，让故事继续。</h2></div><p>从第一行代码，到每一次改进。<br />谢谢每一个让 Kazumi 更好的人。</p></div>
+      <div class="section-heading"><div><span class="eyebrow">开发团队与贡献者</span><h2 id="contributors-title">项目维护与贡献者</h2></div><p>感谢所有为 Kazumi 提交代码、维护规则与编写文档的贡献者。</p></div>
       <div class="core-team">
         @for (member of coreMembers; track member.name) {
           <a [href]="member.github" target="_blank" rel="noopener noreferrer" class="core-card"><img [src]="member.avatar" [alt]="member.name" width="72" height="72" loading="lazy" /><div><h3>{{ member.name }}</h3><p>{{ member.title }}</p></div><mat-icon>north_east</mat-icon></a>
         }
       </div>
       @if (contributors().length) {
-        <div class="contributor-heading"><h3>每一份贡献，都算数。</h3><span>{{ contributors().length }} 位贡献者</span></div>
+        <div class="contributor-heading"><h3>社区贡献者</h3><span>共 {{ contributors().length }} 位</span></div>
         <div class="contributors-grid">
           @for (contributor of contributors(); track contributor.name) {
             <a [href]="contributor.link" target="_blank" rel="noopener noreferrer" class="contributor"><img [src]="contributor.avatar" [alt]="contributor.name" width="48" height="48" loading="lazy" /><span>{{ contributor.name }}</span></a>
           }
         </div>
       }
-      @if (loading()) { <p class="load-state" role="status">正在认识社区贡献者…</p> }
-      @if (failed()) { <p class="load-state" role="status">贡献者列表暂时无法加载。<a href="https://github.com/Predidit/Kazumi/graphs/contributors" target="_blank" rel="noopener noreferrer">在 GitHub 查看所有贡献者</a></p> }
+      @if (loading()) { <p class="load-state" role="status">正在加载贡献者列表…</p> }
+      @if (failed()) { <p class="load-state" role="status">贡献者列表加载失败。<a href="https://github.com/Predidit/Kazumi/graphs/contributors" target="_blank" rel="noopener noreferrer">前往 GitHub 查看全部贡献者</a></p> }
     </section>
   `,
 	styles: `

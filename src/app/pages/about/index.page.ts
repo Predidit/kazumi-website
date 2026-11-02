@@ -8,11 +8,11 @@ import { SeoService } from "../../features/seo/seo.service";
 	imports: [MatIconModule, ContributorsComponent],
 	template: `
     <div class="page-shell">
-      <header class="community-hero"><div><span class="eyebrow">OPEN SOURCE, OPEN HEART</span><h1>好用的工具，<br />从热爱里长出来。</h1><p>Kazumi 是一个由社区共同构建的开源项目。<br />我们分享代码，也分享让它变得更好的想法。</p></div><mat-icon aria-hidden="true">favorite_border</mat-icon></header>
+      <header class="community-hero"><div><span class="eyebrow">关于项目与社区</span><h1>开源透明，<br />由社区共同维护。</h1><p>Kazumi 基于 GPL-3.0 协议开源。<br />无论是提交代码、编写规则、完善文档，还是反馈使用问题，都欢迎你的参与。</p></div><mat-icon aria-hidden="true">favorite_border</mat-icon></header>
       <section class="join-grid" aria-label="参与社区">
-        <a href="https://github.com/Predidit/Kazumi/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22" target="_blank" rel="noopener noreferrer"><mat-icon>code</mat-icon><h2>写下你的下一行</h2><p>从一个小改进开始，让想法变成新功能。</p><span>参与开发<mat-icon>north_east</mat-icon></span></a>
-        <a href="https://github.com/Predidit/Kazumi/issues" target="_blank" rel="noopener noreferrer"><mat-icon>chat_bubble_outline</mat-icon><h2>让我们听到你的声音</h2><p>反馈问题、分享建议，一起把体验打磨好。</p><span>交流与反馈<mat-icon>north_east</mat-icon></span></a>
-        <a href="https://t.me/kazumi_app" target="_blank" rel="noopener noreferrer"><mat-icon>forum</mat-icon><h2>找到同样喜欢的人</h2><p>来社区聊聊使用心得，交换灵感和发现。</p><span>加入 Telegram<mat-icon>north_east</mat-icon></span></a>
+        <a href="https://github.com/Predidit/Kazumi/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22" target="_blank" rel="noopener noreferrer"><mat-icon>code</mat-icon><h2>参与代码开发</h2><p>浏览带有 good first issue 标签的待办任务，提交 Pull Request 改进功能或修复问题。</p><span>查看待办议题<mat-icon>north_east</mat-icon></span></a>
+        <a href="https://github.com/Predidit/Kazumi/issues" target="_blank" rel="noopener noreferrer"><mat-icon>chat_bubble_outline</mat-icon><h2>问题反馈与建议</h2><p>遇到 Bug 或有新功能建议？欢迎前往 GitHub Issues 搜索已有讨论或提交反馈。</p><span>前往 GitHub Issues<mat-icon>north_east</mat-icon></span></a>
+        <a href="https://t.me/kazumi_app" target="_blank" rel="noopener noreferrer"><mat-icon>forum</mat-icon><h2>社区日常交流</h2><p>加入 Telegram 群组，与其他用户交流使用体验、规则编写心得与版本动态。</p><span>加入 Telegram 群组<mat-icon>north_east</mat-icon></span></a>
       </section>
       <app-contributors />
     </div>

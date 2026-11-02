@@ -10,51 +10,51 @@ import { RouterLink } from "@angular/router";
     <div class="page-shell home-page">
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <span class="eyebrow"><span class="status-dot"></span> 开源的，自由的，你的。</span>
-          <h1 id="hero-title">喜欢的故事，<br /><span>自在地看。</span></h1>
-          <p class="hero-description">从口袋里的小屏，到桌面上的大屏。</p>
+          <span class="eyebrow"><span class="status-dot"></span> 开源免费的跨平台番剧应用</span>
+          <h1 id="hero-title">自定义规则，<br /><span>跨平台追番。</span></h1>
+          <p class="hero-description">基于 Flutter 开发的番剧采集与在线观看程序，支持按需导入规则、多源弹幕、Anime4K 实时超分辨率与多端同步。</p>
           <div class="actions">
-            <a mat-flat-button class="action action-large" routerLink="/download"><mat-icon>download</mat-icon>获取 Kazumi</a>
+            <a mat-flat-button class="action action-large" routerLink="/download"><mat-icon>download</mat-icon>下载 Kazumi</a>
           </div>
-          <div class="hero-meta"><span>免费使用</span><span>无广告</span><span>多平台支持</span></div>
+          <div class="hero-meta"><span>GPL-3.0 开源</span><span>无广告</span><span>多平台支持</span></div>
         </div>
         <div class="hero-art">
           <div class="art-top"><span>HELLO, KAZUMI</span><mat-icon aria-hidden="true">filter_vintage</mat-icon></div>
           <picture class="mascot">
             <source type="image/webp" srcset="/kazumi-expressive-480.webp 480w, /kazumi-expressive-768.webp 768w, /kazumi-expressive-1024.webp 1024w, /kazumi-expressive-1254.webp 1254w" sizes="(max-width: 700px) calc(100vw - 80px), (max-width: 1000px) calc((100vw - 60px) / 2.3 - 48px), (max-width: 1360px) calc((100vw - 92px) / 2.3 - 64px), 488px" />
-            <img src="/kazumi-expressive.png" width="1254" height="1254" alt="以柔和雕塑风格重新演绎的 Kazumi 绿发角色" fetchpriority="high" />
+            <img src="/kazumi-expressive.png" width="1254" height="1254" alt="Kazumi 角色插画" fetchpriority="high" />
           </picture>
-          <div class="art-bottom"><span>总有好故事，<br /><strong>等着与你相遇。</strong></span><a routerLink="/about/icon" class="art-link" aria-label="认识 Kazumi 的图标"><mat-icon>north_east</mat-icon></a></div>
+          <div class="art-bottom"><span>关于 Kazumi<br /><strong>形象与图标授权</strong></span><a routerLink="/about/icon" class="art-link" aria-label="查看图标来源与授权说明"><mat-icon>north_east</mat-icon></a></div>
         </div>
       </section>
       <div class="platform-strip" aria-label="支持的平台">
-        <span class="platform-label">在你喜欢的设备上</span>
+        <span class="platform-label">支持平台</span>
         @for (platform of platforms; track platform.name) {
           <a routerLink="/download" [queryParams]="{ platform: platform.id }"><span [class]="'mdi ' + platform.icon" aria-hidden="true"></span>{{ platform.name }}</a>
         }
       </div>
       <section class="experience-section" aria-labelledby="experience-title">
-        <div class="section-heading"><div><span class="eyebrow">YOUR TIME, YOUR WAY</span><h2 id="experience-title">追番这件事，<br />可以更合心意。</h2></div><p>让工具安静地做好分内的事。<br />把选择，留给喜欢故事的你。</p></div>
+        <div class="section-heading"><div><span class="eyebrow">核心特性</span><h2 id="experience-title">轻量纯粹，<br />功能一应俱全。</h2></div><p>应用本身不内置番剧源，通过自定义规则灵活接入站点；<br />配合弹幕、实时超分辨率与进度同步，提供顺手的观看体验。</p></div>
         <div class="feature-grid">
           <a routerLink="/docs/rules/introduce-rules" class="feature feature-rules">
             <div class="feature-top"><span class="feature-icon"><mat-icon>tune</mat-icon></span><mat-icon>north_east</mat-icon></div>
-            <div><span class="feature-index">01 / 自定义规则</span><h3>观看方式，<br />由你定义。</h3><p>导入、分享，或从头编写自己的规则。<br />让内容来源适应你的习惯。</p></div>
+            <div><span class="feature-index">01 / 自定义规则</span><h3>番剧来源，<br />按需接入。</h3><p>支持 XPath 与 API 规则，可从规则仓库直接安装，<br />也能通过链接、JSON 导入或自行编写。</p></div>
           </a>
           <a routerLink="/docs/intro/module-details" class="feature feature-watch">
             <div class="feature-top"><span class="feature-icon"><mat-icon>auto_awesome</mat-icon></span><mat-icon>north_east</mat-icon></div>
-            <div><span class="feature-index">02 / 沉浸体验</span><h3>每个精彩，<br />都值得看清。</h3><p>实时超分辨率、弹幕与一起看。<br />一个人沉浸，也可以一起共鸣。</p></div>
+            <div><span class="feature-index">02 / 播放体验</span><h3>超分与弹幕，<br />看番更尽兴。</h3><p>内置 Anime4K 实时超分辨率与多源弹幕，<br />支持 Bangumi 追番同步、WebDAV 备份、投屏与一起看。</p></div>
           </a>
           <a routerLink="/about" class="feature feature-open">
             <div class="feature-top"><span class="feature-icon"><mat-icon>favorite_border</mat-icon></span><mat-icon>north_east</mat-icon></div>
-            <div><span class="feature-index">03 / 开源共创</span><h3>因为热爱，<br />所以开放。</h3><p>基于 GPL-3.0 开源。<br />每一份贡献，都让 Kazumi 更好一点。</p></div>
+            <div><span class="feature-index">03 / 开源社区</span><h3>免费无广告，<br />由社区驱动。</h3><p>基于 GPL-3.0 协议开源，代码完全公开。<br />欢迎反馈问题、分享规则或参与功能开发。</p></div>
           </a>
         </div>
       </section>
       <section class="start-section" aria-labelledby="start-title">
-        <div><span class="eyebrow">MAKE YOURSELF AT HOME</span><h2 id="start-title">下一段故事，从这里开始。</h2><p>选好设备，装好应用。剩下的，交给好故事。</p></div>
-        <a mat-flat-button class="action action-large" routerLink="/download">选择你的版本<mat-icon iconPositionEnd>arrow_forward</mat-icon></a>
+        <div><span class="eyebrow">立即开始</span><h2 id="start-title">在你的设备上安装 Kazumi</h2><p>支持 Android、Windows、macOS、Linux、iOS 与 HarmonyOS，选择对应平台即可获取安装包。</p></div>
+        <a mat-flat-button class="action action-large" routerLink="/download">前往下载<mat-icon iconPositionEnd>arrow_forward</mat-icon></a>
       </section>
-      <div class="help-links"><a routerLink="/docs">需要一点指引？<strong>打开使用指南</strong><mat-icon>arrow_forward</mat-icon></a><a href="https://github.com/Predidit/Kazumi" target="_blank" rel="noopener noreferrer">想让它变得更好？<strong>一起参与共创</strong><mat-icon>north_east</mat-icon></a></div>
+      <div class="help-links"><a routerLink="/docs">第一次使用？<strong>阅读使用文档</strong><mat-icon>arrow_forward</mat-icon></a><a href="https://github.com/Predidit/Kazumi" target="_blank" rel="noopener noreferrer">关注项目进展？<strong>访问 GitHub 仓库</strong><mat-icon>north_east</mat-icon></a></div>
     </div>
   `,
 	styles: `

@@ -62,17 +62,18 @@ export class SeoService {
 
 	setGuide() {
 		this.setMeta({
-			title: "使用与开发指南 - Kazumi",
+			title: "使用与开发文档 - Kazumi 官网",
 			description:
-				"从安装和使用，到自定义规则开发。按主题查找 Kazumi 指南，找到适合你的下一步。",
+				"查阅 Kazumi 官方文档，了解多平台安装方法、功能模块设置、XPath 与 API 自定义规则开发教程。",
 			path: "/docs",
 		});
 	}
 
 	setCommunity() {
 		this.setMeta({
-			title: "一起共创 - Kazumi",
-			description: "认识 Kazumi 的维护者与贡献者，一起完善应用、规则和文档。",
+			title: "关于项目与社区 - Kazumi 官网",
+			description:
+				"了解 Kazumi 开源项目、维护团队与社区贡献者，参与代码开发、问题反馈与群组交流。",
 			path: "/about",
 		});
 	}
@@ -185,7 +186,7 @@ export class SeoService {
 		this.setMeta({
 			title: "页面未找到 - Kazumi",
 			description:
-				"这个页面可能已移动或不存在。请返回 Kazumi 首页或使用指南继续浏览。",
+				"访问的页面不存在或已移动，请返回 Kazumi 首页或使用文档继续浏览。",
 			status: 404,
 		});
 	}

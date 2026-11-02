@@ -36,9 +36,9 @@ import { TocComponent } from "../features/docs/toc";
 	template: `
     <div class="docs-shell" [class.overview]="isOverview()">
       @if (!isOverview()) {
-        <aside class="docs-sidebar"><a routerLink="/docs" class="guide-home"><mat-icon>arrow_back</mat-icon>指南首页</a><app-doc-search /><ng-container [ngTemplateOutlet]="navigation" /></aside>
+        <aside class="docs-sidebar"><a routerLink="/docs" class="guide-home"><mat-icon>arrow_back</mat-icon>文档首页</a><app-doc-search /><ng-container [ngTemplateOutlet]="navigation" /></aside>
         <div class="mobile-tools">
-          <details #mobileNavigation name="guide-panels"><summary><mat-icon>menu_book</mat-icon>文档目录<mat-icon>expand_more</mat-icon></summary><div class="mobile-panel"><a routerLink="/docs" (click)="closeNavigation()" class="guide-home">返回指南首页<mat-icon>arrow_forward</mat-icon></a><ng-container [ngTemplateOutlet]="navigation" /></div></details>
+          <details #mobileNavigation name="guide-panels"><summary><mat-icon>menu_book</mat-icon>文档目录<mat-icon>expand_more</mat-icon></summary><div class="mobile-panel"><a routerLink="/docs" (click)="closeNavigation()" class="guide-home">返回文档首页<mat-icon>arrow_forward</mat-icon></a><ng-container [ngTemplateOutlet]="navigation" /></div></details>
           <details class="mobile-toc" name="guide-panels"><summary><mat-icon>toc</mat-icon>本页内容<mat-icon>expand_more</mat-icon></summary><div class="mobile-panel"><app-toc [items]="docsState.toc()" [embedded]="true" (linkClick)="closeToc()" /></div></details>
         </div>
       }
@@ -46,7 +46,7 @@ import { TocComponent } from "../features/docs/toc";
       @if (!isOverview()) { <aside class="desktop-toc"><app-toc [items]="docsState.toc()" /></aside> }
     </div>
     <ng-template #navigation>
-      <nav class="document-nav" aria-label="指南目录">
+      <nav class="document-nav" aria-label="文档目录">
         @for (section of sections(); track section.title) {
           <section><h2>{{ section.title }}</h2>
             @for (page of section.pages; track page.route) {

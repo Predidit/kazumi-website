@@ -49,9 +49,9 @@ import { SeoService } from "../features/seo/seo.service";
           <h2>Kazumi <span>for {{ selected().name }}</span></h2>
           <p class="system-requirement">{{ selected().description }}</p>
           <div class="release-meta">
-            @if (loading()) { <span>正在获取发布版本…</span> }
-            @else if (selectedTag()) { <span class="status-dot"></span><strong>v{{ selectedTag() }}</strong><span>当前发布版本</span> }
-            @else { <mat-icon>info_outline</mat-icon><span>版本信息暂不可用，可前往发布页获取安装包</span> }
+            @if (loading()) { <span>正在获取最新版本信息…</span> }
+            @else if (selectedTag()) { <span class="status-dot"></span><strong>v{{ selectedTag() }}</strong><span>当前最新版本</span> }
+            @else { <mat-icon>info_outline</mat-icon><span>暂未获取到版本号，可前往 GitHub Releases 下载</span> }
           </div>
           @if (loading()) { <mat-progress-bar mode="indeterminate" aria-label="加载版本信息" /> }
           <div class="download-actions">
@@ -67,7 +67,7 @@ import { SeoService } from "../features/seo/seo.service";
           </div>
           <p class="install-note">{{ selected().installNote }}</p>
           <div class="mirror-setting">
-            <div><strong>下载速度较慢？</strong><p>{{ selected().releaseSource === 'ohos' ? '鸿蒙版本使用独立发布源，暂不支持镜像。' : '可以切换镜像。镜像同步可能晚于 GitHub。' }}</p></div>
+            <div><strong>下载速度较慢？</strong><p>{{ selected().releaseSource === 'ohos' ? '鸿蒙版由独立仓库发布，暂不支持镜像加速。' : '开启后通过镜像站下载安装包，同步可能略晚于 GitHub。' }}</p></div>
             <mat-slide-toggle [checked]="useMirror()" [disabled]="selected().releaseSource === 'ohos'" (change)="useMirror.set($event.checked)" aria-label="使用镜像下载"></mat-slide-toggle>
           </div>
           <a class="text-action release-link" [href]="releaseUrl()" target="_blank" rel="noopener noreferrer">更新日志与历史版本 <mat-icon>north_east</mat-icon></a>
@@ -75,11 +75,11 @@ import { SeoService } from "../features/seo/seo.service";
         </div>
       </section>
       <section class="install-help" aria-labelledby="install-help-title">
-        <div><span class="eyebrow">GET STARTED</span><h2 id="install-help-title">开始使用 Kazumi</h2></div>
+        <div><span class="eyebrow">安装之后</span><h2 id="install-help-title">开始使用 Kazumi</h2></div>
         <div class="help-grid">
-          <a routerLink="/docs/rules/introduce-rules"><span class="step-number">01</span><div><h3>认识规则</h3><p>了解内容来源，导入你的第一条规则。</p></div><mat-icon>arrow_forward</mat-icon></a>
-          <a routerLink="/docs/intro/module-details"><span class="step-number">02</span><div><h3>了解功能</h3><p>认识播放器、弹幕与更多实用功能。</p></div><mat-icon>arrow_forward</mat-icon></a>
-          <a routerLink="/docs/misc/qa"><span class="step-number">03</span><div><h3>常见问题</h3><p>查看安装和使用中常见问题的解决方法。</p></div><mat-icon>arrow_forward</mat-icon></a>
+          <a routerLink="/docs/rules/introduce-rules"><span class="step-number">01</span><div><h3>导入番剧规则</h3><p>Kazumi 不内置番剧源，首次启动请先从规则仓库或剪贴板添加规则。</p></div><mat-icon>arrow_forward</mat-icon></a>
+          <a routerLink="/docs/intro/module-details"><span class="step-number">02</span><div><h3>功能与设置说明</h3><p>了解超分辨率、弹幕屏蔽、一起看、追番同步与快捷键等配置。</p></div><mat-icon>arrow_forward</mat-icon></a>
+          <a routerLink="/docs/misc/qa"><span class="step-number">03</span><div><h3>常见问题排查</h3><p>解答安装报错、超分卡顿、搜索无结果等常见问题。</p></div><mat-icon>arrow_forward</mat-icon></a>
         </div>
       </section>
     </div>

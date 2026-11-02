@@ -10,13 +10,13 @@ import { SeoService } from "../../features/seo/seo.service";
 	imports: [MatIconModule, RouterLink, DocSearchComponent],
 	template: `
     <div class="guide-overview">
-      <header class="guide-hero"><div><span class="eyebrow">A GUIDE TO YOUR KAZUMI</span><h1>从第一步，<br />到得心应手。</h1><p>安装、探索，或动手创造。<br />你需要的下一步，就在这里。</p></div><div class="hero-search"><mat-icon class="guide-symbol" aria-hidden="true">auto_stories</mat-icon><app-doc-search /></div></header>
-      <section class="guide-starts" aria-label="选择阅读起点">
-        <a routerLink="/docs/intro/what-is-kazumi"><span class="start-icon"><mat-icon>waving_hand</mat-icon></span><span><h2>第一次使用</h2><p>认识 Kazumi，轻松开始。</p></span><mat-icon>arrow_forward</mat-icon></a>
-        <a routerLink="/docs/rules/develop-rules"><span class="start-icon"><mat-icon>code</mat-icon></span><span><h2>想写自己的规则</h2><p>从选择器，到你的第一条规则。</p></span><mat-icon>arrow_forward</mat-icon></a>
-        <a routerLink="/docs/misc/qa"><span class="start-icon"><mat-icon>help_outline</mat-icon></span><span><h2>需要一点帮助</h2><p>安装与使用问题，一起解决。</p></span><mat-icon>arrow_forward</mat-icon></a>
+      <header class="guide-hero"><div><span class="eyebrow">使用与开发文档</span><h1>使用说明与<br />规则开发文档</h1><p>涵盖各平台安装方法、功能模块说明、<br />自定义规则编写教程与技术实现细节。</p></div><div class="hero-search"><mat-icon class="guide-symbol" aria-hidden="true">auto_stories</mat-icon><app-doc-search /></div></header>
+      <section class="guide-starts" aria-label="常用文档入口">
+        <a routerLink="/docs/intro/what-is-kazumi"><span class="start-icon"><mat-icon>waving_hand</mat-icon></span><span><h2>快速上手</h2><p>了解基本用法与首次启动配置。</p></span><mat-icon>arrow_forward</mat-icon></a>
+        <a routerLink="/docs/rules/develop-rules"><span class="start-icon"><mat-icon>code</mat-icon></span><span><h2>编写自定义规则</h2><p>学习 XPath 与 API 规则语法及配置流程。</p></span><mat-icon>arrow_forward</mat-icon></a>
+        <a routerLink="/docs/misc/qa"><span class="start-icon"><mat-icon>help_outline</mat-icon></span><span><h2>常见问题</h2><p>排查安装、播放与超分辨率相关问题。</p></span><mat-icon>arrow_forward</mat-icon></a>
       </section>
-      <div class="library-heading"><h2>按主题探索</h2><span>{{ pageCount }} 篇指南，随时翻阅</span></div>
+      <div class="library-heading"><h2>全部文档</h2><span>共 {{ pageCount }} 篇文档</span></div>
       <div class="guide-library">
         @for (section of sections(); track section.title; let i = $index) {
           <section class="guide-section"><div class="section-title"><span>{{ '0' + (i + 1) }}</span><h2>{{ section.title }}</h2></div>
@@ -24,7 +24,7 @@ import { SeoService } from "../../features/seo/seo.service";
           </section>
         }
       </div>
-      <div class="guide-contribute"><mat-icon>edit_note</mat-icon><div><h2>好的指南，也需要你的经验。</h2><p>发现遗漏或想分享技巧？欢迎一起完善文档。</p></div><a href="https://github.com/Predidit/kazumi-website" target="_blank" rel="noopener noreferrer" class="text-action">参与编写<mat-icon>north_east</mat-icon></a></div>
+      <div class="guide-contribute"><mat-icon>edit_note</mat-icon><div><h2>参与完善文档</h2><p>如果发现文档存在疏漏，或希望补充新的使用技巧，欢迎在 GitHub 提交修改。</p></div><a href="https://github.com/Predidit/kazumi-website" target="_blank" rel="noopener noreferrer" class="text-action">前往文档仓库<mat-icon>north_east</mat-icon></a></div>
     </div>
   `,
 	styles: `

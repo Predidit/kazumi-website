@@ -8,13 +8,13 @@ import { RouterLink } from "@angular/router";
 	template: `
     <footer class="site-footer">
       <div class="footer-top">
-        <div class="footer-brand"><a routerLink="/">Kazumi.</a><p>为故事停留，为热爱相遇。</p></div>
+        <div class="footer-brand"><a routerLink="/">Kazumi.</a><p>基于自定义规则的跨平台番剧采集与在线观看应用</p></div>
         <nav aria-label="页脚导航">
-          <a routerLink="/download">获取应用</a><a routerLink="/docs">使用指南</a><a routerLink="/about">参与共创</a><a routerLink="/about/icon">图标与授权</a>
+          <a routerLink="/download">下载应用</a><a routerLink="/docs">使用文档</a><a routerLink="/about">关于项目</a><a routerLink="/about/icon">图标与授权</a>
         </nav>
-        <a class="community-link" href="https://t.me/kazumi_app" target="_blank" rel="noopener noreferrer">加入 Telegram <mat-icon>north_east</mat-icon></a>
+        <a class="community-link" href="https://t.me/kazumi_app" target="_blank" rel="noopener noreferrer">Telegram 群组 <mat-icon>north_east</mat-icon></a>
       </div>
-      <div class="footer-bottom"><span>由开源社区用心构建</span><span>© {{ year }} Kazumi · 网站基于 MIT 协议开源</span></div>
+      <div class="footer-bottom"><span>Kazumi 基于 GPL-3.0 协议开源</span><span>© {{ year }} Kazumi · 网站基于 MIT 协议开源</span></div>
     </footer>
   `,
 	styles: `

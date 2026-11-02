@@ -40,11 +40,11 @@ const DOC_CONTENT_FILES = import.meta.glob<string>(
         <span>正在加载文档...</span>
       </div>
     } @else if (html()) {
-      <nav class="doc-breadcrumb" aria-label="阅读位置"><a routerLink="/docs">指南</a><mat-icon>chevron_right</mat-icon><span>{{ metadata()?.section }}</span></nav>
+      <nav class="doc-breadcrumb" aria-label="阅读位置"><a routerLink="/docs">文档</a><mat-icon>chevron_right</mat-icon><span>{{ metadata()?.section }}</span></nav>
       <article class="markdown-body" [innerHTML]="html()"></article>
       <app-doc-footer />
     } @else {
-      <section class="doc-empty"><mat-icon>auto_stories</mat-icon><h1>{{ loadError() ? '这篇指南暂时没有加载成功' : '这篇指南还没有找到' }}</h1><p>可以回到指南首页，换一个主题继续探索。</p><a routerLink="/docs" class="text-action">回到指南首页 <mat-icon>arrow_forward</mat-icon></a></section>
+      <section class="doc-empty"><mat-icon>auto_stories</mat-icon><h1>{{ loadError() ? '文档加载失败' : '未找到该文档' }}</h1><p>{{ loadError() ? '请检查网络连接后刷新重试，或返回文档首页。' : '该页面可能已移动或删除，请返回文档首页查找。' }}</p><a routerLink="/docs" class="text-action">返回文档首页 <mat-icon>arrow_forward</mat-icon></a></section>
     }
   `,
 	styles: `

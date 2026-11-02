@@ -11,11 +11,11 @@ import { SeoService } from "../features/seo/seo.service";
     <div class="page-shell">
       <section class="missing-page">
         <span class="eyebrow">404</span>
-        <h1>这一页，还没有找到。</h1>
-        <p>页面可能已移动，也可能是地址有误。换个入口，继续探索 Kazumi。</p>
+        <h1>未找到该页面</h1>
+        <p>你访问的页面不存在，可能已被移动或链接输入有误。</p>
         <div class="actions">
           <a mat-flat-button class="action" routerLink="/">返回首页<mat-icon iconPositionEnd>arrow_forward</mat-icon></a>
-          <a class="text-action" routerLink="/docs">打开使用指南<mat-icon>auto_stories</mat-icon></a>
+          <a class="text-action" routerLink="/docs">查看使用文档<mat-icon>auto_stories</mat-icon></a>
         </div>
       </section>
     </div>

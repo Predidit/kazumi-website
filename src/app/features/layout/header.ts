@@ -79,10 +79,10 @@ import { ThemeMode, ThemeService } from "./theme.service";
 export class HeaderComponent {
 	readonly theme = inject(ThemeService);
 	readonly navigation = [
-		{ route: "/", label: "发现", icon: "explore" },
+		{ route: "/", label: "首页", icon: "explore" },
 		{ route: "/download", label: "下载", icon: "download" },
-		{ route: "/docs", label: "指南", icon: "auto_stories" },
-		{ route: "/about", label: "共创", icon: "favorite_border" },
+		{ route: "/docs", label: "文档", icon: "auto_stories" },
+		{ route: "/about", label: "关于", icon: "favorite_border" },
 	];
 	readonly themeOptions: { value: ThemeMode; label: string; icon: string }[] = [
 		{ value: "light", label: "浅色", icon: "light_mode" },

@@ -17,8 +17,7 @@ export const PLATFORMS: readonly Platform[] = [
 	{
 		id: "android",
 		icon: "android",
-		installNote:
-			"下载 APK 后在设备上打开，按系统提示允许安装。也可以通过 F-Droid 获取应用。",
+		installNote: "直接下载 APK 安装，或通过 F-Droid 获取。",
 		releaseSource: "kazumi",
 		name: "Android",
 		description: "适用于 Android 10 及以上",
@@ -39,10 +38,11 @@ export const PLATFORMS: readonly Platform[] = [
 	{
 		id: "ios",
 		icon: "phone_iphone",
-		installNote: "IPA 为未签名安装包，需要自签或侧载。建议先阅读安装指南。",
+		installNote:
+			"提供未签名 IPA 安装包，需通过自签或侧载工具安装，建议先阅读安装文档。",
 		releaseSource: "kazumi",
 		name: "iOS",
-		description: "适用于 iOS/iPadOS 13 及以上",
+		description: "适用于 iOS / iPadOS 13 及以上",
 		links: [
 			{
 				kind: "asset",
@@ -61,7 +61,7 @@ export const PLATFORMS: readonly Platform[] = [
 		id: "windows",
 		icon: "desktop_windows",
 		installNote:
-			"选择 MSIX 安装，或下载便携版解压使用。遇到安装问题时可查阅使用指南。",
+			"Windows 11 推荐使用 MSIX 安装包，也可下载 ZIP 便携版解压即用。",
 		releaseSource: "kazumi",
 		name: "Windows",
 		description: "适用于 Windows 10 及以上",
@@ -78,10 +78,10 @@ export const PLATFORMS: readonly Platform[] = [
 	{
 		id: "mac",
 		icon: "laptop_mac",
-		installNote: "下载 DMG 后打开，将 Kazumi 拖入「应用程序」文件夹。",
+		installNote: "下载 DMG 镜像后打开，将 Kazumi 拖入「应用程序」文件夹即可。",
 		releaseSource: "kazumi",
 		name: "macOS",
-		description: "适用于 MacOS 10.15 及以上",
+		description: "适用于 macOS 10.15 及以上",
 		links: [
 			{
 				kind: "asset",
@@ -95,10 +95,10 @@ export const PLATFORMS: readonly Platform[] = [
 		id: "linux",
 		icon: "computer",
 		installNote:
-			"提供 amd64 安装包与便携版，也可以通过 Flathub 安装。Linux 目前为实验性支持。",
+			"提供 amd64 架构的 DEB 安装包与 tar.gz 便携包，也可通过 Flathub 安装。",
 		releaseSource: "kazumi",
 		name: "Linux",
-		description: "实验性支持",
+		description: "适用于 x86_64 架构（实验性支持）",
 		links: [
 			{
 				kind: "asset",
@@ -122,7 +122,7 @@ export const PLATFORMS: readonly Platform[] = [
 		id: "ohos",
 		icon: "phone_android",
 		installNote:
-			"鸿蒙版由社区独立维护。HAP 为未签名安装包，使用前请先阅读侧载指南。",
+			"鸿蒙版由社区独立维护。提供未签名 HAP 安装包，安装前请先阅读侧载教程。",
 		releaseSource: "ohos",
 		name: "HarmonyOS",
 		description: "适用于 HarmonyOS NEXT",
@@ -144,10 +144,10 @@ export const PLATFORMS: readonly Platform[] = [
 		id: "arch",
 		icon: "terminal",
 		installNote:
-			"Arch Linux 为实验性支持。请按下载文档中的包管理器说明进行安装。",
+			"可通过 yay 或 paru 从 AUR 安装 kazumi 或 kazumi-bin，详见下载文档。",
 		releaseSource: "kazumi",
 		name: "Arch Linux",
-		description: "实验性支持",
+		description: "通过 AUR 安装（实验性支持）",
 		links: [
 			{
 				kind: "guide",

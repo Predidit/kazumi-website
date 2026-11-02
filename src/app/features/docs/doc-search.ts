@@ -7,12 +7,12 @@ import { DocNavService } from "./doc-nav.service";
 	selector: "app-doc-search",
 	imports: [MatIconModule, RouterLink],
 	template: `
-    <div class="search-field"><mat-icon>search</mat-icon><input type="search" aria-label="搜索指南标题" placeholder="搜索指南标题…" [value]="query()" (input)="query.set($any($event.target).value)" />
+    <div class="search-field"><mat-icon>search</mat-icon><input type="search" aria-label="搜索文档标题" placeholder="搜索文档…" [value]="query()" (input)="query.set($any($event.target).value)" />
       @if (query()) { <button type="button" aria-label="清空搜索" (click)="query.set('')"><mat-icon>close</mat-icon></button> }
     </div>
     @if (query().trim()) {
       <div class="search-results">
-        <p role="status">{{ results().length ? '找到 ' + results().length + ' 篇指南' : '没有匹配的指南，试试「安装」或「规则」' }}</p>
+        <p role="status">{{ results().length ? '找到 ' + results().length + ' 篇文档' : '未找到匹配的文档，可尝试搜索「安装」或「规则」' }}</p>
         @for (page of results(); track page.route) {
           <a [routerLink]="page.route" (click)="query.set('')"><mat-icon>{{ page.icon }}</mat-icon><span>{{ page.title }}<small>{{ page.section }}</small></span><mat-icon>arrow_forward</mat-icon></a>
         }
